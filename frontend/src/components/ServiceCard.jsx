@@ -1,22 +1,22 @@
-function ServiceCard({ service }) {
+import { Link } from "react-router-dom";
+import "./ServiceCard.css";
 
+function ServiceCard({ service }) {
   return (
     <div className="service-card">
 
       <h2>{service.name}</h2>
 
-      <p>
-        {service.description}
-      </p>
+      <p>{service.description}</p>
 
-      <p>
-        Price: {service.price}
-      </p>
+      <Link to={`/services/${service.id}`}>
+        <button className="service-btn">
+          View Services
+        </button>
+      </Link>
 
     </div>
   );
-
 }
-
 
 export default ServiceCard;

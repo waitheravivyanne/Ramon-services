@@ -1,78 +1,57 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import ServiceCard from "../components/ServiceCard";
-
+import sampleServices from "../data/services";
+import "./Services.css";
 
 function Services() {
-
   const [services, setServices] = useState([]);
-
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
-    api.get("/services")
-      .then(res => {
-
+    api
+      .get("/services")
+      .then((res) => {
         setServices(res.data);
-
       })
-      .catch(error => {
-
-        console.log(error)
-
-        console.log("Backend not connected, using sample services");
-
-        setServices([
-          {
-            id: 1,
-            name: "House Cleaning",
-            description: "Professional home cleaning",
-            price: 2000
-          },
-          {
-            id: 2,
-            name: "Laundry",
-            description: "Wash and iron clothes",
-            price: 1000
-          }
-        ]);
-
+      .catch((error) => {
+        console.log(error);
+        console.log("Using local sample services...");
+        setServices(sampleServices);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-
-
   }, []);
 
-
+  if (loading) {
+    return (
+      <div className="services-container">
+        <h2>Loading services...</h2>
+      </div>
+    );
+  }
 
   return (
+    <div className="services-container">
 
-    <div>
+      <h1>Available Services</h1>
 
-      <h1>
-        Available Services
-      </h1>
+      <p className="services-subtitle">
+        Choose a service category to get started.
+      </p>
 
-
-      {
-        services.map(service => (
-
+      <div className="service-list">
+        {services.map((service) => (
           <ServiceCard
-
             key={service.id}
-
             service={service}
-
           />
-
-        ))
-      }
-
+        ))}
+      </div>
 
     </div>
-
   );
-
 }
-
 
 export default Services;

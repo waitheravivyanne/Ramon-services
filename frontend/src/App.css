@@ -1,38 +1,69 @@
-body{
+body {
 
-font-family:Arial;
-background:#f4f4f4;
+  margin:0;
 
-}
+  font-family: Arial, sans-serif;
 
+  background:#F5F7FA;
 
-.card{
-
-background:white;
-
-padding:20px;
-
-margin:20px;
-
-border-radius:10px;
-
-box-shadow:0 3px 10px #ccc;
+  color:#263238;
 
 }
 
 
-button{
 
-background:#007bff;
+.app-container {
 
-color:white;
+  min-height:100vh;
 
-border:none;
+}
 
-padding:10px 20px;
 
-border-radius:5px;
 
-cursor:pointer;
+.app-title {
+
+  text-align:center;
+
+  color:#1565C0;
+
+  font-size:40px;
+
+}
+
+
+
+.app-description {
+
+  text-align:center;
+
+  color:#546E7A;
+
+}
+
+
+
+button {
+
+  background:#2E7D32;
+
+  color:white;
+
+  border:none;
+
+  padding:12px 25px;
+
+  border-radius:8px;
+
+  cursor:pointer;
+
+  font-size:16px;
+
+}
+
+
+
+button:hover {
+
+  background:#1B5E20;
 
 }
