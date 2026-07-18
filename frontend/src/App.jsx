@@ -1,66 +1,61 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Navbar from "./components/Navbar";
 
 import Home from "./pages/Home";
+import Services from "./pages/Services";
+import Categories from "./pages/Categories";
+import Booking from "./pages/Booking";
+import Checkout from "./pages/Checkout";
+import Payment from "./pages/Payment";
+import Success from "./pages/Success";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Services from "./pages/Services";
 
+import "./App.css";
 
 function App() {
-
   return (
-
     <BrowserRouter>
 
-      <div>
+      <Navbar />
 
-        <h1>
-          Service Marketplace
-        </h1>
-
-        <p>
-          Find trusted service providers
-        </p>
-
+      <main className="app-container">
 
         <Routes>
 
-          <Route
-            path="/"
-            element={<Home />}
-          />
+          {/* Home */}
+          <Route path="/" element={<Home />} />
 
+          {/* All Services */}
+          <Route path="/services" element={<Services />} />
 
-          <Route
-            path="/services"
-            element={<Services />}
-          />
+          {/* Categories inside a service e.g. Cleaning */}
+          <Route path="/services/:serviceId" element={<Categories />} />
 
+          {/* Booking a specific category e.g. House Cleaning */}
+          <Route path="/booking/:categoryId" element={<Booking />} />
 
-          <Route
-            path="/register"
-            element={<Register />}
-          />
+          {/* Checkout */}
+          <Route path="/checkout" element={<Checkout />} />
 
+          {/* Payment */}
+          <Route path="/payment" element={<Payment />} />
 
-          <Route
-            path="/login"
-            element={<Login />}
-          />
+          {/* Booking Success */}
+          <Route path="/success" element={<Success />} />
+
+          {/* Authentication */}
+          <Route path="/login" element={<Login />} />
+
+          <Route path="/register" element={<Register />} />
 
         </Routes>
 
-      </div>
+      </main>
 
     </BrowserRouter>
-
   );
-
 }
-
 
 export default App;
