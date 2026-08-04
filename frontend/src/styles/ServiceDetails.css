@@ -1,0 +1,58 @@
+.service-details{
+    max-width:1200px;
+    margin:auto;
+    padding:40px;
+}
+
+.service-details h1{
+    color:#0F766E;
+    margin-bottom:10px;
+}
+
+.service-description{
+    color:#666;
+    margin-bottom:40px;
+    font-size:18px;
+}
+
+.categories-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:25px;
+}
+
+.category-card{
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+    transition:.3s;
+}
+
+.category-card:hover{
+    transform:translateY(-5px);
+}
+
+.category-card h3{
+    color:#0F766E;
+}
+
+.category-card h2{
+    color:#16A34A;
+}
+
+.category-card button{
+    width:100%;
+    padding:12px;
+    margin-top:15px;
+    border:none;
+    background:#0F766E;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.category-card button:hover{
+    background:#115E59;
+}

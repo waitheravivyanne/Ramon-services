@@ -3,18 +3,23 @@ import ReactDOM from "react-dom/client";
 
 import App from "./App.jsx";
 
+import AuthProvider from "./context/AuthProvider.jsx";
+
 import "./App.css";
 
 
 ReactDOM.createRoot(
-    document.getElementById("root")
-)
-.render(
+  document.getElementById("root")
+).render(
 
-    <React.StrictMode>
+  <React.StrictMode>
 
-        <App />
+    <AuthProvider>
 
-    </React.StrictMode>
+      <App />
+
+    </AuthProvider>
+
+  </React.StrictMode>
 
 );

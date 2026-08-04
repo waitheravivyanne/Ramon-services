@@ -1,10 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import Home from "./pages/Home";
 import Services from "./pages/Services";
-import Categories from "./pages/Categories";
+import ServiceDetails from "./pages/ServiceDetails";
 import Booking from "./pages/Booking";
 import Checkout from "./pages/Checkout";
 import Payment from "./pages/Payment";
@@ -18,6 +20,7 @@ function App() {
   return (
     <BrowserRouter>
 
+      {/* Navigation */}
       <Navbar />
 
       <main className="app-container">
@@ -25,34 +28,77 @@ function App() {
         <Routes>
 
           {/* Home */}
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={<Home />}
+          />
 
-          {/* All Services */}
-          <Route path="/services" element={<Services />} />
+          {/* Services */}
+          <Route
+            path="/services"
+            element={<Services />}
+          />
 
-          {/* Categories inside a service e.g. Cleaning */}
-          <Route path="/services/:serviceId" element={<Categories />} />
+          {/* Service Details */}
+          <Route
+            path="/services/:serviceId"
+            element={<ServiceDetails />}
+          />
 
-          {/* Booking a specific category e.g. House Cleaning */}
-          <Route path="/booking/:categoryId" element={<Booking />} />
+          {/* Booking (Protected) */}
+          <Route
+            path="/booking/:categoryId"
+            element={
+              <ProtectedRoute>
+                <Booking />
+              </ProtectedRoute>
+            }
+          />
 
-          {/* Checkout */}
-          <Route path="/checkout" element={<Checkout />} />
+          {/* Checkout (Protected) */}
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
 
-          {/* Payment */}
-          <Route path="/payment" element={<Payment />} />
+          {/* Payment (Protected) */}
+          <Route
+            path="/payment"
+            element={
+              <ProtectedRoute>
+                <Payment />
+              </ProtectedRoute>
+            }
+          />
 
-          {/* Booking Success */}
-          <Route path="/success" element={<Success />} />
+          {/* Success */}
+          <Route
+            path="/success"
+            element={<Success />}
+          />
 
-          {/* Authentication */}
-          <Route path="/login" element={<Login />} />
+          {/* Login */}
+          <Route
+            path="/login"
+            element={<Login />}
+          />
 
-          <Route path="/register" element={<Register />} />
+          {/* Register */}
+          <Route
+            path="/register"
+            element={<Register />}
+          />
 
         </Routes>
 
       </main>
+
+      {/* Footer */}
+      <Footer />
 
     </BrowserRouter>
   );

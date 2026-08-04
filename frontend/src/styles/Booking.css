@@ -1,0 +1,280 @@
+/* ===========================
+   BOOKING PAGE
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f7fb;
+}
+
+.booking-container{
+
+    max-width:900px;
+
+    margin:50px auto;
+
+    background:white;
+
+    padding:40px;
+
+    border-radius:20px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+
+    animation:fadeIn .8s ease;
+
+}
+
+.booking-container h1{
+
+    text-align:center;
+
+    color:#0f172a;
+
+    margin-bottom:35px;
+
+    font-size:2.4rem;
+
+}
+
+.booking-container h2{
+
+    color:#2563eb;
+
+    margin-top:35px;
+
+    margin-bottom:15px;
+
+}
+
+.booking-container h3{
+
+    margin-top:25px;
+
+    margin-bottom:10px;
+
+    color:#334155;
+
+}
+
+/* ===========================
+   INPUTS
+=========================== */
+
+.booking-container input,
+.booking-container select,
+.booking-container textarea{
+
+    width:100%;
+
+    padding:15px;
+
+    margin-bottom:15px;
+
+    border:1px solid #d1d5db;
+
+    border-radius:10px;
+
+    font-size:16px;
+
+    transition:.3s;
+
+    background:#fafafa;
+
+}
+
+.booking-container textarea{
+
+    resize:vertical;
+
+    min-height:120px;
+
+}
+
+.booking-container input:focus,
+.booking-container select:focus,
+.booking-container textarea:focus{
+
+    outline:none;
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 10px rgba(37,99,235,.2);
+
+    background:white;
+
+}
+
+/* ===========================
+   EXTRAS
+=========================== */
+
+.booking-container label{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:15px;
+
+    margin-bottom:12px;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.booking-container label:hover{
+
+    background:#eff6ff;
+
+    border-color:#2563eb;
+
+}
+
+.booking-container input[type="checkbox"]{
+
+    width:18px;
+
+    height:18px;
+
+}
+
+/* ===========================
+   PRICE SUMMARY
+=========================== */
+
+.booking-container hr{
+
+    margin:35px 0;
+
+    border:none;
+
+    border-top:2px solid #e5e7eb;
+
+}
+
+.booking-container p{
+
+    font-size:17px;
+
+    margin-bottom:10px;
+
+    color:#475569;
+
+}
+
+.booking-container h2:last-of-type{
+
+    color:#16a34a;
+
+    font-size:2rem;
+
+    margin-top:20px;
+
+}
+
+/* ===========================
+   BUTTON
+=========================== */
+
+.booking-container button{
+
+    width:100%;
+
+    margin-top:30px;
+
+    padding:18px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.booking-container button:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-4px);
+
+    box-shadow:0 12px 30px rgba(37,99,235,.35);
+
+}
+
+/* ===========================
+   ANIMATION
+=========================== */
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(30px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ===========================
+   MOBILE
+=========================== */
+
+@media(max-width:768px){
+
+.booking-container{
+
+    margin:20px;
+
+    padding:25px;
+
+}
+
+.booking-container h1{
+
+    font-size:2rem;
+
+}
+
+.booking-container button{
+
+    font-size:16px;
+
+}
+
+}

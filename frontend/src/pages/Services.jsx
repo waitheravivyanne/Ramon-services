@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 import ServiceCard from "../components/ServiceCard";
 import sampleServices from "../data/services";
-import "./Services.css";
+import "../styles/Services.css";
 
 function Services() {
   const [services, setServices] = useState([]);

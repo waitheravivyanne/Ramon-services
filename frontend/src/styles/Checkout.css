@@ -1,0 +1,241 @@
+/* Checkout Page */
+
+.checkout-container {
+
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 35px;
+
+    background: white;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.12);
+
+    animation: slideUp 0.6s ease;
+
+    font-family: Arial, sans-serif;
+
+}
+
+
+/* Heading */
+
+.checkout-container h1 {
+
+    text-align: center;
+
+    color: #16a34a;
+
+    margin-bottom: 25px;
+
+    font-size: 35px;
+
+}
+
+
+.checkout-container h3 {
+
+    margin-top: 25px;
+
+    color: #333;
+
+    border-bottom: 2px solid #16a34a;
+
+    padding-bottom: 8px;
+
+}
+
+
+/* Booking Details */
+
+.checkout-container p {
+
+    background: #f8fafc;
+
+    padding: 12px 15px;
+
+    margin: 10px 0;
+
+    border-radius: 10px;
+
+    color: #444;
+
+    transition: 0.3s;
+
+}
+
+
+.checkout-container p:hover {
+
+    transform: translateX(5px);
+
+    background: #ecfdf5;
+
+}
+
+
+/* Extras */
+
+.checkout-container h3:nth-of-type(2) {
+
+    color: #15803d;
+
+}
+
+
+
+.checkout-container h2 {
+
+    margin-top: 30px;
+
+    text-align: center;
+
+    color: #111827;
+
+    font-size: 28px;
+
+}
+
+
+/* Total Amount */
+
+.checkout-container h2:last-of-type {
+
+    background: linear-gradient(
+        135deg,
+        #16a34a,
+        #22c55e
+    );
+
+    color: white;
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 8px 20px rgba(22,163,74,0.3);
+
+}
+
+
+
+/* Payment Button */
+
+.checkout-container button {
+
+    display: block;
+
+    width: 100%;
+
+    margin-top: 30px;
+
+    padding: 16px;
+
+    border: none;
+
+    border-radius: 30px;
+
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+
+}
+
+
+
+.checkout-container button:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+    0 10px 25px rgba(37,99,235,0.4);
+
+}
+
+
+/* Empty Booking */
+
+.checkout-container h2:first-child {
+
+    color: #dc2626;
+
+    text-align:center;
+
+}
+
+
+
+/* Animation */
+
+@keyframes slideUp {
+
+    from {
+
+        opacity:0;
+
+        transform:
+        translateY(40px);
+
+    }
+
+
+    to {
+
+        opacity:1;
+
+        transform:
+        translateY(0);
+
+    }
+
+}
+
+
+
+/* Mobile Responsive */
+
+@media(max-width:768px){
+
+
+.checkout-container{
+
+    margin:20px;
+
+    padding:25px;
+
+}
+
+
+.checkout-container h1{
+
+    font-size:28px;
+
+}
+
+
+.checkout-container h2{
+
+    font-size:23px;
+
+}
+
+
+}

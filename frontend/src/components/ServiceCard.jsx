@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import "./ServiceCard.css";
+import "../styles/ServiceCard.css";
 
 function ServiceCard({ service }) {
+  console.log(service);
   return (
     <div className="service-card">
 
@@ -9,9 +10,15 @@ function ServiceCard({ service }) {
 
       <p>{service.description}</p>
 
+       <p className="price">
+        {/* Starting from Ksh {service.categories[0].price} */}
+          Starting from Ksh {service.price}
+
+      </p>
+
       <Link to={`/services/${service.id}`}>
         <button className="service-btn">
-          View Services
+          View Details
         </button>
       </Link>
 

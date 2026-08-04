@@ -2,129 +2,97 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 
-
-function Register(){
+function Register() {
 
   const navigate = useNavigate();
 
-
-  const [form,setForm]=useState({
+  const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
-    role: "customer"
+    role: "customer",
   });
 
-
-
-  function handleChange(e){
-
+  function handleChange(e) {
     setForm({
-
       ...form,
-
-      [e.target.name]: e.target.value
-
+      [e.target.name]: e.target.value,
     });
-
   }
 
-
-
-  function submit(e){
-
+  function submit(e) {
     e.preventDefault();
 
+    api
+      .post("/register", form)
+      .then((res) => {
+        alert(res.data.message);
 
-    api.post("/register",form)
+        // Go to login page
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.error(error);
 
-    .then(res=>{
-
-      alert(res.data.message);
-
-
-      // Redirect to login page
-      navigate("/login");
-
-
-    })
-
-    .catch(error=>{
-
-      console.log(error);
-
-      alert("Registration failed");
-
-    });
-
+        if (error.response) {
+          alert(error.response.data.message);
+        } else {
+          alert("Registration failed.");
+        }
+      });
   }
 
+  return (
+    <div className="register-container">
 
+      <form onSubmit={submit} className="register-form">
 
-  return(
+        <h1>Create Account</h1>
 
-    <form onSubmit={submit}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Full Name"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
 
+        <input
+          type="email"
+          name="email"
+          placeholder="Email Address"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
 
-      <h1>
-        Create Account
-      </h1>
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={handleChange}
+          required
+        />
 
+        <select
+          name="role"
+          value={form.role}
+          onChange={handleChange}
+        >
+          <option value="customer">Customer</option>
+          <option value="provider">Service Provider</option>
+        </select>
 
-      <input
-        name="name"
-        placeholder="Full name"
-        value={form.name}
-        onChange={handleChange}
-      />
+        <button type="submit">
+          Register
+        </button>
 
+      </form>
 
-      <input
-        name="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={handleChange}
-      />
-
-
-      <input
-        name="password"
-        type="password"
-        placeholder="Password"
-        value={form.password}
-        onChange={handleChange}
-      />
-
-
-      <select
-        name="role"
-        value={form.role}
-        onChange={handleChange}
-      >
-
-        <option value="customer">
-          Customer
-        </option>
-
-
-        <option value="provider">
-          Service Provider
-        </option>
-
-
-      </select>
-
-
-      <button type="submit">
-        Register
-      </button>
-
-
-    </form>
-
+    </div>
   );
-
 }
-
 
 export default Register;

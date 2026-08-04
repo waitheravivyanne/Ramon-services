@@ -1,11 +1,88 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import "./Booking.css";
+import "../styles/Booking.css";
 
 function Booking() {
   const navigate = useNavigate();
 
-  const basePrice = 1500;
+  // ==========================
+  // HOUSE SIZE PRICING
+  // ==========================
+
+ const pricing = {
+  "Bedsitter": {
+    "Standard Cleaning": 1500,
+    "Deep Cleaning": 2200,
+    "Move In / Move Out": 2800,
+    "Post Construction": 3500,
+    "Fumigation": 3000,
+  },
+
+  "1 Bedroom": {
+    "Standard Cleaning": 2000,
+    "Deep Cleaning": 3000,
+    "Move In / Move Out": 3800,
+    "Post Construction": 4500,
+    "Fumigation": 3500,
+  },
+
+  "2 Bedroom": {
+    "Standard Cleaning": 3000,
+    "Deep Cleaning": 4200,
+    "Move In / Move Out": 5200,
+    "Post Construction": 6500,
+    "Fumigation": 4500,
+  },
+
+  "3 Bedroom": {
+    "Standard Cleaning": 4000,
+    "Deep Cleaning": 5500,
+    "Move In / Move Out": 6800,
+    "Post Construction": 8200,
+    "Fumigation": 5500,
+  },
+
+  "4 Bedroom": {
+    "Standard Cleaning": 5500,
+    "Deep Cleaning": 7200,
+    "Move In / Move Out": 8800,
+    "Post Construction": 10500,
+    "Fumigation": 7000,
+  },
+
+  "5 Bedroom": {
+    "Standard Cleaning": 7000,
+    "Deep Cleaning": 9000,
+    "Move In / Move Out": 11000,
+    "Post Construction": 13000,
+    "Fumigation": 8500,
+  },
+
+  "5+ Bedroom": {
+    "Standard Cleaning": 8500,
+    "Deep Cleaning": 11000,
+    "Move In / Move Out": 13500,
+    "Post Construction": 16000,
+    "Fumigation": 10000,
+  },
+};
+
+  // ==========================
+  // CLEANING TYPE MULTIPLIERS
+  // ==========================
+
+  const cleaningMultiplier = {
+    "Standard Cleaning": 1,
+    "Deep Cleaning": 1.5,
+    "Move In / Move Out": 1.8,
+    "Post Construction": 2,
+    "Fumigation": 2.5,
+  };
+
+
+  // OPTIONAL EXTRAS
+  // ==========================
 
   const extrasList = [
     { name: "Inside Fridge", price: 500 },
@@ -15,6 +92,10 @@ function Booking() {
     { name: "Ironing", price: 500 },
     { name: "Pest Control / Fumigation", price: 2500 },
   ];
+
+  // ==========================
+  // FORM STATE
+  // ==========================
 
   const [booking, setBooking] = useState({
     houseSize: "",
@@ -30,6 +111,10 @@ function Booking() {
     extras: [],
   });
 
+  // ==========================
+  // HANDLE INPUT CHANGES
+  // ==========================
+
   const handleChange = (e) => {
     setBooking({
       ...booking,
@@ -37,8 +122,14 @@ function Booking() {
     });
   };
 
+  // ==========================
+  // HANDLE EXTRAS
+  // ==========================
+
   const handleExtra = (extra) => {
-    const exists = booking.extras.find((item) => item.name === extra.name);
+    const exists = booking.extras.find(
+      (item) => item.name === extra.name
+    );
 
     if (exists) {
       setBooking({
@@ -55,12 +146,51 @@ function Booking() {
     }
   };
 
-  const extrasTotal = booking.extras.reduce(
-    (sum, item) => sum + item.price,
-    0
-  );
+  
 
-  const total = basePrice + extrasTotal;
+  // 1. House size price
+const housePrice =
+  pricing[booking.houseSize]?.[booking.cleaningType] || 0;
+// 2. Cleaning type multiplier
+const multiplier =
+  cleaningMultiplier[booking.cleaningType] || 1;
+
+// 3. Price after cleaning type
+const cleaningPrice = Math.round(
+  housePrice * multiplier
+);
+
+// 4. Frequency discount
+const frequencyDiscount = {
+  "One-Time": 0,
+  "Weekly": 0.10,
+  "Bi-Weekly": 0.05,
+  "Monthly Subscription": 0.15,
+};
+
+const discountRate =
+  frequencyDiscount[booking.frequency] || 0;
+
+// Amount deducted because of frequency
+const discountAmount = Math.round(
+  cleaningPrice * discountRate
+);
+
+// Price after discount
+const discountedPrice =
+  cleaningPrice - discountAmount;
+
+// 5. Extras total
+const extrasTotal = booking.extras.reduce(
+  (sum, item) => sum + item.price,
+  0
+);
+
+// 6. Grand Total
+const total = discountedPrice + extrasTotal;
+  // ==========================
+  // GO TO CHECKOUT
+  // ==========================
 
   const proceedToCheckout = () => {
     navigate("/checkout", {
@@ -144,8 +274,7 @@ function Booking() {
         <option>2:00 PM - 4:00 PM</option>
         <option>4:00 PM - 6:00 PM</option>
       </select>
-
-      <h3>Address</h3>
+            <h3>Address</h3>
 
       <input
         type="text"
@@ -195,8 +324,12 @@ function Booking() {
           <label>
             <input
               type="checkbox"
+              checked={booking.extras.some(
+                (item) => item.name === extra.name
+              )}
               onChange={() => handleExtra(extra)}
             />
+
             {extra.name} (+Ksh {extra.price})
           </label>
         </div>
@@ -204,19 +337,79 @@ function Booking() {
 
       <hr />
 
+     
       <h2>Price Summary</h2>
 
-      <p>Base Cleaning: Ksh {basePrice}</p>
+<p>
+  House Size Price:
+  <strong> Ksh {housePrice}</strong>
+</p>
 
-      {booking.extras.map((extra) => (
-        <p key={extra.name}>
-          {extra.name}: Ksh {extra.price}
-        </p>
-      ))}
+<p>
+  Cleaning Type:
+  <strong> {booking.cleaningType || "Not Selected"}</strong>
+</p>
 
-      <h2>Total: Ksh {total}</h2>
+<p>
+  Cleaning Charge:
+  <strong> Ksh {cleaningPrice}</strong>
+</p>
 
-      <button onClick={proceedToCheckout}>
+<p>
+  Frequency:
+  <strong> {booking.frequency || "Not Selected"}</strong>
+</p>
+
+{discountAmount > 0 && (
+  <p style={{ color: "green" }}>
+    Frequency Discount:
+    <strong> -Ksh {discountAmount}</strong>
+  </p>
+)}
+
+<h3>Extras</h3>
+
+{booking.extras.length === 0 ? (
+  <p>No extras selected</p>
+) : (
+  booking.extras.map((extra) => (
+    <p key={extra.name}>
+      {extra.name}: Ksh {extra.price}
+    </p>
+  ))
+)}
+
+<p>
+  Extras Total:
+  <strong> Ksh {extrasTotal}</strong>
+</p>
+
+<hr />
+
+<h2 style={{ color: "#16a34a" }}>
+  Total: Ksh {total}
+</h2>
+
+      {booking.frequency &&
+        booking.frequency !== "One-Time" && (
+          <p style={{ color: "green", fontWeight: "bold" }}>
+            Discount Applied ✔
+          </p>
+        )}
+
+      <h2
+        style={{
+          color: "#16a34a",
+          marginTop: "20px",
+        }}
+      >
+        Total: Ksh {total}
+      </h2>
+
+      <button
+        className="checkout-btn"
+        onClick={proceedToCheckout}
+      >
         Proceed to Checkout
       </button>
 

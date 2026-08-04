@@ -1,36 +1,110 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../api/axios";
+import  useAuth  from "../hooks/useAuth";
 
 
-function Account(){
+function Login(){
+
+  const navigate = useNavigate();
+
+  const { login } = useAuth();
+
+
+  const [form,setForm] = useState({
+    email:"",
+    password:""
+  });
+
+
+  const handleChange = (e)=>{
+
+    setForm({
+      ...form,
+      [e.target.name]:e.target.value
+    });
+
+  };
+
+
+  const submit = async(e)=>{
+
+    e.preventDefault();
+
+
+    try{
+
+      const response = await api.post(
+        "/login",
+        form
+      );
+
+
+      login({
+
+        token: response.data.token,
+
+        name: response.data.name,
+
+        role: response.data.role
+
+      });
+
+
+      alert("Login successful");
+
+
+      navigate("/");
+
+
+    }catch{
+
+      alert(
+        "Invalid email or password"
+      );
+
+    }
+
+  };
+
 
   return(
 
-    <div>
+    <form onSubmit={submit}>
 
       <h1>
-        My Account
+        Login
       </h1>
 
 
-      <p>
-        Welcome! Find and book services you need.
-      </p>
+      <input
+        name="email"
+        type="email"
+        placeholder="Email"
+        value={form.email}
+        onChange={handleChange}
+      />
 
 
-      <Link to="/services">
+      <input
+        name="password"
+        type="password"
+        placeholder="Password"
+        value={form.password}
+        onChange={handleChange}
+      />
 
-        <button>
-          Browse Services
-        </button>
 
-      </Link>
+      <button type="submit">
+        Login
+      </button>
 
 
-    </div>
+    </form>
 
   );
 
 }
 
 
-export default Account;
+export default Login;

@@ -1,0 +1,38 @@
+.services-container {
+
+  padding: 40px;
+
+  text-align: center;
+
+  background: #f5f7fb;
+
+  min-height: 100vh;
+
+}
+
+
+.services-container h1 {
+
+  font-size: 32px;
+
+  margin-bottom: 30px;
+
+  color: #333;
+
+}
+
+
+
+.services-list {
+
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+  gap: 25px;
+
+  max-width: 1000px;
+
+  margin: auto;
+
+}

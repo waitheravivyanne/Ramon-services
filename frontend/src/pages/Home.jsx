@@ -1,41 +1,48 @@
 import { Link } from "react-router-dom";
+import "../styles/Home.css";
 
 function Home() {
-
   return (
+    <div className="home">
 
-    <div>
+      <div className="hero">
 
-      <h1>
-        Welcome to Ramon's Service Marketplace
-      </h1>
+        <h1>
+          Find Trusted Service Providers Near You
+        </h1>
 
-      <p>
-        Find trusted service providers near you.
-      </p>
+        <p>
+          Connect with verified professionals for cleaning, plumbing,
+          electrical work, painting, gardening, repairs, moving services,
+          and much more—all in one place.
+        </p>
 
-      <Link to="/services">
-        <button>
-          View Services
-        </button>
-      </Link>
+        <div className="hero-buttons">
 
-      <Link to="/register">
-        <button>
-          Register
-        </button>
-      </Link>
+          <Link to="/services">
+            <button className="primary-btn">
+              Explore Services
+            </button>
+          </Link>
 
-      <Link to="/login">
-        <button>
-          Login
-        </button>
-      </Link>
+          <Link to="/register">
+            <button className="secondary-btn">
+              Register
+            </button>
+          </Link>
+
+          <Link to="/login">
+            <button className="secondary-btn">
+              Login
+            </button>
+          </Link>
+
+        </div>
+
+      </div>
 
     </div>
-
   );
-
 }
 
 export default Home;
