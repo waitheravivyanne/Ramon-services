@@ -1,53 +1,62 @@
 import { useState } from "react";
 import AuthContext from "./AuthContext";
 
+function AuthProvider({ children }) {
 
-function AuthProvider({children}){
+  const [user, setUser] = useState(() => {
+
+    const savedUser = localStorage.getItem("user");
+
+    if (!savedUser) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(savedUser);
+    } catch {
+      localStorage.removeItem("user");
+      return null;
+    }
+
+  });
 
 
-    const [user,setUser] = useState(
-        JSON.parse(
-            localStorage.getItem("user")
-        )
+  const login = (userData) => {
+
+    setUser(userData);
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(userData)
     );
 
-
-    const login = (userData)=>{
-
-        setUser(userData);
-
-        localStorage.setItem(
-            "user",
-            JSON.stringify(userData)
-        );
-
-    };
+  };
 
 
-    const logout = ()=>{
+  const logout = () => {
 
-        setUser(null);
+    setUser(null);
 
-        localStorage.removeItem("user");
+    localStorage.removeItem("user");
 
-    };
+  };
 
 
-    return(
+  return (
 
-        <AuthContext.Provider
-            value={{
-                user,
-                login,
-                logout
-            }}
-        >
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout
+      }}
+    >
 
-            {children}
+      {children}
 
-        </AuthContext.Provider>
+    </AuthContext.Provider>
 
-    );
+  );
 
 }
 

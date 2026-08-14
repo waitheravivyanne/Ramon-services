@@ -1,110 +1,179 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import api from "../api/axios";
-import  useAuth  from "../hooks/useAuth";
+import useAuth from "../hooks/useAuth";
+import "../styles/Login.css";
 
-
-function Login(){
-
+function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { login } = useAuth();
 
-
-  const [form,setForm] = useState({
-    email:"",
-    password:""
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleChange = (e)=>{
+  // Where the user was trying to go before login
+  const from = location.state?.from?.pathname || "/";
 
+  const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]:e.target.value
+      [e.target.name]: e.target.value,
     });
 
+    // Remove error while typing
+    if (error) {
+      setError("");
+    }
   };
 
-
-  const submit = async(e)=>{
-
+  const submit = async (e) => {
     e.preventDefault();
 
+    setError("");
+    setLoading(true);
 
-    try{
+    try {
+      const response = await api.post("/login", form);
 
-      const response = await api.post(
-        "/login",
-        form
-      );
-
-
-      login({
-
+      const userData = {
         token: response.data.token,
+        id: response.data.user.id,
+        name: response.data.user.name,
+        email: response.data.user.email,
+        role: response.data.user.role,
+      };
 
-        name: response.data.name,
+      // Save user through AuthContext
+      login(userData);
 
-        role: response.data.role
+      alert("Login successful! 🎉");
 
-      });
+      // Send user back to the page they originally wanted
+      navigate(from, { replace: true });
 
+    } catch (err) {
+      console.error("Login error:", err);
 
-      alert("Login successful");
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Invalid email or password.");
+      }
 
-
-      navigate("/");
-
-
-    }catch{
-
-      alert(
-        "Invalid email or password"
-      );
-
+    } finally {
+      setLoading(false);
     }
-
   };
 
+  return (
+    <div className="login-page">
 
-  return(
+      <form
+        className="login-form"
+        onSubmit={submit}
+      >
 
-    <form onSubmit={submit}>
+        {/* LOGIN ICON */}
+        <div className="login-icon">
+          🔐
+        </div>
 
-      <h1>
-        Login
-      </h1>
+        <h1>
+          Welcome Back!
+        </h1>
 
+        <p className="login-subtitle">
+          Login to your Ramon's Marketplace account
+          and continue booking services.
+        </p>
 
-      <input
-        name="email"
-        type="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={handleChange}
-      />
+        {/* ERROR MESSAGE */}
+        {error && (
+          <div className="login-error">
+            ⚠️ {error}
+          </div>
+        )}
 
+        {/* EMAIL */}
+        <div className="login-group">
 
-      <input
-        name="password"
-        type="password"
-        placeholder="Password"
-        value={form.password}
-        onChange={handleChange}
-      />
+          <label htmlFor="email">
+            Email Address
+          </label>
 
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Enter your email"
+            value={form.email}
+            onChange={handleChange}
+            autoComplete="email"
+            required
+          />
 
-      <button type="submit">
-        Login
-      </button>
+        </div>
 
+        {/* PASSWORD */}
+        <div className="login-group">
 
-    </form>
+          <label htmlFor="password">
+            Password
+          </label>
 
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Enter your password"
+            value={form.password}
+            onChange={handleChange}
+            autoComplete="current-password"
+            required
+          />
+
+        </div>
+
+        {/* LOGIN BUTTON */}
+        <button
+          type="submit"
+          className="login-button"
+          disabled={loading}
+        >
+
+          {loading ? (
+            <>
+              <span className="login-spinner"></span>
+              Logging in...
+            </>
+          ) : (
+            "Login to Account →"
+          )}
+
+        </button>
+
+        {/* REGISTER */}
+        <div className="login-register">
+
+          Don't have an account?{" "}
+
+          <Link to="/register">
+            Create one
+          </Link>
+
+        </div>
+
+      </form>
+
+    </div>
   );
-
 }
-
 
 export default Login;

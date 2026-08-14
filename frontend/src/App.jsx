@@ -1,8 +1,7 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import ProtectedRoute from "./components/ProtectedRoute";
 
 import Home from "./pages/Home";
 import Services from "./pages/Services";
@@ -14,48 +13,59 @@ import Success from "./pages/Success";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
+import ProtectedRoute from "./components/ProtectedRoute";
+
 import "./App.css";
 
 function App() {
   return (
-    <BrowserRouter>
+    <>
 
-      {/* Navigation */}
       <Navbar />
 
       <main className="app-container">
 
         <Routes>
 
-          {/* Home */}
+          {/* PUBLIC */}
+
           <Route
             path="/"
             element={<Home />}
           />
 
-          {/* Services */}
           <Route
             path="/services"
             element={<Services />}
           />
 
-          {/* Service Details */}
           <Route
             path="/services/:serviceId"
             element={<ServiceDetails />}
           />
 
-          {/* Booking (Protected) */}
-         <Route
-  path="/booking/:serviceId/:categoryId"
-  element={
-    <ProtectedRoute>
-      <Booking />
-    </ProtectedRoute>
-  }
-/>
+          <Route
+            path="/login"
+            element={<Login />}
+          />
 
-          {/* Checkout (Protected) */}
+          <Route
+            path="/register"
+            element={<Register />}
+          />
+
+
+          {/* PROTECTED */}
+
+          <Route
+            path="/booking/:serviceId/:categoryId"
+            element={
+              <ProtectedRoute>
+                <Booking />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/checkout"
             element={
@@ -65,7 +75,6 @@ function App() {
             }
           />
 
-          {/* Payment (Protected) */}
           <Route
             path="/payment"
             element={
@@ -75,32 +84,23 @@ function App() {
             }
           />
 
-          {/* Success */}
           <Route
             path="/success"
-            element={<Success />}
+            element={
+              <ProtectedRoute>
+                <Success />
+              </ProtectedRoute>
+            }
           />
 
-          {/* Login */}
-          <Route
-            path="/login"
-            element={<Login />}
-          />
-
-          {/* Register */}
-          <Route
-            path="/register"
-            element={<Register />}
-          />
-
+          
         </Routes>
 
       </main>
 
-      {/* Footer */}
       <Footer />
 
-    </BrowserRouter>
+    </>
   );
 }
 

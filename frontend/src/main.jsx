@@ -1,8 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import App from "./App.jsx";
+import { BrowserRouter } from "react-router-dom";
 
+import App from "./App.jsx";
 import AuthProvider from "./context/AuthProvider.jsx";
 
 import "./App.css";
@@ -14,11 +15,15 @@ ReactDOM.createRoot(
 
   <React.StrictMode>
 
-    <AuthProvider>
+    <BrowserRouter>
 
-      <App />
+      <AuthProvider>
 
-    </AuthProvider>
+        <App />
+
+      </AuthProvider>
+
+    </BrowserRouter>
 
   </React.StrictMode>
 

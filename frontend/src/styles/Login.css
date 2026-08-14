@@ -1,0 +1,847 @@
+/* =========================================
+   LOGIN PAGE
+========================================= */
+
+.login-page {
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 40px 20px;
+
+  position: relative;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(147, 197, 253, 0.45),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      rgba(167, 243, 208, 0.4),
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      #eff6ff 0%,
+      #f8fafc 45%,
+      #eefdf5 100%
+    );
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+}
+
+
+/* =========================================
+   FLOATING BACKGROUND EFFECT
+========================================= */
+
+.login-page::before,
+.login-page::after {
+  content: "";
+
+  position: absolute;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  filter: blur(2px);
+
+  opacity: 0.5;
+}
+
+
+/* Blue floating bubble */
+
+.login-page::before {
+  width: 220px;
+  height: 220px;
+
+  top: -70px;
+  left: -70px;
+
+  background: rgba(96, 165, 250, 0.25);
+
+  animation:
+    floatingBubble 8s ease-in-out infinite;
+}
+
+
+/* Green floating bubble */
+
+.login-page::after {
+  width: 180px;
+  height: 180px;
+
+  right: -50px;
+  bottom: -50px;
+
+  background: rgba(52, 211, 153, 0.22);
+
+  animation:
+    floatingBubble 10s ease-in-out infinite reverse;
+}
+
+
+/* =========================================
+   LOGIN CARD
+========================================= */
+
+.login-form {
+  width: 100%;
+
+  max-width: 430px;
+
+  padding: 42px 38px;
+
+  position: relative;
+  z-index: 2;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  border-radius: 24px;
+
+  border: 1px solid rgba(255, 255, 255, 0.9);
+
+  box-shadow:
+    0 20px 50px rgba(15, 23, 42, 0.12);
+
+  animation:
+    loginAppear 0.7s cubic-bezier(
+      0.22,
+      1,
+      0.36,
+      1
+    );
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+
+/* Card hover */
+
+.login-form:hover {
+
+  transform:
+    translateY(-4px);
+
+  box-shadow:
+    0 28px 65px rgba(15, 23, 42, 0.16);
+}
+
+
+/* =========================================
+   LOGIN ICON
+========================================= */
+
+.login-icon {
+
+  width: 75px;
+  height: 75px;
+
+  margin: 0 auto 20px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eff6ff,
+      #dbeafe
+    );
+
+  color: #2563eb;
+
+  font-size: 32px;
+
+  box-shadow:
+    0 8px 20px rgba(37, 99, 235, 0.12);
+
+  animation:
+    iconFloat 3s ease-in-out infinite;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+
+/* Icon interaction */
+
+.login-form:hover .login-icon {
+
+  transform:
+    translateY(-6px)
+    scale(1.06);
+
+  box-shadow:
+    0 15px 30px rgba(37, 99, 235, 0.2);
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.login-form h1 {
+
+  text-align: center;
+
+  margin-bottom: 8px;
+
+  color: #0f172a;
+
+  font-size: 32px;
+
+  font-weight: 800;
+
+  animation:
+    titleAppear 0.8s ease 0.15s both;
+}
+
+
+/* =========================================
+   SUBTITLE
+========================================= */
+
+.login-subtitle {
+
+  text-align: center;
+
+  color: #64748b;
+
+  margin-bottom: 30px;
+
+  font-size: 15px;
+
+  line-height: 1.6;
+
+  animation:
+    titleAppear 0.8s ease 0.25s both;
+}
+
+
+/* =========================================
+   FORM GROUP
+========================================= */
+
+.login-group {
+
+  margin-bottom: 20px;
+
+  animation:
+    inputAppear 0.6s ease both;
+}
+
+
+/* Stagger the fields */
+
+.login-group:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.login-group:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.login-group:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+
+/* =========================================
+   LABEL
+========================================= */
+
+.login-group label {
+
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #334155;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+/* =========================================
+   INPUTS
+========================================= */
+
+.login-form input {
+
+  width: 100%;
+
+  padding: 15px 16px;
+
+  border: 1px solid #dbe3ef;
+
+  border-radius: 12px;
+
+  background: #f8fafc;
+
+  color: #0f172a;
+
+  font-size: 16px;
+
+  outline: none;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+.login-form input::placeholder {
+
+  color: #94a3b8;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.login-form input:hover {
+
+  background: white;
+
+  border-color: #bfdbfe;
+
+  transform:
+    translateY(-1px);
+}
+
+
+.login-form input:focus {
+
+  background: white;
+
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 4px rgba(37, 99, 235, 0.10),
+    0 8px 20px rgba(37, 99, 235, 0.08);
+
+  transform:
+    translateY(-2px);
+}
+
+
+.login-form input:focus::placeholder {
+
+  opacity: 0.5;
+
+  transform:
+    translateX(5px);
+}
+
+
+/* Change label when group contains focused input */
+
+.login-group:focus-within label {
+
+  color: #2563eb;
+
+  transform:
+    translateX(3px);
+}
+
+
+/* =========================================
+   LOGIN BUTTON
+========================================= */
+
+.login-button {
+
+  width: 100%;
+
+  padding: 15px;
+
+  margin-top: 8px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #3b82f6
+    );
+
+  color: white;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 20px rgba(37, 99, 235, 0.22);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+
+/* Shimmer effect */
+
+.login-button::before {
+
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: -100%;
+
+  width: 70%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,0.35),
+      transparent
+    );
+
+  transform:
+    skewX(-20deg);
+
+  transition:
+    left 0.6s ease;
+}
+
+
+.login-button:hover::before {
+
+  left: 130%;
+}
+
+
+.login-button:hover {
+
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+    0 15px 30px rgba(37, 99, 235, 0.32);
+
+  background:
+    linear-gradient(
+      135deg,
+      #1d4ed8,
+      #2563eb
+    );
+}
+
+
+.login-button:active {
+
+  transform:
+    translateY(0)
+    scale(0.98);
+
+  box-shadow:
+    0 6px 12px rgba(37, 99, 235, 0.2);
+}
+
+
+/* =========================================
+   REGISTER LINK
+========================================= */
+
+.login-register {
+
+  text-align: center;
+
+  margin-top: 25px;
+
+  color: #64748b;
+
+  font-size: 14px;
+
+  animation:
+    titleAppear 0.8s ease 0.5s both;
+}
+
+
+.login-register a {
+
+  color: #2563eb;
+
+  font-weight: 700;
+
+  text-decoration: none;
+
+  position: relative;
+
+  transition:
+    color 0.2s ease;
+}
+
+
+.login-register a::after {
+
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: -3px;
+
+  width: 0;
+  height: 2px;
+
+  background: #2563eb;
+
+  transition:
+    width 0.25s ease;
+}
+
+
+.login-register a:hover {
+
+  color: #1d4ed8;
+}
+
+
+.login-register a:hover::after {
+
+  width: 100%;
+}
+
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes loginAppear {
+
+  0% {
+
+    opacity: 0;
+
+    transform:
+      translateY(45px)
+      scale(0.94)
+      rotateX(4deg);
+
+  }
+
+  60% {
+
+    opacity: 1;
+
+    transform:
+      translateY(-5px)
+      scale(1.01);
+
+  }
+
+  100% {
+
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1)
+      rotateX(0);
+
+  }
+
+}
+
+
+@keyframes iconFloat {
+
+  0%,
+  100% {
+
+    transform:
+      translateY(0);
+
+  }
+
+  50% {
+
+    transform:
+      translateY(-7px);
+
+  }
+
+}
+
+
+@keyframes titleAppear {
+
+  from {
+
+    opacity: 0;
+
+    transform:
+      translateY(12px);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translateY(0);
+
+  }
+
+}
+
+
+@keyframes inputAppear {
+
+  from {
+
+    opacity: 0;
+
+    transform:
+      translateX(15px);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translateX(0);
+
+  }
+
+}
+
+
+@keyframes floatingBubble {
+
+  0%,
+  100% {
+
+    transform:
+      translate(0, 0)
+      scale(1);
+
+  }
+
+  50% {
+
+    transform:
+      translate(25px, 20px)
+      scale(1.08);
+
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 500px) {
+
+  .login-page {
+
+    padding: 25px 15px;
+
+  }
+
+
+  .login-form {
+
+    padding: 35px 25px;
+
+    border-radius: 20px;
+
+  }
+
+
+  .login-form h1 {
+
+    font-size: 28px;
+
+  }
+
+
+  .login-icon {
+
+    width: 65px;
+    height: 65px;
+
+    font-size: 28px;
+
+  }
+
+}
+
+
+/* =========================================
+   REDUCE MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .login-page::before,
+  .login-page::after,
+  .login-form,
+  .login-icon,
+  .login-form h1,
+  .login-subtitle,
+  .login-group,
+  .login-register {
+
+    animation: none;
+
+  }
+
+  .login-button,
+  .login-form,
+  .login-icon,
+  .login-form input {
+
+    transition: none;
+
+  }
+
+}
+
+/* ================================
+   LOGIN ERROR
+================================ */
+
+.login-error {
+  padding: 12px 15px;
+
+  margin-bottom: 20px;
+
+  border-radius: 10px;
+
+  background: #fef2f2;
+
+  border: 1px solid #fecaca;
+
+  color: #b91c1c;
+
+  font-size: 14px;
+
+  animation: errorShake 0.35s ease;
+}
+
+
+/* ================================
+   LOADING BUTTON
+================================ */
+
+.login-button:disabled {
+  opacity: 0.7;
+
+  cursor: not-allowed;
+
+  transform: none;
+
+  box-shadow: none;
+}
+
+
+.login-spinner {
+  display: inline-block;
+
+  width: 17px;
+
+  height: 17px;
+
+  margin-right: 8px;
+
+  vertical-align: middle;
+
+  border: 2px solid rgba(255,255,255,0.4);
+
+  border-top-color: white;
+
+  border-radius: 50%;
+
+  animation: loginSpin 0.7s linear infinite;
+}
+
+
+/* ================================
+   ERROR ANIMATION
+================================ */
+
+@keyframes errorShake {
+
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  50% {
+    transform: translateX(5px);
+  }
+
+  75% {
+    transform: translateX(-5px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+
+}
+
+
+/* ================================
+   SPINNER
+================================ */
+
+@keyframes loginSpin {
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
