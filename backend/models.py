@@ -3,6 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
+# =====================================================
+# USER
+# =====================================================
+
 class User(db.Model):
 
     __tablename__ = "users"
@@ -34,6 +38,10 @@ class User(db.Model):
     )
 
 
+# =====================================================
+# SERVICE
+# =====================================================
+
 class Service(db.Model):
 
     __tablename__ = "services"
@@ -63,4 +71,88 @@ class Service(db.Model):
 
     provider = db.Column(
         db.String(100)
+    )
+
+
+# =====================================================
+# BOOKING
+# =====================================================
+
+class Booking(db.Model):
+
+    __tablename__ = "bookings"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id"),
+        nullable=False
+    )
+
+    service_id = db.Column(
+        db.Integer,
+        db.ForeignKey("services.id"),
+        nullable=False
+    )
+
+    category_id = db.Column(
+        db.String(50)
+    )
+
+    total = db.Column(
+        db.Float,
+        nullable=False
+    )
+
+    status = db.Column(
+        db.String(30),
+        default="Pending"
+    )
+
+    date = db.Column(
+        db.String(50)
+    )
+
+    time = db.Column(
+        db.String(50)
+    )
+
+    address = db.Column(
+        db.String(200)
+    )
+
+    city = db.Column(
+        db.String(100)
+    )
+
+    estate = db.Column(
+        db.String(100)
+    )
+
+    house_number = db.Column(
+        db.String(100)
+    )
+
+    house_size = db.Column(
+        db.String(50)
+    )
+
+    cleaning_type = db.Column(
+        db.String(100)
+    )
+
+    frequency = db.Column(
+        db.String(100)
+    )
+
+    notes = db.Column(
+        db.Text
+    )
+
+    extras = db.Column(
+        db.Text
     )

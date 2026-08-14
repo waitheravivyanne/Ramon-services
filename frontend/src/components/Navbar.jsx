@@ -1,23 +1,49 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Navbar.css";
 
 function Navbar() {
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
     <nav className="navbar">
 
+      {/* BACK BUTTON */}
+      <button
+        className="back-button"
+        onClick={handleBack}
+        title="Go back"
+      >
+        ←
+        <span>Back</span>
+      </button>
+
+      {/* LOGO */}
       <Link to="/" className="logo">
         Ramon's Marketplace
       </Link>
 
+      {/* NAVIGATION LINKS */}
       <div className="nav-links">
 
-        <Link to="/">Home</Link>
+        <Link to="/">
+          Home
+        </Link>
 
-        <Link to="/services">Services</Link>
+        <Link to="/services">
+          Services
+        </Link>
 
-        <Link to="/login">Login</Link>
+        <Link to="/login">
+          Login
+        </Link>
 
-        <Link to="/register">Register</Link>
+        <Link to="/register">
+          Register
+        </Link>
 
       </div>
 

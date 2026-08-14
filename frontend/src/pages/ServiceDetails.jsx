@@ -30,7 +30,7 @@ function ServiceDetails() {
 
       <div className="categories-grid">
 
-        {service.categories.map((category) => (
+        {service.categories?.map((category) => (
 
           <div
             key={category.id}
@@ -43,9 +43,13 @@ function ServiceDetails() {
               Starting From
             </p>
 
-            <h2>Ksh {category.price}</h2>
+            <h2>
+              Ksh {category.price}
+            </h2>
 
-            <Link to={`/booking/${category.id}`}>
+            <Link
+              to={`/booking/${service.id}/${category.id}`}
+            >
               <button>
                 Book Now
               </button>

@@ -46,14 +46,14 @@ function App() {
           />
 
           {/* Booking (Protected) */}
-          <Route
-            path="/booking/:categoryId"
-            element={
-              <ProtectedRoute>
-                <Booking />
-              </ProtectedRoute>
-            }
-          />
+         <Route
+  path="/booking/:serviceId/:categoryId"
+  element={
+    <ProtectedRoute>
+      <Booking />
+    </ProtectedRoute>
+  }
+/>
 
           {/* Checkout (Protected) */}
           <Route

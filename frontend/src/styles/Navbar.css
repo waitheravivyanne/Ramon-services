@@ -1,56 +1,146 @@
-/* Navbar Container */
+/* ===========================
+   NAVBAR
+=========================== */
+
 .navbar {
+    width: 100%;
+    min-height: 70px;
+
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 16px 8%;
-    background: #0f172a;
-    color: white;
+
+    padding: 0 30px;
+
+    background: #ffffff;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+
+    gap: 25px;
 }
 
-/* Logo */
+
+/* ===========================
+   BACK BUTTON
+=========================== */
+
+.back-button {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 9px 14px;
+
+    border: 1px solid #dbe3ef;
+
+    border-radius: 9px;
+
+    background: #f8fafc;
+
+    color: #334155;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+.back-button:hover {
+    background: #2563eb;
+
+    color: white;
+
+    border-color: #2563eb;
+
+    transform: translateX(-3px);
+
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.25);
+}
+
+.back-button:active {
+    transform: scale(0.96);
+}
+
+
+/* ===========================
+   LOGO
+=========================== */
+
 .logo {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #ffffff;
     text-decoration: none;
-    letter-spacing: 0.5px;
+
+    color: #2563eb;
+
+    font-size: 22px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+
     transition: 0.3s;
 }
 
 .logo:hover {
-    color: #38bdf8;
+    color: #1d4ed8;
 }
 
-/* Navigation Links */
+
+/* ===========================
+   NAVIGATION LINKS
+=========================== */
+
 .nav-links {
     display: flex;
+
     align-items: center;
-    gap: 30px;
+
+    gap: 25px;
+
+    margin-left: auto;
 }
 
 .nav-links a {
-    color: #f8fafc;
     text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-    transition: 0.3s;
+
+    color: #334155;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
     position: relative;
+
+    transition: 0.3s;
 }
 
-/* Underline Animation */
+.nav-links a:hover {
+    color: #2563eb;
+}
+
+
+/* Animated underline */
+
 .nav-links a::after {
     content: "";
+
     position: absolute;
+
     left: 0;
+
     bottom: -6px;
+
     width: 0;
+
     height: 2px;
-    background: #38bdf8;
+
+    background: #2563eb;
+
     transition: width 0.3s ease;
 }
 
@@ -58,24 +148,46 @@
     width: 100%;
 }
 
-.nav-links a:hover {
-    color: #38bdf8;
-}
 
-/* Mobile Menu */
+/* ===========================
+   MOBILE
+=========================== */
+
 @media (max-width: 768px) {
 
     .navbar {
-        flex-direction: column;
-        gap: 15px;
-        padding: 20px;
+        padding: 12px 15px;
+
+        flex-wrap: wrap;
+
+        gap: 12px;
+    }
+
+    .logo {
+        font-size: 19px;
+    }
+
+    .back-button {
+        padding: 8px 11px;
+    }
+
+    .back-button span {
+        display: none;
     }
 
     .nav-links {
-        flex-direction: column;
-        gap: 15px;
         width: 100%;
-        text-align: center;
+
+        justify-content: center;
+
+        gap: 15px;
+
+        margin-left: 0;
+
+        padding-top: 5px;
     }
 
+    .nav-links a {
+        font-size: 14px;
+    }
 }
