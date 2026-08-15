@@ -18,8 +18,12 @@ function Footer() {
 
       <div className="footer-container">
 
-        {/* Company */}
+        {/* =========================
+            COMPANY
+        ========================== */}
+
         <div className="footer-section">
+
           <h2>Ramon's Marketplace</h2>
 
           <p>
@@ -28,33 +32,55 @@ function Footer() {
             painting, moving, repairs and many other services at affordable
             prices.
           </p>
+
         </div>
 
-        {/* Quick Links */}
+
+        {/* =========================
+            QUICK LINKS
+        ========================== */}
+
         <div className="footer-section">
+
           <h3>Quick Links</h3>
 
           <ul>
+
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/">
+                Home
+              </Link>
             </li>
 
             <li>
-              <Link to="/services">Services</Link>
+              <Link to="/services">
+                Services
+              </Link>
             </li>
 
             <li>
-              <Link to="/register">Register</Link>
+              <Link to="/register">
+                Register
+              </Link>
             </li>
 
             <li>
-              <Link to="/login">Login</Link>
+              <Link to="/login">
+                Login
+              </Link>
             </li>
+
           </ul>
+
         </div>
 
-        {/* Contact */}
+
+        {/* =========================
+            CONTACT
+        ========================== */}
+
         <div className="footer-section">
+
           <h3>Contact Us</h3>
 
           <p>
@@ -67,6 +93,8 @@ function Footer() {
             +254 700 123 456
           </p>
 
+          
+
           <p>
             <FaEnvelope className="footer-icon" />
             info@ramonsmarketplace.com
@@ -76,57 +104,113 @@ function Footer() {
             <FaClock className="footer-icon" />
             Mon - Sat: 8:00 AM - 6:00 PM
           </p>
+
         </div>
 
-        {/* Social Media */}
+
+        {/* =========================
+            SOCIAL MEDIA
+        ========================== */}
+
         <div className="footer-section">
+
           <h3>Follow Us</h3>
 
           <div className="social-icons">
 
+            {/* Facebook */}
+
             <a
               href="https://facebook.com"
+              className="facebook"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Facebook"
             >
+
               <FaFacebook />
-              <span>Facebook</span>
+
+              <span>
+                Facebook
+              </span>
+
             </a>
+
+
+            {/* Instagram */}
 
             <a
               href="https://instagram.com"
+              className="instagram"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Instagram"
             >
+
               <FaInstagram />
-              <span>Instagram</span>
+
+              <span>
+                Instagram
+              </span>
+
             </a>
+
+
+            {/* X / Twitter */}
 
             <a
               href="https://x.com"
+              className="twitter"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="X / Twitter"
             >
+
               <FaXTwitter />
-              <span>X (Twitter)</span>
+
+              <span>
+                X (Twitter)
+              </span>
+
             </a>
+
+
+            {/* LinkedIn */}
 
             <a
               href="https://linkedin.com"
+              className="linkedin"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="LinkedIn"
             >
+
               <FaLinkedin />
-              <span>LinkedIn</span>
+
+              <span>
+                LinkedIn
+              </span>
+
             </a>
 
           </div>
+
         </div>
 
       </div>
 
+
+      {/* =========================
+          FOOTER BOTTOM
+      ========================== */}
+
       <div className="footer-bottom">
-        © {new Date().getFullYear()} Ramon's Service Marketplace. All Rights Reserved.
+
+        <p>
+          © {new Date().getFullYear()} Ramon's Service Marketplace.
+          All Rights Reserved.
+        </p>
+
       </div>
 
     </footer>

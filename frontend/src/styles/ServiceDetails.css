@@ -1,58 +1,780 @@
-.service-details{
-    max-width:1200px;
-    margin:auto;
-    padding:40px;
+/* =========================================================
+   SERVICE DETAILS PAGE
+   Ramon's Service Marketplace
+========================================================= */
+
+.service-details {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 100vh;
+
+  margin: 0 auto;
+  padding: 35px 25px 80px;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(219, 234, 254, 0.65),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(224, 231, 255, 0.65),
+      transparent 30%
+    );
+
+  box-sizing: border-box;
+
+  animation: pageAppear 0.6s ease;
 }
 
-.service-details h1{
-    color:#0F766E;
-    margin-bottom:10px;
+
+/* =========================================
+   BACK BUTTON
+========================================= */
+
+.back-button {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  margin-bottom: 35px;
+
+  padding: 12px 20px;
+
+  /* Visible background */
+  background: #284e8c;
+
+  /* Stronger border */
+  border: 2px solid #2563eb;
+
+  border-radius: 12px;
+
+  /* Dark text */
+  color: #1d4ed8;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 5px 15px rgba(37, 99, 235, 0.15);
+
+  transition:
+    all 0.25s ease;
 }
 
-.service-description{
-    color:#666;
-    margin-bottom:40px;
-    font-size:18px;
+
+/* Hover */
+
+.back-button:hover {
+  background: #2563eb;
+
+  color: white;
+
+  transform: translateX(-5px);
+
+  box-shadow:
+    0 10px 25px rgba(37, 99, 235, 0.25);
 }
 
-.categories-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:25px;
+
+/* Click */
+
+.back-button:active {
+  transform:
+    translateX(-2px)
+    scale(0.97);
 }
 
-.category-card{
-    background:white;
-    padding:25px;
-    border-radius:12px;
-    box-shadow:0 5px 15px rgba(0,0,0,.1);
-    transition:.3s;
+
+/* Keyboard focus */
+
+.back-button:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.3);
+
+  outline-offset: 3px;
 }
 
-.category-card:hover{
-    transform:translateY(-5px);
+/* =========================================================
+   SERVICE HEADER
+========================================================= */
+
+.service-header {
+  text-align: center;
+
+  max-width: 800px;
+
+  margin: 0 auto 55px;
+
+  animation: headerAppear 0.7s ease;
 }
 
-.category-card h3{
-    color:#0F766E;
+
+/* =========================================================
+   MAIN SERVICE ICON
+========================================================= */
+
+.service-main-icon {
+  width: 100px;
+  height: 100px;
+
+  margin: 0 auto 22px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eff6ff,
+      #eef2ff
+    );
+
+  font-size: 52px;
+
+  box-shadow:
+    0 12px 30px rgba(37, 99, 235, 0.12);
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
 }
 
-.category-card h2{
-    color:#16A34A;
+.service-main-icon:hover {
+  transform:
+    translateY(-8px)
+    rotate(-3deg)
+    scale(1.05);
+
+  box-shadow:
+    0 18px 40px rgba(37, 99, 235, 0.2);
 }
 
-.category-card button{
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    border:none;
-    background:#0F766E;
-    color:white;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:16px;
+
+/* =========================================================
+   SERVICE TITLE
+========================================================= */
+
+.service-header h1 {
+  margin: 0 0 15px;
+
+  color: #0f172a;
+
+  font-size: clamp(30px, 5vw, 46px);
+
+  font-weight: 800;
+
+  letter-spacing: -1px;
 }
 
-.category-card button:hover{
-    background:#115E59;
+
+/* =========================================================
+   SERVICE DESCRIPTION
+========================================================= */
+
+.service-header p {
+  max-width: 700px;
+
+  margin: 0 auto;
+
+  color: #64748b;
+
+  font-size: 17px;
+
+  line-height: 1.8;
+}
+
+
+/* =========================================================
+   CATEGORY LIST
+========================================================= */
+
+.category-list {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(260px, 1fr)
+    );
+
+  gap: 28px;
+
+  width: 100%;
+}
+
+
+/* =========================================================
+   CATEGORY CARD
+========================================================= */
+
+.category-card {
+  position: relative;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  min-height: 270px;
+
+  padding: 30px;
+
+  background:
+    rgba(255, 255, 255, 0.95);
+
+  border:
+    1px solid rgba(226, 232, 240, 0.9);
+
+  border-radius: 22px;
+
+  box-shadow:
+    0 8px 25px rgba(15, 23, 42, 0.07);
+
+  overflow: hidden;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+
+/* =========================================================
+   CARD DECORATION
+========================================================= */
+
+.category-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 5px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #2563eb,
+      #4f46e5,
+      #38bdf8
+    );
+
+  transform:
+    scaleX(0);
+
+  transform-origin: left;
+
+  transition:
+    transform 0.35s ease;
+}
+
+
+.category-card:hover::before {
+  transform:
+    scaleX(1);
+}
+
+
+/* =========================================================
+   CARD HOVER
+========================================================= */
+
+.category-card:hover {
+  transform:
+    translateY(-9px);
+
+  border-color:
+    #bfdbfe;
+
+  box-shadow:
+    0 20px 45px rgba(15, 23, 42, 0.12);
+}
+
+
+/* =========================================================
+   CATEGORY ICON
+========================================================= */
+
+.category-icon {
+  width: 55px;
+  height: 55px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 20px;
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eff6ff,
+      #eef2ff
+    );
+
+  font-size: 25px;
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
+}
+
+
+.category-card:hover .category-icon {
+  transform:
+    rotate(8deg)
+    scale(1.08);
+
+  background:
+    linear-gradient(
+      135deg,
+      #dbeafe,
+      #e0e7ff
+    );
+}
+
+
+/* =========================================================
+   CATEGORY TITLE
+========================================================= */
+
+.category-card h2 {
+  margin: 0 0 12px;
+
+  color: #1e293b;
+
+  font-size: 22px;
+
+  font-weight: 750;
+
+  transition:
+    color 0.25s ease;
+}
+
+
+.category-card:hover h2 {
+  color: #2563eb;
+}
+
+
+/* =========================================================
+   CATEGORY PRICE
+========================================================= */
+
+.category-card p {
+  margin: 0 0 25px;
+
+  color: #64748b;
+
+  font-size: 15px;
+
+  line-height: 1.6;
+}
+
+
+.category-card p strong {
+  color: #16a34a;
+
+  font-size: 17px;
+}
+
+
+/* =========================================================
+   BOOK BUTTON
+========================================================= */
+
+.book-button {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: auto;
+
+  width: 100%;
+
+  padding: 13px 20px;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #4f46e5
+    );
+
+  color: white;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  text-decoration: none;
+
+  box-shadow:
+    0 8px 18px rgba(37, 99, 235, 0.2);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+
+.book-button:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #1d4ed8,
+      #4338ca
+    );
+
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+    0 12px 25px rgba(37, 99, 235, 0.3);
+}
+
+
+.book-button:active {
+  transform:
+    translateY(0)
+    scale(0.98);
+}
+
+
+/* =========================================================
+   SERVICE NOT FOUND
+========================================================= */
+
+.service-error {
+  min-height: 60vh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px;
+
+  text-align: center;
+
+  background:
+    #f8fafc;
+
+  animation:
+    pageAppear 0.5s ease;
+}
+
+
+.service-error h2 {
+  margin-bottom: 20px;
+
+  color: #0f172a;
+
+  font-size: 28px;
+}
+
+
+.service-error a {
+  display: inline-block;
+
+  padding: 12px 22px;
+
+  border-radius: 12px;
+
+  background: #2563eb;
+
+  color: white;
+
+  font-weight: 700;
+
+  text-decoration: none;
+
+  box-shadow:
+    0 8px 18px rgba(37, 99, 235, 0.2);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+.service-error a:hover {
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+    0 12px 25px rgba(37, 99, 235, 0.3);
+}
+
+
+/* =========================================================
+   PAGE ANIMATION
+========================================================= */
+
+@keyframes pageAppear {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =========================================================
+   HEADER ANIMATION
+========================================================= */
+
+@keyframes headerAppear {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 800px) {
+
+  .service-details {
+    padding:
+      30px 20px 60px;
+  }
+
+
+  .service-header {
+    margin-bottom: 40px;
+  }
+
+
+  .service-main-icon {
+    width: 85px;
+    height: 85px;
+
+    font-size: 44px;
+
+    border-radius: 23px;
+  }
+
+
+  .category-list {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+
+    gap: 20px;
+  }
+
+
+  .category-card {
+    padding: 25px;
+
+    min-height: 250px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .service-details {
+    padding:
+      25px 15px 50px;
+  }
+
+
+  .back-button {
+    margin-bottom: 25px;
+
+    padding:
+      10px 16px;
+
+    font-size: 14px;
+  }
+
+
+  .service-header {
+    margin-bottom: 35px;
+  }
+
+
+  .service-main-icon {
+    width: 75px;
+    height: 75px;
+
+    font-size: 38px;
+
+    border-radius: 20px;
+
+    margin-bottom: 18px;
+  }
+
+
+  .service-header h1 {
+    font-size: 30px;
+
+    letter-spacing:
+      -0.5px;
+  }
+
+
+  .service-header p {
+    font-size: 15px;
+
+    line-height: 1.7;
+  }
+
+
+  .category-list {
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+  }
+
+
+  .category-card {
+    min-height: auto;
+
+    padding: 24px;
+
+    border-radius: 18px;
+  }
+
+
+  .category-card h2 {
+    font-size: 20px;
+  }
+
+
+  .book-button {
+    padding:
+      14px 18px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .service-details {
+    padding:
+      20px 12px 40px;
+  }
+
+
+  .service-header h1 {
+    font-size: 27px;
+  }
+
+
+  .category-card {
+    padding: 20px;
+  }
+
+
+  .category-icon {
+    width: 50px;
+    height: 50px;
+
+    font-size: 22px;
+  }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.back-button:focus-visible,
+.book-button:focus-visible,
+.service-error a:focus-visible {
+
+  outline:
+    3px solid rgba(37, 99, 235, 0.35);
+
+  outline-offset:
+    3px;
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .service-details,
+  .service-header,
+  .category-card,
+  .service-main-icon,
+  .back-button,
+  .book-button,
+  .category-icon,
+  .service-error a {
+
+    animation: none;
+
+    transition: none;
+  }
+
 }

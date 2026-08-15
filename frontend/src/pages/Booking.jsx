@@ -1,196 +1,171 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import services from "../data/services";
 import "../styles/Booking.css";
 
+
+// ======================================================
+// HOUSE PRICES
+// ======================================================
+
+const HOUSE_PRICES = {
+  Bedsitter: {
+    "Standard Cleaning": 1500,
+    "Deep Cleaning": 2200,
+    "Move In / Move Out": 2800,
+    "Post Construction": 3500,
+    Fumigation: 3000,
+  },
+
+  "1 Bedroom": {
+    "Standard Cleaning": 2000,
+    "Deep Cleaning": 3000,
+    "Move In / Move Out": 3800,
+    "Post Construction": 4500,
+    Fumigation: 3500,
+  },
+
+  "2 Bedroom": {
+    "Standard Cleaning": 2500,
+    "Deep Cleaning": 3750,
+    "Move In / Move Out": 4500,
+    "Post Construction": 5500,
+    Fumigation: 4500,
+  },
+
+  "3 Bedroom": {
+    "Standard Cleaning": 3000,
+    "Deep Cleaning": 4500,
+    "Move In / Move Out": 5400,
+    "Post Construction": 6500,
+    Fumigation: 5500,
+  },
+
+  "4 Bedroom": {
+    "Standard Cleaning": 4000,
+    "Deep Cleaning": 6000,
+    "Move In / Move Out": 7200,
+    "Post Construction": 8000,
+    Fumigation: 6500,
+  },
+
+  "5+ Bedroom": {
+    "Standard Cleaning": 5000,
+    "Deep Cleaning": 7500,
+    "Move In / Move Out": 9000,
+    "Post Construction": 10000,
+    Fumigation: 8000,
+  },
+};
+
+
+// ======================================================
+// FREQUENCY DISCOUNTS
+// ======================================================
+
+const FREQUENCY_DISCOUNTS = {
+  "One-Time": 0,
+  Weekly: 0.10,
+  "Bi-Weekly": 0.05,
+  "Monthly Subscription": 0.15,
+};
+
+
+// ======================================================
+// CLEANING MULTIPLIERS
+// ======================================================
+
+const CLEANING_MULTIPLIERS = {
+  "Standard Cleaning": 1,
+  "Deep Cleaning": 1.5,
+  "Move In / Move Out": 1.8,
+  "Post Construction": 2,
+  Fumigation: 2.5,
+};
+
+
+// ======================================================
+// EXTRAS
+// ======================================================
+
+const EXTRAS = [
+  {
+    name: "Inside Fridge",
+    price: 500,
+  },
+
+  {
+    name: "Inside Oven",
+    price: 400,
+  },
+
+  {
+    name: "Balcony Cleaning",
+    price: 300,
+  },
+
+  {
+    name: "Laundry",
+    price: 700,
+  },
+
+  {
+    name: "Ironing",
+    price: 500,
+  },
+
+  {
+    name: "Pest Control / Fumigation",
+    price: 2500,
+  },
+];
+
+
+// ======================================================
+// TIME SLOTS
+// ======================================================
+
+const TIME_SLOTS = [
+  "8:00 AM - 10:00 AM",
+  "10:00 AM - 12:00 PM",
+  "12:00 PM - 2:00 PM",
+  "2:00 PM - 4:00 PM",
+  "4:00 PM - 6:00 PM",
+];
+
+
+// ======================================================
+// BOOKING COMPONENT
+// ======================================================
+
 function Booking() {
+
   const navigate = useNavigate();
+
   const { serviceId, categoryId } = useParams();
 
-  // =========================================================
-  // SERVICE INFORMATION
-  // =========================================================
 
-  const serviceNames = {
-    1: "Cleaning",
-    2: "Laundry",
-    3: "Plumbing",
-    4: "Electrical",
-    5: "Gardening",
-    6: "Painting",
-    7: "Moving",
-  };
+  // ====================================================
+  // FIND SERVICE AND CATEGORY
+  // ====================================================
 
-  const serviceName =
-    serviceNames[Number(serviceId)] || "Service";
+  const service = services.find(
+    (item) => String(item.id) === String(serviceId)
+  );
 
-  // =========================================================
-  // CLEANING PRICES
-  // =========================================================
+  const category = service?.categories?.find(
+    (item) => String(item.id) === String(categoryId)
+  );
 
-  const cleaningPricing = {
-    Bedsitter: {
-      "General Cleaning": 1500,
-      "Deep Cleaning": 2200,
-      "Move In / Move Out": 2800,
-      "Post Construction": 3500,
-      Fumigation: 3000,
-    },
 
-    "1 Bedroom": {
-      "General Cleaning": 2000,
-      "Deep Cleaning": 3000,
-      "Move In / Move Out": 3800,
-      "Post Construction": 4500,
-      Fumigation: 3500,
-    },
-
-    "2 Bedroom": {
-      "General Cleaning": 3000,
-      "Deep Cleaning": 4200,
-      "Move In / Move Out": 5200,
-      "Post Construction": 6500,
-      Fumigation: 4500,
-    },
-
-    "3 Bedroom": {
-      "General Cleaning": 4000,
-      "Deep Cleaning": 5500,
-      "Move In / Move Out": 6800,
-      "Post Construction": 8200,
-      Fumigation: 5500,
-    },
-
-    "4 Bedroom": {
-      "General Cleaning": 5500,
-      "Deep Cleaning": 7200,
-      "Move In / Move Out": 8800,
-      "Post Construction": 10500,
-      Fumigation: 7000,
-    },
-
-    "5 Bedroom": {
-      "General Cleaning": 7000,
-      "Deep Cleaning": 9000,
-      "Move In / Move Out": 11000,
-      "Post Construction": 13000,
-      Fumigation: 8500,
-    },
-
-    "5+ Bedroom": {
-      "General Cleaning": 8500,
-      "Deep Cleaning": 11000,
-      "Move In / Move Out": 13500,
-      "Post Construction": 16000,
-      Fumigation: 10000,
-    },
-  };
-
-  // =========================================================
-  // OTHER SERVICE PRICES
-  // =========================================================
-
-  const otherServicePricing = {
-    Laundry: {
-      "Basic Laundry": 800,
-      "Wash & Fold": 1200,
-      "Wash & Iron": 1600,
-      "Full Laundry Service": 2000,
-    },
-
-    Plumbing: {
-      "General Plumbing": 1500,
-      "Pipe Repair": 2500,
-      "Leak Repair": 2000,
-      "Drain Cleaning": 1800,
-      "Emergency Plumbing": 3500,
-    },
-
-    Electrical: {
-      "General Electrical": 1500,
-      "Socket Installation": 1200,
-      "Lighting Installation": 1500,
-      "Electrical Repair": 2500,
-      "Emergency Electrical": 3500,
-    },
-
-    Gardening: {
-      "General Gardening": 1500,
-      "Lawn Maintenance": 2000,
-      "Tree Trimming": 2500,
-      "Garden Cleanup": 1800,
-    },
-
-    Painting: {
-      "Single Room": 3500,
-      "Two Rooms": 6000,
-      "Three Rooms": 8500,
-      "Full House": 15000,
-    },
-
-    Moving: {
-      "Small Move": 5000,
-      "Medium Move": 8000,
-      "Large Move": 12000,
-      "Full House Move": 18000,
-    },
-  };
-
-  // =========================================================
-  // CLEANING EXTRAS
-  // =========================================================
-
-  const cleaningExtras = [
-    {
-      name: "Inside Fridge",
-      price: 500,
-    },
-    {
-      name: "Inside Oven",
-      price: 400,
-    },
-    {
-      name: "Balcony Cleaning",
-      price: 300,
-    },
-    {
-      name: "Laundry",
-      price: 700,
-    },
-    {
-      name: "Ironing",
-      price: 500,
-    },
-    {
-      name: "Pest Control / Fumigation",
-      price: 2500,
-    },
-  ];
-
-  // =========================================================
-  // FREQUENCY DISCOUNTS
-  // =========================================================
-
-  const frequencyDiscount = {
-    "One-Time": 0,
-    Weekly: 0.10,
-    "Bi-Weekly": 0.05,
-    "Monthly Subscription": 0.15,
-  };
-
-  // =========================================================
+  // ====================================================
   // FORM STATE
-  // =========================================================
+  // ====================================================
 
-  const [booking, setBooking] = useState({
-    serviceId: serviceId || "",
-    categoryId: categoryId || "",
-    service: serviceName,
-
-    houseSize: "",
-    cleaningType: "",
-    serviceType: "",
-
-    frequency: "",
+  const [form, setForm] = useState({
+    houseSize: "Bedsitter",
+    cleaningType: "Standard Cleaning",
+    frequency: "One-Time",
 
     date: "",
     time: "",
@@ -205,752 +180,920 @@ function Booking() {
     extras: [],
   });
 
-  const [error, setError] = useState("");
 
-  // =========================================================
-  // HANDLE INPUT
-  // =========================================================
+  // ====================================================
+  // FORM CHANGE
+  // ====================================================
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
 
-    setBooking((previous) => ({
+    const {
+      name,
+      value,
+    } = e.target;
+
+
+    setForm((previous) => ({
       ...previous,
       [name]: value,
     }));
-
-    setError("");
   };
 
-  // =========================================================
-  // HANDLE EXTRAS
-  // =========================================================
 
-  const handleExtra = (extra) => {
-    setBooking((previous) => {
-      const exists = previous.extras.some(
-        (item) => item.name === extra.name
-      );
+  // ====================================================
+  // EXTRA CHECKBOX
+  // ====================================================
 
-      if (exists) {
+  const handleExtraChange = (extra) => {
+
+    setForm((previous) => {
+
+      const alreadySelected =
+        previous.extras.some(
+          (item) => item.name === extra.name
+        );
+
+
+      if (alreadySelected) {
+
         return {
           ...previous,
-          extras: previous.extras.filter(
-            (item) => item.name !== extra.name
-          ),
+
+          extras:
+            previous.extras.filter(
+              (item) =>
+                item.name !== extra.name
+            ),
         };
       }
 
+
       return {
         ...previous,
-        extras: [...previous.extras, extra],
+
+        extras: [
+          ...previous.extras,
+          extra,
+        ],
       };
     });
   };
 
-  // =========================================================
-  // CLEANING PRICE
-  // =========================================================
 
-  const cleaningBasePrice =
-    cleaningPricing[booking.houseSize]?.[
-      booking.cleaningType
-    ] || 0;
+  // ====================================================
+  // AVAILABLE EXTRAS
+  // ====================================================
 
-  // =========================================================
-  // OTHER SERVICE PRICE
-  // =========================================================
+  const availableExtras = EXTRAS;
 
-  const otherServiceBasePrice =
-    otherServicePricing[serviceName]?.[
-      booking.serviceType
-    ] || 0;
 
-  // =========================================================
-  // BASE PRICE
-  // =========================================================
+  // ====================================================
+  // PRICE CALCULATION
+  // ====================================================
 
-  const basePrice =
-    serviceName === "Cleaning"
-      ? cleaningBasePrice
-      : otherServiceBasePrice;
+  const priceSummary = useMemo(() => {
 
-  // =========================================================
-  // FREQUENCY DISCOUNT
-  // =========================================================
+    const housePrices =
+      HOUSE_PRICES[form.houseSize] || {};
 
-  const discountRate =
-    frequencyDiscount[booking.frequency] || 0;
 
-  const discountAmount = Math.round(
-    basePrice * discountRate
-  );
+    const basePrice =
+      housePrices[form.cleaningType] || 0;
 
-  const discountedPrice =
-    basePrice - discountAmount;
 
-  // =========================================================
-  // EXTRAS
-  // =========================================================
+    const multiplier =
+      CLEANING_MULTIPLIERS[
+        form.cleaningType
+      ] || 1;
 
-  const extrasTotal = booking.extras.reduce(
-    (sum, item) => sum + item.price,
-    0
-  );
 
-  // =========================================================
-  // FINAL TOTAL
-  // =========================================================
+    /*
+      We use the house-size price directly because
+      HOUSE_PRICES already contains the prices for
+      each cleaning type.
 
-  const total = discountedPrice + extrasTotal;
+      The multiplier is retained for compatibility
+      with your original pricing structure.
+    */
 
-  // =========================================================
-  // VALIDATION
-  // =========================================================
+    const cleaningPrice =
+      basePrice > 0
+        ? basePrice
+        : basePrice * multiplier;
 
-  const validateBooking = () => {
-    if (!booking.date) {
-      setError("Please select a cleaning/service date.");
-      return false;
-    }
 
-    if (!booking.time) {
-      setError("Please select your preferred time.");
-      return false;
-    }
+    const discountRate =
+      FREQUENCY_DISCOUNTS[
+        form.frequency
+      ] || 0;
 
-    if (!booking.address.trim()) {
-      setError("Please enter your street address.");
-      return false;
-    }
 
-    if (!booking.city.trim()) {
-      setError("Please enter your city.");
-      return false;
-    }
+    const discountAmount =
+      cleaningPrice * discountRate;
 
-    if (!booking.estate.trim()) {
-      setError("Please enter your estate or area.");
-      return false;
-    }
 
-    if (!booking.houseNumber.trim()) {
-      setError("Please enter your house number.");
-      return false;
-    }
+    const discountedPrice =
+      cleaningPrice - discountAmount;
 
-    if (serviceName === "Cleaning") {
-      if (!booking.houseSize) {
-        setError("Please select your house size.");
-        return false;
-      }
 
-      if (!booking.cleaningType) {
-        setError("Please select the cleaning type.");
-        return false;
-      }
+    const extrasTotal =
+      form.extras.reduce(
+        (total, extra) =>
+          total + Number(extra.price || 0),
+        0
+      );
 
-      if (!booking.frequency) {
-        setError("Please select the cleaning frequency.");
-        return false;
-      }
-    } else {
-      if (!booking.serviceType) {
-        setError(
-          `Please select the type of ${serviceName.toLowerCase()} service.`
-        );
-        return false;
-      }
-    }
 
-    return true;
-  };
+    const total =
+      discountedPrice + extrasTotal;
 
-  // =========================================================
-  // PROCEED TO CHECKOUT
-  // =========================================================
 
-  const proceedToCheckout = () => {
-    if (!validateBooking()) {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
+    return {
+      basePrice,
+      multiplier,
+      cleaningPrice,
+      discountRate,
+      discountAmount,
+      discountedPrice,
+      extrasTotal,
+      total,
+    };
+
+  }, [
+    form.houseSize,
+    form.cleaningType,
+    form.frequency,
+    form.extras,
+  ]);
+
+
+  // ====================================================
+  // SUBMIT BOOKING
+  // ====================================================
+
+  const handleSubmit = (e) => {
+
+    e.preventDefault();
+
+
+    if (
+      !form.date ||
+      !form.time ||
+      !form.address ||
+      !form.city
+    ) {
+
+      alert(
+        "Please complete all required fields marked with *."
+      );
 
       return;
     }
 
+
+    const booking = {
+
+      serviceId,
+
+      categoryId,
+
+      serviceName:
+        service?.name || "",
+
+      categoryName:
+        category?.name || "",
+
+      houseSize:
+        form.houseSize,
+
+      cleaningType:
+        form.cleaningType,
+
+      frequency:
+        form.frequency,
+
+      date:
+        form.date,
+
+      time:
+        form.time,
+
+      address:
+        form.address,
+
+      city:
+        form.city,
+
+      estate:
+        form.estate,
+
+      houseNumber:
+        form.houseNumber,
+
+      notes:
+        form.notes,
+
+      extras:
+        form.extras,
+
+      cleaningPrice:
+        priceSummary.cleaningPrice,
+
+      discount:
+        priceSummary.discountAmount,
+
+      extrasTotal:
+        priceSummary.extrasTotal,
+
+      total:
+        priceSummary.total,
+    };
+
+
     navigate("/checkout", {
+
       state: {
+
         booking,
-        total,
-        basePrice,
-        discountAmount,
-        extrasTotal,
-        serviceName,
+
+        total:
+          priceSummary.total,
+
       },
+
     });
+
   };
 
-  // =========================================================
-  // BACK BUTTON
-  // =========================================================
 
-  const goBack = () => {
-    navigate(-1);
-  };
+  // ====================================================
+  // INVALID SERVICE/CATEGORY
+  // ====================================================
 
-  // =========================================================
-  // RENDER
-  // =========================================================
+  if (!service || !category) {
 
-  return (
-    <div className="booking-container">
+    return (
 
-     
+      <div className="booking-error">
 
-      {/* HEADER */}
-
-      <div className="booking-header">
-
-        <span className="booking-icon">
-          🛠️
-        </span>
-
-        <h1>
-          Book {serviceName}
-        </h1>
+        <h2>
+          Booking information not found
+        </h2>
 
         <p>
-          Complete the form below to schedule your service.
+          The service you are trying to book
+          could not be found.
         </p>
 
-      </div>
-
-      {/* ERROR */}
-
-      {error && (
-        <div className="booking-error">
-          ⚠️ {error}
-        </div>
-      )}
-
-      {/* =====================================================
-          CLEANING SECTION
-      ===================================================== */}
-
-      {serviceName === "Cleaning" && (
-        <>
-          <div className="form-section">
-
-            <h2>🏠 Cleaning Details</h2>
-
-            {/* HOUSE SIZE */}
-
-            <label>
-              House Size <span className="required">*</span>
-            </label>
-
-            <select
-              name="houseSize"
-              value={booking.houseSize}
-              onChange={handleChange}
-            >
-              <option value="">
-                Select House Size
-              </option>
-
-              {Object.keys(cleaningPricing).map(
-                (size) => (
-                  <option key={size} value={size}>
-                    {size}
-                  </option>
-                )
-              )}
-            </select>
-
-            {/* CLEANING TYPE */}
-
-            <label>
-              Cleaning Type{" "}
-              <span className="required">*</span>
-            </label>
-
-            <select
-              name="cleaningType"
-              value={booking.cleaningType}
-              onChange={handleChange}
-            >
-              <option value="">
-                Select Cleaning Type
-              </option>
-
-              <option>
-                General Cleaning
-              </option>
-
-              <option>
-                Deep Cleaning
-              </option>
-
-              <option>
-                Move In / Move Out
-              </option>
-
-              <option>
-                Post Construction
-              </option>
-
-              <option>
-                Fumigation
-              </option>
-            </select>
-
-            {/* FREQUENCY */}
-
-            <label>
-              Frequency{" "}
-              <span className="required">*</span>
-            </label>
-
-            <select
-              name="frequency"
-              value={booking.frequency}
-              onChange={handleChange}
-            >
-              <option value="">
-                Select Frequency
-              </option>
-
-              <option value="One-Time">
-                One-Time
-              </option>
-
-              <option value="Weekly">
-                Weekly — 10% Discount
-              </option>
-
-              <option value="Bi-Weekly">
-                Bi-Weekly — 5% Discount
-              </option>
-
-              <option value="Monthly Subscription">
-                Monthly Subscription — 15% Discount
-              </option>
-            </select>
-
-          </div>
-
-          {/* CLEANING EXTRAS */}
-
-          <div className="form-section">
-
-            <h2>✨ Optional Extras</h2>
-
-            {cleaningExtras.map((extra) => (
-              <label
-                className="extra-option"
-                key={extra.name}
-              >
-
-                <input
-                  type="checkbox"
-                  checked={booking.extras.some(
-                    (item) =>
-                      item.name === extra.name
-                  )}
-                  onChange={() =>
-                    handleExtra(extra)
-                  }
-                />
-
-                <span>
-                  {extra.name}
-                </span>
-
-                <strong>
-                  + Ksh {extra.price.toLocaleString()}
-                </strong>
-
-              </label>
-            ))}
-
-          </div>
-        </>
-      )}
-
-      {/* =====================================================
-          OTHER SERVICES
-      ===================================================== */}
-
-      {serviceName !== "Cleaning" && (
-        <div className="form-section">
-
-          <h2>
-            🔧 {serviceName} Details
-          </h2>
-
-          <label>
-            Service Type{" "}
-            <span className="required">*</span>
-          </label>
-
-          <select
-            name="serviceType"
-            value={booking.serviceType}
-            onChange={handleChange}
-          >
-            <option value="">
-              Select Service Type
-            </option>
-
-            {Object.keys(
-              otherServicePricing[serviceName] || {}
-            ).map((type) => (
-              <option
-                key={type}
-                value={type}
-              >
-                {type} — Ksh{" "}
-                {otherServicePricing[
-                  serviceName
-                ][type].toLocaleString()}
-              </option>
-            ))}
-          </select>
-
-        </div>
-      )}
-
-      {/* =====================================================
-          DATE & TIME
-      ===================================================== */}
-
-      <div className="form-section">
-
-        <h2>📅 Schedule</h2>
-
-        <label>
-          Service Date{" "}
-          <span className="required">*</span>
-        </label>
-
-        <input
-          type="date"
-          name="date"
-          value={booking.date}
-          onChange={handleChange}
-          min={
-            new Date()
-              .toISOString()
-              .split("T")[0]
+        <button
+          type="button"
+          onClick={() =>
+            navigate("/services")
           }
-        />
-
-        <label>
-          Preferred Time{" "}
-          <span className="required">*</span>
-        </label>
-
-        <select
-          name="time"
-          value={booking.time}
-          onChange={handleChange}
         >
-          <option value="">
-            Select Time
-          </option>
-
-          <option>
-            8:00 AM - 10:00 AM
-          </option>
-
-          <option>
-            10:00 AM - 12:00 PM
-          </option>
-
-          <option>
-            12:00 PM - 2:00 PM
-          </option>
-
-          <option>
-            2:00 PM - 4:00 PM
-          </option>
-
-          <option>
-            4:00 PM - 6:00 PM
-          </option>
-
-        </select>
+          ← Back to Services
+        </button>
 
       </div>
 
-      {/* =====================================================
-          ADDRESS
-      ===================================================== */}
+    );
+  }
 
-      <div className="form-section">
 
-        <h2>📍 Service Location</h2>
+  // ====================================================
+  // RENDER
+  // ====================================================
 
-        <label>
-          Street Address{" "}
-          <span className="required">*</span>
-        </label>
+  return (
 
-        <input
-          type="text"
-          name="address"
-          placeholder="e.g. Mombasa Road"
-          value={booking.address}
-          onChange={handleChange}
-        />
+    <div className="booking-page">
 
-        <label>
-          City{" "}
-          <span className="required">*</span>
-        </label>
+      <div className="booking-card">
 
-        <input
-          type="text"
-          name="city"
-          placeholder="e.g. Nairobi"
-          value={booking.city}
-          onChange={handleChange}
-        />
 
-        <label>
-          Estate / Area{" "}
-          <span className="required">*</span>
-        </label>
+        {/* ==========================================
+            HEADER
+        ========================================== */}
 
-        <input
-          type="text"
-          name="estate"
-          placeholder="e.g. South B"
-          value={booking.estate}
-          onChange={handleChange}
-        />
+        <div className="booking-header">
 
-        <label>
-          House / Building Number{" "}
-          <span className="required">*</span>
-        </label>
+          
 
-        <input
-          type="text"
-          name="houseNumber"
-          placeholder="e.g. House 24"
-          value={booking.houseNumber}
-          onChange={handleChange}
-        />
 
-      </div>
+          <div>
 
-      {/* =====================================================
-          SPECIAL INSTRUCTIONS
-      ===================================================== */}
+            <span className="booking-badge">
+              {service.icon} {service.name}
+            </span>
 
-      <div className="form-section">
+            <h1>
+              Book {category.name}
+            </h1>
 
-        <h2>📝 Special Instructions</h2>
+            <p>
+              Schedule your service and
+              customize your booking.
+            </p>
 
-        <label>
-          Additional Notes
-        </label>
-
-        <textarea
-          name="notes"
-          placeholder="Tell the service provider anything important..."
-          value={booking.notes}
-          onChange={handleChange}
-        />
-
-      </div>
-
-      {/* =====================================================
-          PRICE SUMMARY
-      ===================================================== */}
-
-      <div className="price-summary">
-
-        <h2>💰 Price Summary</h2>
-
-        <div className="price-row">
-
-          <span>
-            Service
-          </span>
-
-          <strong>
-            {serviceName}
-          </strong>
+          </div>
 
         </div>
 
-        {serviceName === "Cleaning" ? (
-          <>
-            <div className="price-row">
 
-              <span>
-                House Size
+        <form
+          className="booking-form"
+          onSubmit={handleSubmit}
+        >
+
+
+          {/* ========================================
+              SERVICE INFORMATION
+          ======================================== */}
+
+          <section className="booking-section">
+
+            <div className="section-heading">
+
+              <span className="section-number">
+                1
               </span>
 
-              <strong>
-                {booking.houseSize ||
-                  "Not Selected"}
-              </strong>
+              <div>
+
+                <h2>
+                  Service Details
+                </h2>
+
+                <p>
+                  Choose the details for your service.
+                </p>
+
+              </div>
 
             </div>
 
-            <div className="price-row">
 
-              <span>
-                Cleaning Type
-              </span>
+            <div className="form-grid">
 
-              <strong>
-                {booking.cleaningType ||
-                  "Not Selected"}
-              </strong>
 
-            </div>
-          </>
-        ) : (
-          <div className="price-row">
+              {/* HOUSE SIZE */}
 
-            <span>
-              Service Type
-            </span>
+              <div className="form-group">
 
-            <strong>
-              {booking.serviceType ||
-                "Not Selected"}
-            </strong>
+                <label htmlFor="houseSize">
+                  House Size <span>*</span>
+                </label>
 
-          </div>
-        )}
-
-        <div className="price-row">
-
-          <span>
-            Base Price
-          </span>
-
-          <strong>
-            Ksh {basePrice.toLocaleString()}
-          </strong>
-
-        </div>
-
-        {serviceName === "Cleaning" &&
-          booking.frequency && (
-            <div className="price-row">
-
-              <span>
-                Frequency
-              </span>
-
-              <strong>
-                {booking.frequency}
-              </strong>
-
-            </div>
-          )}
-
-        {discountAmount > 0 && (
-          <div className="price-row discount">
-
-            <span>
-              Frequency Discount
-            </span>
-
-            <strong>
-              - Ksh{" "}
-              {discountAmount.toLocaleString()}
-            </strong>
-
-          </div>
-        )}
-
-        {booking.extras.length > 0 && (
-          <>
-            <h3>
-              Extras
-            </h3>
-
-            {booking.extras.map(
-              (extra) => (
-                <div
-                  className="price-row"
-                  key={extra.name}
+                <select
+                  id="houseSize"
+                  name="houseSize"
+                  value={form.houseSize}
+                  onChange={handleChange}
+                  required
                 >
 
-                  <span>
-                    {extra.name}
-                  </span>
+                  {Object.keys(HOUSE_PRICES).map(
+                    (size) => (
 
-                  <strong>
-                    + Ksh{" "}
-                    {extra.price.toLocaleString()}
-                  </strong>
+                      <option
+                        key={size}
+                        value={size}
+                      >
+                        {size}
+                      </option>
 
-                </div>
-              )
-            )}
+                    )
+                  )}
+
+                </select>
+
+              </div>
+
+
+              {/* CLEANING TYPE */}
+
+              <div className="form-group">
+
+                <label htmlFor="cleaningType">
+                  Cleaning Type <span>*</span>
+                </label>
+
+                <select
+                  id="cleaningType"
+                  name="cleaningType"
+                  value={form.cleaningType}
+                  onChange={handleChange}
+                  required
+                >
+
+                  {Object.keys(
+                    CLEANING_MULTIPLIERS
+                  ).map(
+                    (type) => (
+
+                      <option
+                        key={type}
+                        value={type}
+                      >
+                        {type}
+                      </option>
+
+                    )
+                  )}
+
+                </select>
+
+              </div>
+
+
+              {/* FREQUENCY */}
+
+              <div className="form-group">
+
+                <label htmlFor="frequency">
+                  Frequency <span>*</span>
+                </label>
+
+                <select
+                  id="frequency"
+                  name="frequency"
+                  value={form.frequency}
+                  onChange={handleChange}
+                  required
+                >
+
+                  {Object.entries(
+                    FREQUENCY_DISCOUNTS
+                  ).map(
+                    ([frequency, discount]) => (
+
+                      <option
+                        key={frequency}
+                        value={frequency}
+                      >
+
+                        {frequency}
+
+                        {discount > 0
+                          ? ` - ${discount * 100}% discount`
+                          : ""}
+
+                      </option>
+
+                    )
+                  )}
+
+                </select>
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          {/* ========================================
+              DATE AND TIME
+          ======================================== */}
+
+          <section className="booking-section">
+
+            <div className="section-heading">
+
+              <span className="section-number">
+                2
+              </span>
+
+              <div>
+
+                <h2>
+                  Date & Time
+                </h2>
+
+                <p>
+                  When would you like the service?
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div className="form-grid">
+
+
+              <div className="form-group">
+
+                <label htmlFor="date">
+                  Service Date <span>*</span>
+                </label>
+
+                <input
+                  id="date"
+                  type="date"
+                  name="date"
+                  value={form.date}
+                  min={
+                    new Date()
+                      .toISOString()
+                      .split("T")[0]
+                  }
+                  onChange={handleChange}
+                  required
+                />
+
+              </div>
+
+
+              <div className="form-group">
+
+                <label htmlFor="time">
+                  Preferred Time <span>*</span>
+                </label>
+
+                <select
+                  id="time"
+                  name="time"
+                  value={form.time}
+                  onChange={handleChange}
+                  required
+                >
+
+                  <option value="">
+                    Select a time
+                  </option>
+
+                  {TIME_SLOTS.map(
+                    (slot) => (
+
+                      <option
+                        key={slot}
+                        value={slot}
+                      >
+                        {slot}
+                      </option>
+
+                    )
+                  )}
+
+                </select>
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          {/* ========================================
+              LOCATION
+          ======================================== */}
+
+          <section className="booking-section">
+
+            <div className="section-heading">
+
+              <span className="section-number">
+                3
+              </span>
+
+              <div>
+
+                <h2>
+                  Service Location
+                </h2>
+
+                <p>
+                  Tell us where the service will
+                  take place.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div className="form-grid">
+
+
+              <div className="form-group full-width">
+
+                <label htmlFor="address">
+                  Address <span>*</span>
+                </label>
+
+                <input
+                  id="address"
+                  type="text"
+                  name="address"
+                  placeholder="Enter your street / building"
+                  value={form.address}
+                  onChange={handleChange}
+                  required
+                />
+
+              </div>
+
+
+              <div className="form-group">
+
+                <label htmlFor="city">
+                  City <span>*</span>
+                </label>
+
+                <input
+                  id="city"
+                  type="text"
+                  name="city"
+                  placeholder="e.g. Nairobi"
+                  value={form.city}
+                  onChange={handleChange}
+                  required
+                />
+
+              </div>
+
+
+              <div className="form-group">
+
+                <label htmlFor="estate">
+                  Estate
+                </label>
+
+                <input
+                  id="estate"
+                  type="text"
+                  name="estate"
+                  placeholder="e.g. Kilimani"
+                  value={form.estate}
+                  onChange={handleChange}
+                />
+
+              </div>
+
+
+              <div className="form-group">
+
+                <label htmlFor="houseNumber">
+                  House / Apartment Number
+                </label>
+
+                <input
+                  id="houseNumber"
+                  type="text"
+                  name="houseNumber"
+                  placeholder="e.g. A12"
+                  value={form.houseNumber}
+                  onChange={handleChange}
+                />
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          {/* ========================================
+              EXTRAS
+          ======================================== */}
+
+          <section className="booking-section">
+
+            <div className="section-heading">
+
+              <span className="section-number">
+                4
+              </span>
+
+              <div>
+
+                <h2>
+                  Extra Services
+                </h2>
+
+                <p>
+                  Customize your booking with
+                  additional services.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div className="extras-grid">
+
+              {availableExtras.map(
+                (extra) => {
+
+                  const selected =
+                    form.extras.some(
+                      (item) =>
+                        item.name === extra.name
+                    );
+
+
+                  return (
+
+                    <label
+                      key={extra.name}
+                      className={
+                        `extra-option ${
+                          selected
+                            ? "selected"
+                            : ""
+                        }`
+                      }
+                    >
+
+                      <input
+                        type="checkbox"
+                        checked={selected}
+                        onChange={() =>
+                          handleExtraChange(
+                            extra
+                          )
+                        }
+                      />
+
+
+                      <div className="extra-content">
+
+                        <strong>
+                          {extra.name}
+                        </strong>
+
+                        <span>
+                          + Ksh{" "}
+                          {extra.price.toLocaleString()}
+                        </span>
+
+                      </div>
+
+                    </label>
+
+                  );
+
+                }
+              )}
+
+            </div>
+
+          </section>
+
+
+          {/* ========================================
+              NOTES
+          ======================================== */}
+
+          <section className="booking-section">
+
+            <div className="section-heading">
+
+              <span className="section-number">
+                5
+              </span>
+
+              <div>
+
+                <h2>
+                  Special Instructions
+                </h2>
+
+                <p>
+                  Anything else we should know?
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div className="form-group">
+
+              <textarea
+                name="notes"
+                rows="5"
+                placeholder="Enter any special instructions..."
+                value={form.notes}
+                onChange={handleChange}
+              />
+
+            </div>
+
+          </section>
+
+
+          {/* ========================================
+              PRICE SUMMARY
+          ======================================== */}
+
+          <section className="price-summary">
+
+            <div className="price-summary-header">
+
+              <h2>
+                Price Summary
+              </h2>
+
+              <span>
+                💰
+              </span>
+
+            </div>
+
 
             <div className="price-row">
 
               <span>
-                Extras Total
+                Cleaning Service
               </span>
 
               <strong>
                 Ksh{" "}
-                {extrasTotal.toLocaleString()}
+                {priceSummary.cleaningPrice.toLocaleString()}
               </strong>
 
             </div>
-          </>
-        )}
 
-        <hr />
 
-        <div className="total-row">
+            {priceSummary.discountAmount > 0 && (
 
-          <span>
-            Total
-          </span>
+              <div className="price-row discount">
 
-          <strong>
-            Ksh {total.toLocaleString()}
-          </strong>
+                <span>
+                  Frequency Discount
+                </span>
 
-        </div>
+                <strong>
+                  - Ksh{" "}
+                  {priceSummary.discountAmount.toLocaleString()}
+                </strong>
+
+              </div>
+
+            )}
+
+
+            <div className="price-row">
+
+              <span>
+                Extra Services
+              </span>
+
+              <strong>
+                Ksh{" "}
+                {priceSummary.extrasTotal.toLocaleString()}
+              </strong>
+
+            </div>
+
+
+            <div className="price-divider" />
+
+
+            <div className="price-total">
+
+              <span>
+                Total
+              </span>
+
+              <strong>
+                Ksh{" "}
+                {priceSummary.total.toLocaleString()}
+              </strong>
+
+            </div>
+
+          </section>
+
+
+          {/* ========================================
+              SUBMIT
+          ======================================== */}
+
+          <button
+            type="submit"
+            className="booking-submit"
+          >
+            Proceed to Checkout →
+          </button>
+
+
+          <p className="required-note">
+            <span>*</span> Required fields
+          </p>
+
+
+        </form>
 
       </div>
 
-      {/* =====================================================
-          BUTTON
-      ===================================================== */}
-
-      <button
-        type="button"
-        className="checkout-btn"
-        onClick={proceedToCheckout}
-      >
-        Proceed to Checkout →
-      </button>
-
-      <p className="required-note">
-        <span className="required">
-          *
-        </span>{" "}
-        Required fields
-      </p>
-
     </div>
+
   );
 }
+
 
 export default Booking;

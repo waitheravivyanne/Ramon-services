@@ -110,7 +110,8 @@ class Booking(db.Model):
 
     status = db.Column(
         db.String(30),
-        default="Pending"
+        default="Pending",
+        nullable=False
     )
 
     date = db.Column(
@@ -155,4 +156,15 @@ class Booking(db.Model):
 
     extras = db.Column(
         db.Text
+    )
+
+    # Relationships
+    user = db.relationship(
+        "User",
+        backref="bookings"
+    )
+
+    service = db.relationship(
+        "Service",
+        backref="bookings"
     )

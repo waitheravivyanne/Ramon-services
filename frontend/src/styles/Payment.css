@@ -1,0 +1,421 @@
+/* =========================================
+   PAYMENT PAGE
+========================================= */
+
+.payment-container {
+    width: 100%;
+    max-width: 750px;
+
+    margin: 50px auto;
+
+    padding: 40px;
+
+    background: #ffffff;
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 20px 60px rgba(15, 23, 42, 0.10);
+
+    animation: paymentAppear 0.6s ease;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+
+/* =========================================
+   PAGE HEADER
+========================================= */
+
+.payment-container > h1 {
+    text-align: center;
+
+    font-size: 2.4rem;
+
+    color: #0f172a;
+
+    margin-bottom: 10px;
+}
+
+.payment-container > p {
+    text-align: center;
+
+    color: #64748b;
+
+    font-size: 16px;
+
+    margin-bottom: 30px;
+}
+
+
+/* =========================================
+   ORDER SUMMARY
+========================================= */
+
+.payment-summary {
+    padding: 25px;
+
+    margin-bottom: 30px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eff6ff,
+            #f8fafc
+        );
+
+    border: 1px solid #dbeafe;
+
+    transition: all 0.3s ease;
+}
+
+.payment-summary:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 25px rgba(37, 99, 235, 0.10);
+}
+
+.payment-summary h2 {
+    color: #2563eb;
+
+    margin-bottom: 15px;
+
+    font-size: 1.3rem;
+}
+
+.payment-summary p {
+    color: #475569;
+
+    font-size: 17px;
+
+    margin: 0;
+}
+
+.payment-summary strong {
+    color: #0f172a;
+}
+
+
+/* =========================================
+   PAYMENT METHOD TITLE
+========================================= */
+
+.payment-container > h2 {
+    color: #1e293b;
+
+    font-size: 1.35rem;
+
+    margin-bottom: 15px;
+}
+
+
+/* =========================================
+   PAYMENT OPTIONS
+========================================= */
+
+.payment-option {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    width: 100%;
+
+    padding: 18px;
+
+    margin-bottom: 12px;
+
+    border: 2px solid #e2e8f0;
+
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    color: #334155;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        all 0.25s ease;
+}
+
+
+/* Hover */
+
+.payment-option:hover {
+    border-color: #93c5fd;
+
+    background: #f8fbff;
+
+    transform: translateX(4px);
+
+    box-shadow:
+        0 5px 15px rgba(37, 99, 235, 0.08);
+}
+
+
+/* Radio button */
+
+.payment-option input[type="radio"] {
+    width: 19px;
+
+    height: 19px;
+
+    accent-color: #2563eb;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   PAYMENT FORM
+========================================= */
+
+.payment-form {
+    margin-top: 22px;
+
+    padding: 25px;
+
+    border-radius: 16px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    animation: formSlide 0.35s ease;
+}
+
+.payment-form h3 {
+    margin-bottom: 18px;
+
+    color: #2563eb;
+
+    font-size: 1.2rem;
+}
+
+
+/* =========================================
+   PAYMENT INPUTS
+========================================= */
+
+.payment-form input {
+    width: 100%;
+
+    padding: 15px 16px;
+
+    margin-bottom: 14px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 11px;
+
+    outline: none;
+
+    background: white;
+
+    color: #0f172a;
+
+    font-size: 15px;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
+}
+
+.payment-form input::placeholder {
+    color: #94a3b8;
+}
+
+.payment-form input:hover {
+    border-color: #93c5fd;
+}
+
+.payment-form input:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 4px rgba(37, 99, 235, 0.10);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   PAYMENT DESCRIPTION
+========================================= */
+
+.payment-form p {
+    margin: 5px 0;
+
+    color: #64748b;
+
+    line-height: 1.6;
+
+    font-size: 14px;
+}
+
+
+/* =========================================
+   PAY BUTTON
+========================================= */
+
+.pay-button {
+    width: 100%;
+
+    margin-top: 30px;
+
+    padding: 17px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #4f46e5
+        );
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 25px rgba(37, 99, 235, 0.25);
+
+    transition:
+        all 0.25s ease;
+}
+
+.pay-button:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 15px 30px rgba(37, 99, 235, 0.35);
+
+    background:
+        linear-gradient(
+            135deg,
+            #1d4ed8,
+            #4338ca
+        );
+}
+
+.pay-button:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes paymentAppear {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(30px)
+            scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+@keyframes formSlide {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .payment-container {
+        margin: 25px 15px;
+
+        padding: 28px 20px;
+
+        border-radius: 20px;
+    }
+
+    .payment-container > h1 {
+        font-size: 2rem;
+    }
+
+    .payment-option {
+        padding: 15px;
+    }
+
+    .payment-form {
+        padding: 20px;
+    }
+
+    .pay-button {
+        font-size: 16px;
+    }
+}
+
+
+/* =========================================
+   SMALL PHONES
+========================================= */
+
+@media (max-width: 450px) {
+
+    .payment-container {
+        padding: 25px 16px;
+    }
+
+    .payment-container > h1 {
+        font-size: 1.8rem;
+    }
+
+    .payment-summary {
+        padding: 20px;
+    }
+
+    .payment-option {
+        font-size: 14px;
+    }
+}

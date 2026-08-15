@@ -1,0 +1,601 @@
+/* =========================================
+   SUCCESS PAGE
+========================================= */
+
+.success-container {
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  padding: 60px 20px;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      #dbeafe,
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      #dcfce7,
+      transparent 35%
+    ),
+    #f8fafc;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  animation: pageFade 0.6s ease;
+}
+
+
+/* =========================================
+   SUCCESS CARD
+========================================= */
+
+.success-card {
+  width: 100%;
+  max-width: 850px;
+
+  padding: 45px;
+
+  background: rgba(255,255,255,0.96);
+
+  border-radius: 28px;
+
+  box-shadow:
+    0 25px 70px rgba(15,23,42,0.12);
+
+  text-align: center;
+
+  animation:
+    cardAppear 0.7s ease;
+
+  border: 1px solid rgba(255,255,255,0.8);
+}
+
+
+/* =========================================
+   SUCCESS ICON
+========================================= */
+
+.success-icon {
+  width: 90px;
+  height: 90px;
+
+  margin: 0 auto 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #22c55e,
+      #16a34a
+    );
+
+  color: white;
+
+  font-size: 48px;
+
+  font-weight: bold;
+
+  box-shadow:
+    0 15px 35px rgba(34,197,94,0.3);
+
+  animation:
+    successPop 0.7s ease;
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.success-card h1 {
+  color: #0f172a;
+
+  font-size: 34px;
+
+  margin-bottom: 12px;
+}
+
+
+.success-message {
+  color: #64748b;
+
+  font-size: 16px;
+
+  line-height: 1.6;
+
+  margin-bottom: 20px;
+}
+
+
+/* =========================================
+   SUCCESS BADGE
+========================================= */
+
+.success-badge {
+  display: inline-block;
+
+  padding: 8px 16px;
+
+  border-radius: 50px;
+
+  background: #dcfce7;
+
+  color: #15803d;
+
+  font-size: 13px;
+
+  font-weight: bold;
+
+  margin-bottom: 20px;
+
+  animation: badgeAppear 0.8s ease;
+}
+
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+.success-card hr {
+  border: none;
+
+  border-top: 1px solid #e2e8f0;
+
+  margin: 30px 0;
+}
+
+
+/* =========================================
+   HEADINGS
+========================================= */
+
+.success-card h2 {
+  color: #2563eb;
+
+  margin-bottom: 20px;
+
+  font-size: 22px;
+}
+
+
+/* =========================================
+   BOOKING REFERENCE
+========================================= */
+
+.booking-reference {
+  background: #eff6ff;
+
+  border: 1px solid #bfdbfe;
+
+  border-radius: 15px;
+
+  padding: 18px;
+
+  margin-bottom: 25px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+
+.booking-reference span {
+  color: #64748b;
+
+  font-size: 13px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1px;
+}
+
+
+.booking-reference strong {
+  color: #1d4ed8;
+
+  font-size: 22px;
+
+  letter-spacing: 1px;
+}
+
+
+/* =========================================
+   BOOKING DETAILS
+========================================= */
+
+.booking-details {
+  background: #f8fafc;
+
+  border-radius: 18px;
+
+  padding: 20px;
+
+  text-align: left;
+
+  margin-bottom: 20px;
+}
+
+
+.detail-row {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 14px 5px;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+
+.detail-row span {
+  color: #64748b;
+
+  font-size: 14px;
+}
+
+
+.detail-row strong {
+  color: #0f172a;
+
+  font-size: 15px;
+
+  text-align: right;
+}
+
+
+.detail-notes {
+  align-items: flex-start;
+}
+
+
+/* =========================================
+   PAYMENT
+========================================= */
+
+.payment-confirmation {
+  margin-top: 20px;
+
+  background: #f0fdf4;
+
+  border: 1px solid #bbf7d0;
+
+  border-radius: 15px;
+
+  padding: 5px 15px;
+}
+
+
+/* =========================================
+   TOTAL
+========================================= */
+
+.total-section {
+  margin-top: 25px;
+
+  padding: 25px;
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eff6ff,
+      #f0fdf4
+    );
+}
+
+
+.total-section p {
+  margin: 0 0 5px;
+
+  color: #64748b;
+
+  font-size: 15px;
+}
+
+
+.total-section h1 {
+  margin: 0;
+
+  color: #16a34a;
+
+  font-size: 38px;
+}
+
+
+.total-section span {
+  display: block;
+
+  margin-top: 8px;
+
+  color: #15803d;
+
+  font-size: 13px;
+}
+
+
+/* =========================================
+   NEXT STEPS
+========================================= */
+
+.next-section {
+  text-align: left;
+
+  margin-top: 25px;
+}
+
+
+.next-step {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 12px 0;
+}
+
+
+.next-step span {
+  min-width: 32px;
+
+  height: 32px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #2563eb;
+
+  color: white;
+
+  font-size: 13px;
+
+  font-weight: bold;
+}
+
+
+.next-step p {
+  margin: 0;
+
+  color: #475569;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.success-buttons {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 15px;
+
+  margin-top: 30px;
+}
+
+
+.success-buttons button {
+  border: none;
+
+  padding: 15px;
+
+  border-radius: 12px;
+
+  font-size: 15px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+.home-button {
+  background: #e2e8f0;
+
+  color: #334155;
+}
+
+
+.service-button {
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #4f46e5
+    );
+
+  color: white;
+
+  box-shadow:
+    0 8px 20px rgba(37,99,235,0.2);
+}
+
+
+.success-buttons button:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 10px 25px rgba(15,23,42,0.15);
+}
+
+
+.success-buttons button:active {
+  transform: translateY(0);
+}
+
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes pageFade {
+
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+
+}
+
+
+@keyframes cardAppear {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(30px)
+      scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+
+}
+
+
+@keyframes successPop {
+
+  0% {
+    opacity: 0;
+
+    transform:
+      scale(0.3)
+      rotate(-20deg);
+  }
+
+  60% {
+    transform:
+      scale(1.15)
+      rotate(5deg);
+  }
+
+  100% {
+    opacity: 1;
+
+    transform:
+      scale(1)
+      rotate(0);
+  }
+
+}
+
+
+@keyframes badgeAppear {
+
+  from {
+    opacity: 0;
+
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 650px) {
+
+  .success-container {
+    padding: 25px 15px;
+  }
+
+
+  .success-card {
+    padding: 30px 20px;
+
+    border-radius: 20px;
+  }
+
+
+  .success-card h1 {
+    font-size: 28px;
+  }
+
+
+  .success-icon {
+    width: 75px;
+
+    height: 75px;
+
+    font-size: 38px;
+  }
+
+
+  .detail-row {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 5px;
+  }
+
+
+  .detail-row strong {
+    text-align: left;
+  }
+
+
+  .success-buttons {
+    grid-template-columns: 1fr;
+  }
+
+
+  .total-section h1 {
+    font-size: 32px;
+  }
+
+}

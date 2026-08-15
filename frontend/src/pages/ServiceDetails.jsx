@@ -1,58 +1,98 @@
-import { useParams, Link } from "react-router-dom";
+import { Link,  useParams } from "react-router-dom";
 import services from "../data/services";
 import "../styles/ServiceDetails.css";
 
 function ServiceDetails() {
+
   const { serviceId } = useParams();
+
 
   const service = services.find(
     (item) => item.id === Number(serviceId)
   );
 
+
   if (!service) {
+
     return (
-      <div className="service-details">
-        <h2>Service not found.</h2>
+
+      <div className="service-error">
+
+        <h2>
+          Service not found
+        </h2>
+
+        <Link to="/services">
+          ← Back to Services
+        </Link>
+
       </div>
+
     );
+
   }
 
+
   return (
+
     <div className="service-details">
 
-      <h1>{service.name}</h1>
 
-      <p className="service-description">
-        {service.description}
-      </p>
+          {/* =========================================
+          SERVICE HEADER
+      ========================================= */}
 
-      <h2>Available Services</h2>
+      <div className="service-header">
 
-      <div className="categories-grid">
+        <div className="service-main-icon">
+          {service.icon}
+        </div>
 
-        {service.categories?.map((category) => (
+        <h1>
+          {service.name}
+        </h1>
+
+        <p>
+          {service.description}
+        </p>
+
+      </div>
+
+
+      {/* =========================================
+          CATEGORIES
+      ========================================= */}
+
+      <div className="category-list">
+
+        {service.categories.map((category) => (
 
           <div
-            key={category.id}
             className="category-card"
+            key={category.id}
           >
 
-            <h3>{category.name}</h3>
-
-            <p>
-              Starting From
-            </p>
+            <div className="category-icon">
+              ✨
+            </div>
 
             <h2>
-              Ksh {category.price}
+              {category.name}
             </h2>
+
+            <p>
+              Starting from
+              <strong>
+                {" "}Ksh {category.price}
+              </strong>
+            </p>
+
 
             <Link
               to={`/booking/${service.id}/${category.id}`}
+              className="book-button"
             >
-              <button>
-                Book Now
-              </button>
+              Book This Service →
             </Link>
 
           </div>
@@ -62,7 +102,9 @@ function ServiceDetails() {
       </div>
 
     </div>
+
   );
+
 }
 
 export default ServiceDetails;

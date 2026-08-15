@@ -60,7 +60,7 @@
 
 .footer-section ul li{
 
-    margin-bottom:12px;
+    margin-bottom:14px;
 
 }
 
@@ -82,44 +82,78 @@
 
 }
 
-.social-icons{
+/* ===========================
+   SOCIAL ICONS
+=========================== */
 
-    display:flex;
-
-    flex-direction:column;
-
-    gap:12px;
-
+.social-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
-.social-icons a{
+.social-icons a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 
-    text-decoration:none;
+    width: fit-content;
 
-    color:#cbd5e1;
+    text-decoration: none;
+    color: #cbd5e1;
 
-    transition:.3s;
-
+    transition: all 0.3s ease;
 }
 
-.social-icons a:hover{
+/* ===========================
+   ORIGINAL BRAND COLORS
+=========================== */
 
-    color:#38bdf8;
-
-    transform:translateX(8px);
-
+.social-icons a.facebook:hover {
+    color: #1877F2;
 }
 
-.footer-bottom{
+.social-icons a.instagram:hover {
+    color: #E4405F;
+}
 
-    border-top:1px solid rgba(255,255,255,.15);
+.social-icons a.twitter:hover {
+    color: #282f34;
+}
 
-    text-align:center;
+.social-icons a.whatsapp:hover {
+    color: #25D366;
+}
 
-    padding:20px;
+.social-icons a.youtube:hover {
+    color: #FF0000;
+}
 
-    color:#94a3b8;
+.social-icons a.linkedin:hover {
+    color: #0A66C2;
+}
 
-    font-size:.95rem;
+.social-icons a.tiktok:hover {
+    color: #000000;
+}
 
+/* ===========================
+   ICON HOVER EFFECT
+=========================== */
+
+.social-icons a:hover {
+    transform: translateX(8px) scale(1.03);
+}
+
+/* ===========================
+   ICON SIZE
+=========================== */
+
+.social-icons svg {
+    font-size: 22px;
+    transition: transform 0.3s ease;
+}
+
+.social-icons a:hover svg {
+    transform: scale(1.15);
 }

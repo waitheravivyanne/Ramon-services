@@ -5,7 +5,13 @@ function ProtectedRoute({ children }) {
 
   const { user } = useAuth();
 
+  console.log("PROTECTED ROUTE USER:", user);
+
   if (!user) {
+
+    console.log(
+      "User is NOT logged in. Redirecting to login."
+    );
 
     return (
       <Navigate
@@ -16,7 +22,14 @@ function ProtectedRoute({ children }) {
 
   }
 
+  console.log(
+    "User IS logged in. Allowing protected page."
+  );
+
   return children;
+
 }
 
 export default ProtectedRoute;
+
+
