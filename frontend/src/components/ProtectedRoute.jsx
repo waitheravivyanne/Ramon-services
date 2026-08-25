@@ -1,11 +1,22 @@
 import { Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
-function ProtectedRoute({ children }) {
+function ProtectedRoute({
+  children,
+  adminOnly = false
+}) {
 
   const { user } = useAuth();
 
-  console.log("PROTECTED ROUTE USER:", user);
+  console.log(
+    "PROTECTED ROUTE USER:",
+    user
+  );
+
+
+  // =========================================
+  // NOT LOGGED IN
+  // =========================================
 
   if (!user) {
 
@@ -22,8 +33,36 @@ function ProtectedRoute({ children }) {
 
   }
 
+
+  // =========================================
+  // ADMIN-ONLY PAGE
+  // =========================================
+
+  if (
+    adminOnly &&
+    user.role !== "admin"
+  ) {
+
+    console.log(
+      "User is NOT an admin. Access denied."
+    );
+
+    return (
+      <Navigate
+        to="/"
+        replace
+      />
+    );
+
+  }
+
+
+  // =========================================
+  // ALLOW ACCESS
+  // =========================================
+
   console.log(
-    "User IS logged in. Allowing protected page."
+    "User is authorized. Allowing protected page."
   );
 
   return children;
@@ -31,5 +70,3 @@ function ProtectedRoute({ children }) {
 }
 
 export default ProtectedRoute;
-
-

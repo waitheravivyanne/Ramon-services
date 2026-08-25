@@ -13,19 +13,30 @@ from werkzeug.security import (
     check_password_hash
 )
 
-from models import db, User, Service, Booking
+from database import db
+from models import User, Service, Booking
 
 import json
 
 
 # =====================================================
-# APP
+# APP CONFIGURATION
 # =====================================================
 
 app = Flask(__name__)
 
-CORS(app)
-
+CORS(
+    app,
+    resources={
+        r"/*": {
+            "origins": [
+                "http://localhost:5173",
+                "http://127.0.0.1:5173"
+            ]
+        }
+    },
+    supports_credentials=True
+)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///service.db"
 
@@ -37,6 +48,47 @@ app.config["JWT_SECRET_KEY"] = "secret-key-change-this"
 db.init_app(app)
 
 jwt = JWTManager(app)
+
+
+# =====================================================
+# HELPER FUNCTIONS
+# =====================================================
+
+def get_current_user():
+
+    identity = get_jwt_identity()
+
+    if not identity:
+        return None
+
+    user = User.query.get(identity["id"])
+
+    return user
+
+
+def admin_required():
+
+    user = get_current_user()
+
+    if not user:
+
+        return None, (
+            jsonify({
+                "message": "User not found."
+            }),
+            404
+        )
+
+    if user.role != "admin":
+
+        return None, (
+            jsonify({
+                "message": "Admin access required."
+            }),
+            403
+        )
+
+    return user, None
 
 
 # =====================================================
@@ -61,6 +113,7 @@ def register():
     data = request.get_json()
 
     if not data:
+
         return jsonify({
             "message": "No data received."
         }), 400
@@ -75,6 +128,8 @@ def register():
             "message": "Name, email and password are required."
         }), 400
 
+    email = email.lower().strip()
+
     existing_user = User.query.filter_by(
         email=email
     ).first()
@@ -86,19 +141,13 @@ def register():
         }), 400
 
     user = User(
-
-        name=name,
-
+        name=name.strip(),
         email=email,
-
         password=generate_password_hash(password),
-
         role="customer"
-
     )
 
     db.session.add(user)
-
     db.session.commit()
 
     return jsonify({
@@ -124,8 +173,15 @@ def login():
         }), 400
 
     email = data.get("email")
-
     password = data.get("password")
+
+    if not email or not password:
+
+        return jsonify({
+            "message": "Email and password are required."
+        }), 400
+
+    email = email.lower().strip()
 
     user = User.query.filter_by(
         email=email
@@ -171,24 +227,20 @@ def login():
 
         }
 
-    })
+    }), 200
 
 
 # =====================================================
 # PROFILE
 # =====================================================
 
-@app.route("/profile")
+@app.route("/profile", methods=["GET"])
 @jwt_required()
 def profile():
 
-    current_user = get_jwt_identity()
+    current_user = get_current_user()
 
-    user = User.query.get(
-        current_user["id"]
-    )
-
-    if not user:
+    if not current_user:
 
         return jsonify({
             "message": "User not found."
@@ -198,13 +250,13 @@ def profile():
 
         "user": {
 
-            "id": user.id,
+            "id": current_user.id,
 
-            "name": user.name,
+            "name": current_user.name,
 
-            "email": user.email,
+            "email": current_user.email,
 
-            "role": user.role
+            "role": current_user.role
 
         }
 
@@ -212,7 +264,7 @@ def profile():
 
 
 # =====================================================
-# GET SERVICES
+# GET ALL SERVICES
 # =====================================================
 
 @app.route("/services", methods=["GET"])
@@ -277,7 +329,13 @@ def get_service(id):
 @jwt_required()
 def create_booking():
 
-    current_user = get_jwt_identity()
+    current_user = get_current_user()
+
+    if not current_user:
+
+        return jsonify({
+            "message": "User not found."
+        }), 404
 
     data = request.get_json()
 
@@ -289,6 +347,12 @@ def create_booking():
 
     service_id = data.get("serviceId")
 
+    if not service_id:
+
+        return jsonify({
+            "message": "Service ID is required."
+        }), 400
+
     service = Service.query.get(service_id)
 
     if not service:
@@ -297,51 +361,115 @@ def create_booking():
             "message": "Service not found."
         }), 404
 
+    try:
+
+        total = float(
+            data.get("total", 0)
+        )
+
+    except (TypeError, ValueError):
+
+        return jsonify({
+            "message": "Invalid total amount."
+        }), 400
+
+
+    # -------------------------------------------------
+    # CREATE BOOKING
+    # -------------------------------------------------
+
     booking = Booking(
 
-        user_id=current_user["id"],
+        user_id=current_user.id,
 
         service_id=service_id,
 
-        category_id=data.get("categoryId"),
+        category_id=data.get(
+            "categoryId"
+        ),
 
-        total=float(data.get("total", 0)),
+        total=total,
 
-        date=data.get("date"),
+        status="Pending",
 
-        time=data.get("time"),
+        date=data.get(
+            "date"
+        ),
 
-        address=data.get("address"),
+        time=data.get(
+            "time"
+        ),
 
-        city=data.get("city"),
+        address=data.get(
+            "address"
+        ),
 
-        estate=data.get("estate"),
+        city=data.get(
+            "city"
+        ),
 
-        house_number=data.get("houseNumber"),
+        estate=data.get(
+            "estate"
+        ),
 
-        house_size=data.get("houseSize"),
+        house_number=data.get(
+            "houseNumber"
+        ),
 
-        cleaning_type=data.get("cleaningType"),
+        house_size=data.get(
+            "houseSize"
+        ),
 
-        frequency=data.get("frequency"),
+        cleaning_type=data.get(
+            "cleaningType"
+        ),
 
-        notes=data.get("notes"),
+        frequency=data.get(
+            "frequency"
+        ),
+
+        notes=data.get(
+            "notes"
+        ),
 
         extras=json.dumps(
-            data.get("extras", [])
+            data.get(
+                "extras",
+                []
+            )
         )
 
     )
+
 
     db.session.add(booking)
 
     db.session.commit()
 
+
     return jsonify({
 
         "message": "Booking created successfully.",
 
-        "bookingId": booking.id
+        "booking": {
+
+            "id": booking.id,
+
+            "userId": booking.user_id,
+
+            "serviceId": booking.service_id,
+
+            "categoryId": booking.category_id,
+
+            "total": booking.total,
+
+            "status": booking.status,
+
+            "date": booking.date,
+
+            "time": booking.time
+
+        }
 
     }), 201
 
@@ -354,19 +482,60 @@ def create_booking():
 @jwt_required()
 def my_bookings():
 
-    current_user = get_jwt_identity()
+    current_user = get_current_user()
+
+    if not current_user:
+
+        return jsonify({
+            "message": "User not found."
+        }), 404
 
     bookings = Booking.query.filter_by(
-        user_id=current_user["id"]
+        user_id=current_user.id
+    ).order_by(
+        Booking.id.desc()
     ).all()
 
-    return jsonify([
 
-        {
+    results = []
+
+
+    for booking in bookings:
+
+        service = Service.query.get(
+            booking.service_id
+        )
+
+
+        try:
+
+            extras = json.loads(
+                booking.extras
+            ) if booking.extras else []
+
+        except (
+            json.JSONDecodeError,
+            TypeError
+        ):
+
+            extras = []
+
+
+        results.append({
 
             "id": booking.id,
 
             "serviceId": booking.service_id,
+
+            "serviceName": (
+
+                service.title
+
+                if service
+
+                else "Unknown Service"
+
+            ),
 
             "categoryId": booking.category_id,
 
@@ -380,60 +549,616 @@ def my_bookings():
 
             "address": booking.address,
 
+            "city": booking.city,
+
+            "estate": booking.estate,
+
+            "houseNumber": booking.house_number,
+
             "houseSize": booking.house_size,
 
             "cleaningType": booking.cleaning_type,
 
             "frequency": booking.frequency,
 
-            "notes": booking.notes
+            "notes": booking.notes,
+
+            "extras": extras
+
+        })
+
+
+    return jsonify(results), 200
+
+
+# =====================================================
+# ADMIN - GET ALL BOOKINGS
+# =====================================================
+
+@app.route("/admin/bookings", methods=["GET"])
+@jwt_required()
+def admin_bookings():
+
+    admin, error = admin_required()
+
+    if error:
+
+        return error
+
+
+    bookings = Booking.query.order_by(
+        Booking.id.desc()
+    ).all()
+
+
+    results = []
+
+
+    for booking in bookings:
+
+        # ---------------------------------------------
+        # CUSTOMER
+        # ---------------------------------------------
+
+        user = User.query.get(
+            booking.user_id
+        )
+
+
+        # ---------------------------------------------
+        # SERVICE
+        # ---------------------------------------------
+
+        service = Service.query.get(
+            booking.service_id
+        )
+
+
+        # ---------------------------------------------
+        # EXTRAS
+        # ---------------------------------------------
+
+        # try:
+
+        #     extras = json.loads(
+        #         booking.extras
+        #     ) if booking.extras else []
+
+        # except (
+        #     json.JSONDecodeError,
+        #     TypeError
+        # ):
+
+        #     extras = []
+
+
+        results.append({
+
+            "id": booking.id,
+
+
+            # CUSTOMER
+            "customerName": (
+
+                user.name
+
+                if user
+
+                else "Unknown Customer"
+
+            ),
+
+            "customerEmail": (
+
+                user.email
+
+                if user
+
+                else ""
+
+            ),
+
+
+            # SERVICE
+            "serviceId": booking.service_id,
+
+            "serviceName": (
+
+                service.title
+
+                if service
+
+                else "Unknown Service"
+
+            ),
+
+            "categoryId": booking.category_id,
+
+
+            # BOOKING
+            "total": booking.total,
+
+            "status": booking.status,
+
+            "date": booking.date,
+
+            "time": booking.time,
+
+            "address": booking.address,
+
+            "city": booking.city,
+
+            "estate": booking.estate,
+
+            "houseNumber": booking.house_number,
+
+            "houseSize": booking.house_size,
+
+            "cleaningType": booking.cleaning_type,
+
+            "frequency": booking.frequency,
+
+            "notes": booking.notes,
+
+            "extras": booking.extras or "[]"
+
+        })
+
+
+    return jsonify(results), 200
+
+
+# =====================================================
+# ADMIN - GET ONE BOOKING
+# =====================================================
+
+@app.route(
+    "/admin/bookings/<int:id>",
+    methods=["GET"]
+)
+@jwt_required()
+def admin_get_booking(id):
+
+    admin, error = admin_required()
+
+    if error:
+
+        return error
+
+
+    booking = Booking.query.get(id)
+
+    if not booking:
+
+        return jsonify({
+            "message": "Booking not found."
+        }), 404
+
+
+    user = User.query.get(
+        booking.user_id
+    )
+
+    service = Service.query.get(
+        booking.service_id
+    )
+
+
+    try:
+
+        extras = json.loads(
+            booking.extras
+        ) if booking.extras else []
+
+    except (
+        json.JSONDecodeError,
+        TypeError
+    ):
+
+        extras = []
+
+
+    return jsonify({
+
+        "id": booking.id,
+
+
+        "customer": {
+
+            "id":
+                user.id
+                if user
+                else None,
+
+            "name":
+                user.name
+                if user
+                else "Unknown",
+
+            "email":
+                user.email
+                if user
+                else "Unknown"
+
+        },
+
+
+        "service": {
+
+            "id":
+                service.id
+                if service
+                else None,
+
+            "name":
+                service.title
+                if service
+                else "Unknown Service"
+
+        },
+
+
+        "categoryId":
+            booking.category_id,
+
+        "total":
+            booking.total,
+
+        "status":
+            booking.status,
+
+        "date":
+            booking.date,
+
+        "time":
+            booking.time,
+
+        "address":
+            booking.address,
+
+        "city":
+            booking.city,
+
+        "estate":
+            booking.estate,
+
+        "houseNumber":
+            booking.house_number,
+
+        "houseSize":
+            booking.house_size,
+
+        "cleaningType":
+            booking.cleaning_type,
+
+        "frequency":
+            booking.frequency,
+
+        "notes":
+            booking.notes,
+
+        "extras":
+            extras
+
+    }), 200
+
+
+# =====================================================
+# ADMIN - UPDATE BOOKING STATUS
+# =====================================================
+
+@app.route(
+    "/admin/bookings/<int:booking_id>",
+    methods=["PUT"]
+)
+@jwt_required()
+def update_booking_status(booking_id):
+
+    admin, error = admin_required()
+
+    if error:
+
+        return error
+
+
+    booking = Booking.query.get(
+        booking_id
+    )
+
+    if not booking:
+
+        return jsonify({
+            "message": "Booking not found."
+        }), 404
+
+
+    data = request.get_json()
+
+    if not data:
+
+        return jsonify({
+            "message": "No data received."
+        }), 400
+
+
+    new_status = data.get(
+        "status"
+    )
+
+
+    allowed_statuses = [
+
+        "Pending",
+
+        "Confirmed",
+
+        "In Progress",
+
+        "Completed",
+
+        "Cancelled"
+
+    ]
+
+
+    if new_status not in allowed_statuses:
+
+        return jsonify({
+
+            "message":
+                "Invalid booking status.",
+
+            "allowedStatuses":
+                allowed_statuses
+
+        }), 400
+
+
+    booking.status = new_status
+
+    db.session.commit()
+
+
+    return jsonify({
+
+        "message":
+            "Booking status updated successfully.",
+
+        "booking": {
+
+            "id":
+                booking.id,
+
+            "status":
+                booking.status
 
         }
 
+    }), 200
+
+
+# =====================================================
+# ADMIN - DELETE BOOKING
+# =====================================================
+
+@app.route(
+    "/admin/bookings/<int:id>",
+    methods=["DELETE"]
+)
+@jwt_required()
+def delete_booking(id):
+
+    admin, error = admin_required()
+
+    if error:
+
+        return error
+
+
+    booking = Booking.query.get(id)
+
+    if not booking:
+
+        return jsonify({
+            "message": "Booking not found."
+        }), 404
+
+
+    db.session.delete(
+        booking
+    )
+
+    db.session.commit()
+
+
+    return jsonify({
+
+        "message":
+            "Booking deleted successfully."
+
+    }), 200
+
+
+# =====================================================
+# ADMIN - DASHBOARD STATISTICS
+# =====================================================
+
+@app.route(
+    "/admin/dashboard",
+    methods=["GET"]
+)
+@jwt_required()
+def admin_dashboard():
+
+    admin, error = admin_required()
+
+    if error:
+
+        return error
+
+
+    total_bookings = Booking.query.count()
+
+
+    pending_bookings = Booking.query.filter_by(
+        status="Pending"
+    ).count()
+
+
+    confirmed_bookings = Booking.query.filter_by(
+        status="Confirmed"
+    ).count()
+
+
+    completed_bookings = Booking.query.filter_by(
+        status="Completed"
+    ).count()
+
+
+    cancelled_bookings = Booking.query.filter_by(
+        status="Cancelled"
+    ).count()
+
+
+    total_customers = User.query.filter_by(
+        role="customer"
+    ).count()
+
+
+    total_services = Service.query.count()
+
+
+    bookings = Booking.query.all()
+
+
+    total_revenue = sum(
+
+        booking.total
+
         for booking in bookings
 
-    ])
+        if booking.status != "Cancelled"
+
+    )
+
+
+    return jsonify({
+
+        "totalBookings":
+            total_bookings,
+
+        "pendingBookings":
+            pending_bookings,
+
+        "confirmedBookings":
+            confirmed_bookings,
+
+        "completedBookings":
+            completed_bookings,
+
+        "cancelledBookings":
+            cancelled_bookings,
+
+        "totalCustomers":
+            total_customers,
+
+        "totalServices":
+            total_services,
+
+        "totalRevenue":
+            total_revenue
+
+    }), 200
 
 
 # =====================================================
 # ADD SERVICE
 # =====================================================
 
-@app.route("/services", methods=["POST"])
+@app.route(
+    "/services",
+    methods=["POST"]
+)
 @jwt_required()
 def add_service():
 
-    current_user = get_jwt_identity()
+    admin, error = admin_required()
 
-    if current_user["role"] != "admin":
+    if error:
 
-        return jsonify({
-            "message": "Unauthorized."
-        }), 403
+        return error
+
 
     data = request.get_json()
+
+    if not data:
+
+        return jsonify({
+            "message": "No data received."
+        }), 400
+
+
+    if not data.get("name"):
+
+        return jsonify({
+            "message": "Service name is required."
+        }), 400
+
+
+    try:
+
+        price = float(
+            data.get(
+                "price",
+                0
+            )
+        )
+
+    except (
+        TypeError,
+        ValueError
+    ):
+
+        return jsonify({
+            "message": "Invalid price."
+        }), 400
+
 
     service = Service(
 
         title=data["name"],
 
-        description=data.get("description"),
+        description=data.get(
+            "description"
+        ),
 
-        price=data.get("price", 0),
+        price=price,
 
-        location=data.get("location"),
+        location=data.get(
+            "location"
+        ),
 
-        provider=data.get("provider")
+        provider=data.get(
+            "provider"
+        )
 
     )
 
-    db.session.add(service)
+
+    db.session.add(
+        service
+    )
 
     db.session.commit()
 
+
     return jsonify({
 
-        "message": "Service added successfully."
+        "message":
+            "Service added successfully.",
+
+        "serviceId":
+            service.id
 
     }), 201
 
@@ -442,83 +1167,123 @@ def add_service():
 # UPDATE SERVICE
 # =====================================================
 
-@app.route("/services/<int:id>", methods=["PUT"])
+@app.route(
+    "/services/<int:id>",
+    methods=["PUT"]
+)
 @jwt_required()
 def update_service(id):
 
-    current_user = get_jwt_identity()
+    admin, error = admin_required()
 
-    if current_user["role"] != "admin":
+    if error:
 
-        return jsonify({
-            "message": "Unauthorized."
-        }), 403
+        return error
 
-    service = Service.query.get_or_404(id)
+
+    service = Service.query.get_or_404(
+        id
+    )
+
 
     data = request.get_json()
+
+    if not data:
+
+        return jsonify({
+            "message": "No data received."
+        }), 400
+
 
     service.title = data.get(
         "name",
         service.title
     )
 
+
     service.description = data.get(
         "description",
         service.description
     )
 
-    service.price = data.get(
-        "price",
-        service.price
-    )
+
+    try:
+
+        if "price" in data:
+
+            service.price = float(
+                data["price"]
+            )
+
+    except (
+        TypeError,
+        ValueError
+    ):
+
+        return jsonify({
+            "message": "Invalid price."
+        }), 400
+
 
     service.location = data.get(
         "location",
         service.location
     )
 
+
     service.provider = data.get(
         "provider",
         service.provider
     )
 
+
     db.session.commit()
+
 
     return jsonify({
 
-        "message": "Service updated successfully."
+        "message":
+            "Service updated successfully."
 
-    })
+    }), 200
 
 
 # =====================================================
 # DELETE SERVICE
 # =====================================================
 
-@app.route("/services/<int:id>", methods=["DELETE"])
+@app.route(
+    "/services/<int:id>",
+    methods=["DELETE"]
+)
 @jwt_required()
 def delete_service(id):
 
-    current_user = get_jwt_identity()
+    admin, error = admin_required()
 
-    if current_user["role"] != "admin":
+    if error:
 
-        return jsonify({
-            "message": "Unauthorized."
-        }), 403
+        return error
 
-    service = Service.query.get_or_404(id)
 
-    db.session.delete(service)
+    service = Service.query.get_or_404(
+        id
+    )
+
+
+    db.session.delete(
+        service
+    )
 
     db.session.commit()
 
+
     return jsonify({
 
-        "message": "Service deleted successfully."
+        "message":
+            "Service deleted successfully."
 
-    })
+    }), 200
 
 
 # =====================================================
@@ -529,13 +1294,17 @@ with app.app_context():
 
     db.create_all()
 
+
     if Service.query.count() == 0:
 
         sample_services = [
 
             Service(
                 title="Cleaning",
-                description="Professional home, office and school cleaning.",
+                description=(
+                    "Professional home, office "
+                    "and school cleaning."
+                ),
                 price=1500,
                 location="Nairobi",
                 provider="Ramon Cleaning Services"
@@ -543,7 +1312,10 @@ with app.app_context():
 
             Service(
                 title="Laundry",
-                description="Professional washing, drying and ironing.",
+                description=(
+                    "Professional washing, "
+                    "drying and ironing."
+                ),
                 price=800,
                 location="Nairobi",
                 provider="Ramon Laundry"
@@ -551,7 +1323,10 @@ with app.app_context():
 
             Service(
                 title="Plumbing",
-                description="Professional plumbing and repair services.",
+                description=(
+                    "Professional plumbing "
+                    "and repair services."
+                ),
                 price=1000,
                 location="Nairobi",
                 provider="Ramon Plumbing"
@@ -559,7 +1334,10 @@ with app.app_context():
 
             Service(
                 title="Electrical",
-                description="Professional electrical installation and repair.",
+                description=(
+                    "Professional electrical "
+                    "installation and repair."
+                ),
                 price=1500,
                 location="Nairobi",
                 provider="Ramon Electrical"
@@ -567,7 +1345,10 @@ with app.app_context():
 
             Service(
                 title="Gardening",
-                description="Garden maintenance and landscaping.",
+                description=(
+                    "Garden maintenance "
+                    "and landscaping."
+                ),
                 price=1000,
                 location="Nairobi",
                 provider="Ramon Gardening"
@@ -575,7 +1356,10 @@ with app.app_context():
 
             Service(
                 title="Painting",
-                description="Interior and exterior painting services.",
+                description=(
+                    "Interior and exterior "
+                    "painting services."
+                ),
                 price=3000,
                 location="Nairobi",
                 provider="Ramon Painting"
@@ -583,13 +1367,17 @@ with app.app_context():
 
             Service(
                 title="Moving",
-                description="House and office moving assistance.",
+                description=(
+                    "House and office "
+                    "moving assistance."
+                ),
                 price=5000,
                 location="Nairobi",
                 provider="Ramon Movers"
             )
 
         ]
+
 
         db.session.add_all(
             sample_services
@@ -599,7 +1387,7 @@ with app.app_context():
 
 
 # =====================================================
-# RUN
+# RUN APPLICATION
 # =====================================================
 
 if __name__ == "__main__":

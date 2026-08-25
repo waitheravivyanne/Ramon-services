@@ -12,32 +12,80 @@ function AuthProvider({ children }) {
     }
 
     try {
+
       return JSON.parse(savedUser);
+
     } catch {
+
       localStorage.removeItem("user");
+      localStorage.removeItem("token");
+
       return null;
+
     }
 
   });
 
 
+  // =========================================
+  // LOGIN
+  // =========================================
+
   const login = (userData) => {
 
-    setUser(userData);
+    const loggedInUser = {
+
+      id: userData.id,
+
+      name: userData.name,
+
+      email: userData.email,
+
+      role: userData.role
+
+    };
+
+
+    // Save JWT token
+
+    localStorage.setItem(
+      "token",
+      userData.token
+    );
+
+
+    // Save user information
 
     localStorage.setItem(
       "user",
-      JSON.stringify(userData)
+      JSON.stringify(loggedInUser)
+    );
+
+
+    // Update React state immediately
+
+    setUser(loggedInUser);
+
+
+    console.log(
+      "USER LOGGED IN:",
+      loggedInUser
     );
 
   };
 
 
+  // =========================================
+  // LOGOUT
+  // =========================================
+
   const logout = () => {
 
-    setUser(null);
+    localStorage.removeItem("token");
 
     localStorage.removeItem("user");
+
+    setUser(null);
 
   };
 
@@ -46,9 +94,15 @@ function AuthProvider({ children }) {
 
     <AuthContext.Provider
       value={{
+
         user,
+
         login,
-        logout
+
+        logout,
+
+        isLoggedIn: !!user
+
       }}
     >
 

@@ -1,8 +1,6 @@
 import { Routes, Route } from "react-router-dom";
-
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
 import Home from "./pages/Home";
 import Services from "./pages/Services";
 import ServiceDetails from "./pages/ServiceDetails";
@@ -12,10 +10,11 @@ import Payment from "./pages/Payment";
 import Success from "./pages/Success";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-
 import ProtectedRoute from "./components/ProtectedRoute";
-
 import "./App.css";
+import AdminDashboard from "./pages/AdminDashboard";
+import Dashboard from "./pages/Dashboard";
+// import AdminRoute from "./components/AminRoute";
 
 function App() {
   return (
@@ -54,8 +53,28 @@ function App() {
             element={<Register />}
           />
 
+   
+
 
           {/* PROTECTED */}
+
+   <Route
+  path="/admin"
+  element={
+    <ProtectedRoute adminOnly={true}>
+      <AdminDashboard />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/dashboard"
+  element={
+    <ProtectedRoute>
+      <Dashboard />
+    </ProtectedRoute>
+  }
+/>
 
           <Route
             path="/booking/:serviceId/:categoryId"
