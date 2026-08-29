@@ -6,246 +6,222 @@ import useAuth from "../hooks/useAuth";
 
 import "../styles/Login.css";
 
-
 function Login() {
-
   const navigate = useNavigate();
   const location = useLocation();
 
   const { login } = useAuth();
 
-
-  // =========================================
+  // =====================================================
   // FORM
-  // =========================================
+  // =====================================================
 
   const [form, setForm] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
-
-  // =========================================
-  // LOADING
-  // =========================================
+  // =====================================================
+  // STATE
+  // =====================================================
 
   const [loading, setLoading] = useState(false);
-
-
-  // =========================================
-  // ERROR
-  // =========================================
-
   const [error, setError] = useState("");
 
-
-  // =========================================
+  // =====================================================
   // HANDLE INPUT
-  // =========================================
+  // =====================================================
 
-  const handleChange = (e) => {
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
+    setForm((currentForm) => ({
+      ...currentForm,
+      [name]: value,
+    }));
 
     if (error) {
       setError("");
     }
-
   };
 
-
-  // =========================================
+  // =====================================================
   // LOGIN
-  // =========================================
+  // =====================================================
 
-  const submit = async (e) => {
-
-    e.preventDefault();
+  const submit = async (event) => {
+    event.preventDefault();
 
     setError("");
     setLoading(true);
 
-
     try {
+      console.log("=================================");
+      console.log("STARTING LOGIN");
+      console.log("EMAIL:", form.email);
+      console.log("=================================");
 
-      const response = await api.post(
-        "/login",
-        form
-      );
+      // -------------------------------------------------
+      // SEND LOGIN REQUEST
+      // -------------------------------------------------
 
+      const response = await api.post("/login", form);
 
-      console.log(
-        "LOGIN RESPONSE:",
-        response.data
-      );
+      console.log("LOGIN RESPONSE:", response.data);
 
+      // -------------------------------------------------
+      // GET TOKEN
+      // -------------------------------------------------
 
-      // =====================================
-      // GET USER
-      // =====================================
+      const token = response.data?.token;
 
-      const user = response.data.user;
-
-
-      if (!user) {
-
+      if (!token) {
         throw new Error(
-          "User information was not returned by the server."
+          "Login succeeded but no authentication token was returned."
         );
-
       }
 
+      // -------------------------------------------------
+      // GET USER
+      // -------------------------------------------------
 
-      // =====================================
-      // SAVE LOGIN INFORMATION
-      // =====================================
+      const user = response.data?.user;
+
+      if (!user) {
+        throw new Error(
+          "Login succeeded but no user information was returned."
+        );
+      }
+
+      console.log("LOGIN USER:", user);
+      console.log("USER ID:", user.id);
+      console.log("USER NAME:", user.name);
+      console.log("USER EMAIL:", user.email);
+      console.log("USER ROLE:", user.role);
+
+      // -------------------------------------------------
+      // NORMALIZE ROLE
+      // -------------------------------------------------
+
+      const role = String(user.role || "")
+        .trim()
+        .toLowerCase();
+
+      console.log("NORMALIZED ROLE:", role);
+
+      // -------------------------------------------------
+      // SAVE AUTHENTICATION
+      // -------------------------------------------------
 
       login({
-
-        token: response.data.token,
-
+        token: token,
         id: user.id,
-
         name: user.name,
-
         email: user.email,
-
-        role: user.role
-
+        role: role,
       });
 
+      // -------------------------------------------------
+      // ALSO SAVE DIRECTLY TO LOCAL STORAGE
+      //
+      // This makes sure the token and role are available
+      // immediately to axios/protected routes.
+      // -------------------------------------------------
 
-      console.log(
-        "LOGGED IN USER:",
-        user
+      localStorage.setItem("token", token);
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: role,
+        })
       );
 
+      localStorage.setItem("role", role);
 
-      // =====================================
-      // ADMIN
-      // =====================================
+      console.log("AUTHENTICATION SAVED");
+      console.log("TOKEN EXISTS:", !!localStorage.getItem("token"));
+      console.log(
+        "STORED ROLE:",
+        localStorage.getItem("role")
+      );
 
-    if (user.role === "admin") {
+      // =================================================
+      // ADMIN REDIRECT
+      // =================================================
 
-  navigate("/admin");
+      if (role === "admin") {
+        console.log("=================================");
+        console.log("ADMIN DETECTED");
+        console.log("REDIRECTING TO /admin");
+        console.log("=================================");
 
-  return;
-}
+        navigate("/admin", {
+          replace: true,
+        });
 
-navigate("/services");
+        return;
+      }
 
-
-      // =====================================
-      // CUSTOMER
-      // =====================================
-
-      /*
-        If the customer originally tried to
-        access a protected page, send them
-        back there.
-
-        Example:
-
-        User clicks Book Service
-        ↓
-        Login required
-        ↓
-        User logs in
-        ↓
-        They return to Booking page
-      */
+      // =================================================
+      // CUSTOMER REDIRECT
+      // =================================================
 
       const previousPage =
         location.state?.from?.pathname;
 
-
       const previousSearch =
         location.state?.from?.search || "";
-
 
       if (
         previousPage &&
         previousPage !== "/login"
       ) {
-
         console.log(
-          "RETURNING USER TO:",
+          "RETURNING CUSTOMER TO:",
           previousPage
         );
-
 
         navigate(
           previousPage + previousSearch,
           {
-            replace: true
+            replace: true,
           }
         );
 
         return;
-
       }
 
-
-      // =====================================
-      // DEFAULT CUSTOMER DESTINATION
-      // =====================================
-
-      /*
-        IMPORTANT:
-
-        We are NOT sending the customer
-        automatically to "/".
-
-        Instead send them to the dashboard.
-      */
-
       console.log(
-        "CUSTOMER LOGIN → /dashboard"
+        "CUSTOMER REDIRECTING TO /dashboard"
       );
 
-
-      navigate(
-        "/dashboard",
-        {
-          replace: true
-        }
-      );
-
-
+      navigate("/dashboard", {
+        replace: true,
+      });
     } catch (err) {
-
-      console.error(
-        "LOGIN ERROR:",
-        err
-      );
-
+      console.error("LOGIN ERROR:", err);
 
       const message =
         err.response?.data?.message ||
+        err.response?.data?.error ||
         err.message ||
         "Invalid email or password.";
 
-
       setError(message);
-
     } finally {
-
       setLoading(false);
-
     }
-
   };
 
-
-  // =========================================
+  // =====================================================
   // PAGE
-  // =========================================
+  // =====================================================
 
   return (
-
     <div className="login-page">
 
       <form
@@ -253,58 +229,38 @@ navigate("/services");
         onSubmit={submit}
       >
 
-
-        {/* =====================================
-            ICON
-        ===================================== */}
+        {/* ICON */}
 
         <div className="login-icon">
           🔐
         </div>
 
-
-        {/* =====================================
-            TITLE
-        ===================================== */}
+        {/* TITLE */}
 
         <h1>
           Welcome Back!
         </h1>
 
-
         <p className="login-subtitle">
-
           Login to your Ramon's Marketplace
           account and continue booking services.
-
         </p>
 
-
-        {/* =====================================
-            ERROR
-        ===================================== */}
+        {/* ERROR */}
 
         {error && (
-
           <div className="login-error">
-
             ⚠️ {error}
-
           </div>
-
         )}
 
-
-        {/* =====================================
-            EMAIL
-        ===================================== */}
+        {/* EMAIL */}
 
         <div className="login-group">
 
           <label htmlFor="email">
             Email Address
           </label>
-
 
           <input
             id="email"
@@ -319,17 +275,13 @@ navigate("/services");
 
         </div>
 
-
-        {/* =====================================
-            PASSWORD
-        ===================================== */}
+        {/* PASSWORD */}
 
         <div className="login-group">
 
           <label htmlFor="password">
             Password
           </label>
-
 
           <input
             id="password"
@@ -344,10 +296,7 @@ navigate("/services");
 
         </div>
 
-
-        {/* =====================================
-            LOGIN BUTTON
-        ===================================== */}
+        {/* LOGIN BUTTON */}
 
         <button
           type="submit"
@@ -356,27 +305,17 @@ navigate("/services");
         >
 
           {loading ? (
-
             <>
-
               <span className="login-spinner"></span>
-
               Logging in...
-
             </>
-
           ) : (
-
             "Login to Account →"
-
           )}
 
         </button>
 
-
-        {/* =====================================
-            REGISTER
-        ===================================== */}
+        {/* REGISTER */}
 
         <div className="login-register">
 
@@ -388,14 +327,10 @@ navigate("/services");
 
         </div>
 
-
       </form>
 
     </div>
-
   );
-
 }
-
 
 export default Login;

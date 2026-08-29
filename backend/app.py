@@ -579,103 +579,73 @@ def my_bookings():
 @jwt_required()
 def admin_bookings():
 
-    admin, error = admin_required()
+    current_user = get_jwt_identity()
 
-    if error:
+    # ---------------------------------------------
+    # Check that the logged-in user is an admin
+    # ---------------------------------------------
 
-        return error
+    if current_user["role"] != "admin":
 
+        return jsonify({
+            "message": "Admin access required."
+        }), 403
+
+
+    # ---------------------------------------------
+    # Get all bookings
+    # ---------------------------------------------
 
     bookings = Booking.query.order_by(
         Booking.id.desc()
     ).all()
 
 
-    results = []
+    # ---------------------------------------------
+    # Return bookings
+    # ---------------------------------------------
 
+    result = []
 
     for booking in bookings:
-
-        # ---------------------------------------------
-        # CUSTOMER
-        # ---------------------------------------------
 
         user = User.query.get(
             booking.user_id
         )
-
-
-        # ---------------------------------------------
-        # SERVICE
-        # ---------------------------------------------
 
         service = Service.query.get(
             booking.service_id
         )
 
 
-        # ---------------------------------------------
-        # EXTRAS
-        # ---------------------------------------------
-
-        # try:
-
-        #     extras = json.loads(
-        #         booking.extras
-        #     ) if booking.extras else []
-
-        # except (
-        #     json.JSONDecodeError,
-        #     TypeError
-        # ):
-
-        #     extras = []
-
-
-        results.append({
+        result.append({
 
             "id": booking.id,
 
+            "userId": booking.user_id,
 
-            # CUSTOMER
             "customerName": (
-
                 user.name
-
                 if user
-
-                else "Unknown Customer"
-
+                else "Unknown"
             ),
 
             "customerEmail": (
-
                 user.email
-
                 if user
-
-                else ""
-
+                else "Unknown"
             ),
 
-
-            # SERVICE
             "serviceId": booking.service_id,
 
             "serviceName": (
-
                 service.title
-
                 if service
-
                 else "Unknown Service"
-
             ),
 
             "categoryId": booking.category_id,
 
-
-            # BOOKING
             "total": booking.total,
 
             "status": booking.status,
@@ -700,12 +670,16 @@ def admin_bookings():
 
             "notes": booking.notes,
 
-            "extras": booking.extras or "[]"
+            "extras": (
+                json.loads(booking.extras)
+                if booking.extras
+                else []
+            )
 
         })
 
 
-    return jsonify(results), 200
+    return jsonify(result), 200
 
 
 # =====================================================
@@ -1295,6 +1269,35 @@ with app.app_context():
     db.create_all()
 
 
+# =====================================================
+# ENSURE RAMON IS ADMIN
+# =====================================================
+
+with app.app_context():
+
+    admin_user = User.query.filter_by(
+        email="admin@ramonsmarketplace.com"
+    ).first()
+
+    if admin_user:
+
+        admin_user.role = "admin"
+
+        db.session.commit()
+
+        print("=================================")
+        print("ADMIN ACCOUNT VERIFIED")
+        print("Name:", admin_user.name)
+        print("Email:", admin_user.email)
+        print("Role:", admin_user.role)
+        print("=================================")
+
+    else:
+
+        print("=================================")
+        print("ADMIN ACCOUNT NOT FOUND")
+        print("=================================")
+
     if Service.query.count() == 0:
 
         sample_services = [
@@ -1384,6 +1387,7 @@ with app.app_context():
         )
 
         db.session.commit()
+
 
 
 # =====================================================

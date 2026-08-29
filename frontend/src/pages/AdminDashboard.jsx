@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 // import "../styles/AdminDashboard.css";
@@ -16,28 +17,96 @@ function AdminDashboard() {
 
     const loadBookings = async () => {
       try {
+        setLoading(true);
+        setError("");
+
+        // Check whether the login token exists
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          if (!cancelled) {
+            setError(
+              "You are not logged in. Please log in as an administrator."
+            );
+            setLoading(false);
+          }
+
+          return;
+        }
+
+        // Check stored role
+        const role = localStorage.getItem("role");
+
+        console.log("Admin Dashboard");
+        console.log("Token exists:", !!token);
+        console.log("Stored role:", role);
+
+        if (role && role.toLowerCase() !== "admin") {
+          if (!cancelled) {
+            setError(
+              "Access denied. You must be logged in as an administrator."
+            );
+            setLoading(false);
+          }
+
+          return;
+        }
+
+        // Axios instance should automatically attach
+        // Authorization: Bearer <token>
         const response = await api.get("/admin/bookings");
+
+        console.log("Bookings response:", response.data);
 
         if (!cancelled) {
           setBookings(
             Array.isArray(response.data)
               ? response.data
-              : []
+              : response.data?.bookings || []
           );
 
           setError("");
         }
       } catch (err) {
-        console.error(
-          "Failed to load bookings:",
-          err
-        );
+        console.error("Failed to load bookings:", err);
 
         if (!cancelled) {
-          setError(
-            err.response?.data?.message ||
-              "Failed to load bookings."
-          );
+          // =================================================
+          // 401 - UNAUTHORIZED
+          // =================================================
+
+          if (err.response?.status === 401) {
+            setError(
+              err.response?.data?.message ||
+                "Your administrator session is invalid or has expired. Please log in again."
+            );
+
+            // Remove invalid login information
+            localStorage.removeItem("token");
+            localStorage.removeItem("role");
+          }
+
+          // =================================================
+          // 403 - FORBIDDEN
+          // =================================================
+
+          else if (err.response?.status === 403) {
+            setError(
+              err.response?.data?.message ||
+                "Access denied. Administrator privileges are required."
+            );
+          }
+
+          // =================================================
+          // OTHER ERRORS
+          // =================================================
+
+          else {
+            setError(
+              err.response?.data?.message ||
+                "Failed to load bookings. Please try again."
+            );
+          }
         }
       } finally {
         if (!cancelled) {
@@ -59,28 +128,53 @@ function AdminDashboard() {
 
   const updateStatus = async (bookingId, status) => {
     try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        alert("Your session has expired. Please log in again.");
+        return;
+      }
+
       await api.put(
         `/admin/bookings/${bookingId}`,
         {
-          status: status
+          status: status,
         }
       );
 
+      // Update the booking immediately in the UI
       setBookings((currentBookings) =>
         currentBookings.map((booking) =>
           booking.id === bookingId
             ? {
                 ...booking,
-                status: status
+                status: status,
               }
             : booking
         )
       );
     } catch (err) {
-      console.error(
-        "Status update failed:",
-        err
-      );
+      console.error("Status update failed:", err);
+
+      if (err.response?.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+
+        alert(
+          "Your administrator session has expired. Please log in again."
+        );
+
+        return;
+      }
+
+      if (err.response?.status === 403) {
+        alert(
+          err.response?.data?.message ||
+            "You do not have permission to update this booking."
+        );
+
+        return;
+      }
 
       alert(
         err.response?.data?.message ||
@@ -117,9 +211,11 @@ function AdminDashboard() {
           <p>{error}</p>
 
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              window.location.href = "/login";
+            }}
           >
-            Try Again
+            Go to Login
           </button>
         </div>
       </div>
@@ -176,7 +272,6 @@ function AdminDashboard() {
         </div>
       </div>
 
-
       {/* STATISTICS */}
 
       <div className="admin-stats">
@@ -193,7 +288,6 @@ function AdminDashboard() {
           </div>
         </div>
 
-
         <div className="stat-card">
           <span>⏳</span>
 
@@ -205,7 +299,6 @@ function AdminDashboard() {
             </h2>
           </div>
         </div>
-
 
         <div className="stat-card">
           <span>✅</span>
@@ -219,7 +312,6 @@ function AdminDashboard() {
           </div>
         </div>
 
-
         <div className="stat-card">
           <span>🎉</span>
 
@@ -231,7 +323,6 @@ function AdminDashboard() {
             </h2>
           </div>
         </div>
-
 
         <div className="stat-card">
           <span>💰</span>
@@ -247,7 +338,6 @@ function AdminDashboard() {
         </div>
 
       </div>
-
 
       {/* ORDERS */}
 
@@ -270,7 +360,6 @@ function AdminDashboard() {
           </span>
 
         </div>
-
 
         {/* NO ORDERS */}
 
@@ -315,7 +404,6 @@ function AdminDashboard() {
 
               </thead>
 
-
               <tbody>
 
                 {bookings.map(
@@ -333,7 +421,6 @@ function AdminDashboard() {
                         </strong>
                       </td>
 
-
                       {/* CUSTOMER */}
 
                       <td>
@@ -350,7 +437,6 @@ function AdminDashboard() {
 
                       </td>
 
-
                       {/* SERVICE */}
 
                       <td>
@@ -362,20 +448,17 @@ function AdminDashboard() {
 
                       </td>
 
-
                       {/* DATE */}
 
                       <td>
                         {booking.date || "-"}
                       </td>
 
-
                       {/* TIME */}
 
                       <td>
                         {booking.time || "-"}
                       </td>
-
 
                       {/* LOCATION */}
 
@@ -393,7 +476,6 @@ function AdminDashboard() {
 
                       </td>
 
-
                       {/* AMOUNT */}
 
                       <td>
@@ -406,7 +488,6 @@ function AdminDashboard() {
                         </strong>
 
                       </td>
-
 
                       {/* STATUS */}
 
@@ -469,3 +550,4 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
+
