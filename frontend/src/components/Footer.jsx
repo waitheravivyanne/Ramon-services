@@ -90,14 +90,14 @@ function Footer() {
 
           <p>
             <FaPhone className="footer-icon" />
-            +254 700 123 456
+            +254 182 122 616
           </p>
 
           
 
           <p>
             <FaEnvelope className="footer-icon" />
-            info@ramonsmarketplace.com
+            254lusha@gmail.com
           </p>
 
           <p>
@@ -146,6 +146,7 @@ function Footer() {
               rel="noopener noreferrer"
               aria-label="Instagram"
             >
+                       
 
               <FaInstagram />
 

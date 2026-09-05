@@ -1,70 +1,23 @@
-// import { Link, useNavigate } from "react-router-dom";
-// import "../styles/Navbar.css";
-
-// function Navbar() {
-//   const navigate = useNavigate();
-
-//   const handleBack = () => {
-//     navigate(-1);
-//   };
-
-//   return (
-//     <nav className="navbar">
-
-//       {/* BACK BUTTON */}
-//       <button
-//         className="back-button"
-//         onClick={handleBack}
-//         title="Go back"
-//       >
-//         ←
-//         <span>Back</span>
-//       </button>
-
-//       {/* LOGO */}
-//       <Link to="/" className="logo">
-//         Ramon's Marketplace
-//       </Link>
-
-//       {/* NAVIGATION LINKS */}
-//       <div className="nav-links">
-
-//         <Link to="/">
-//           Home
-//         </Link>
-
-//         <Link to="/services">
-//           Services
-//         </Link>
-
-//         <Link to="/login">
-//           Login
-//         </Link>
-
-//         <Link to="/register">
-//           Register
-//         </Link>
-
-//       </div>
-
-//     </nav>
-//   );
-// }
-
-// export default Navbar;
-
-
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import "../styles/Navbar.css";
 
 function Navbar() {
-
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Use the logout function from useAuth
+    logout();
+
+    // Return the client to the home page
+    navigate("/");
+  };
 
   return (
     <nav className="navbar">
 
+      {/* Logo */}
       <Link
         to="/"
         className="logo"
@@ -72,6 +25,7 @@ function Navbar() {
         Ramon's Marketplace
       </Link>
 
+      {/* Navigation Links */}
       <div className="nav-links">
 
         <Link to="/">
@@ -83,32 +37,43 @@ function Navbar() {
         </Link>
 
         {user ? (
-
           <>
-
+            {/* Welcome message */}
             <span className="welcome-user">
               Welcome, {user.name}
             </span>
 
-            {user.role === "admin" && (
+            {/* Customer links */}
+            <Link to="/dashboard">
+              Dashboard
+            </Link>
+
+            <Link to="/bookings">
+              My Bookings
+            </Link>
+
+            <Link to="/profile">
+              Profile
+            </Link>
+
+            {/* Admin link */}
+            {user.role?.toLowerCase() === "admin" && (
               <Link to="/admin">
                 Admin Dashboard
               </Link>
             )}
 
+            {/* Logout */}
             <button
+              type="button"
               className="logout-button"
-              onClick={logout}
+              onClick={handleLogout}
             >
-              Logout
+              🚪 Logout
             </button>
-
           </>
-
         ) : (
-
           <>
-
             <Link to="/login">
               Login
             </Link>
@@ -116,9 +81,7 @@ function Navbar() {
             <Link to="/register">
               Register
             </Link>
-
           </>
-
         )}
 
       </div>

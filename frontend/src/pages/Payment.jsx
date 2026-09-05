@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+
+import api from "../api/axios";
 import "../styles/Payment.css";
 
 function Payment() {
@@ -7,11 +9,11 @@ function Payment() {
   const location = useLocation();
 
   // ==========================================
-  // GET BOOKING DATA FROM CHECKOUT
+  // GET BOOKING DATA
   // ==========================================
 
   const booking = location.state?.booking;
-  const total = location.state?.total || 0;
+  const total = Number(location.state?.total ?? booking?.total ?? 0);
 
   // ==========================================
   // PAYMENT STATE
@@ -26,6 +28,7 @@ function Payment() {
   const [cvv, setCvv] = useState("");
 
   const [processing, setProcessing] = useState(false);
+  const [error, setError] = useState("");
 
   // ==========================================
   // CHANGE PAYMENT METHOD
@@ -33,22 +36,195 @@ function Payment() {
 
   const changePaymentMethod = (method) => {
     setPaymentMethod(method);
+    setError("");
+  };
+
+  // ==========================================
+  // CREATE BOOKING
+  // ==========================================
+
+  const createBooking = async () => {
+    if (!booking) {
+      throw new Error("Booking information is missing.");
+    }
+
+    // ------------------------------------------
+    // GET IDS
+    // ------------------------------------------
+
+    const serviceId = Number(
+      booking.serviceId
+    );
+
+    const categoryId = Number(
+      booking.categoryId
+    );
+
+    // ------------------------------------------
+    // VALIDATE REQUIRED IDS
+    // ------------------------------------------
+
+    if (!serviceId || Number.isNaN(serviceId)) {
+      throw new Error(
+        "Service ID is missing from the booking."
+      );
+    }
+
+    if (!categoryId || Number.isNaN(categoryId)) {
+      throw new Error(
+        "Category ID is missing from the booking."
+      );
+    }
+
+    // ------------------------------------------
+    // PREPARE EXTRAS
+    // ------------------------------------------
+
+    const extras =
+      booking.extras ||
+      booking.cleaningExtras ||
+      [];
+
+    // ------------------------------------------
+    // PREPARE DATA FOR FLASK
+    // ------------------------------------------
+
+    const bookingData = {
+      serviceId: serviceId,
+
+      categoryId: categoryId,
+
+      total: total,
+
+      date: booking.date || "",
+
+      time: booking.time || "",
+
+      address: booking.address || "",
+
+      city: booking.city || "",
+
+      estate: booking.estate || "",
+
+      houseNumber:
+        booking.houseNumber || "",
+
+      // ----------------------------------------
+      // CLEANING
+      // ----------------------------------------
+
+      houseSize:
+        booking.houseSize || "",
+
+      cleaningType:
+        booking.cleaningType ||
+        booking.cleaningLevel ||
+        "",
+
+      frequency:
+        booking.frequency || "",
+
+      // ----------------------------------------
+      // NOTES
+      // ----------------------------------------
+
+      notes:
+        booking.notes || "",
+
+      // ----------------------------------------
+      // EXTRAS
+      // ----------------------------------------
+
+      extras: extras,
+
+      // ----------------------------------------
+      // PAYMENT INFORMATION
+      // ----------------------------------------
+
+      paymentMethod: paymentMethod,
+
+      paymentPhone:
+        paymentMethod === "mpesa"
+          ? phone
+          : "",
+    };
+
+    console.log(
+      "================================"
+    );
+
+    console.log(
+      "CREATING BOOKING..."
+    );
+
+    console.log(
+      "BOOKING DATA:",
+      bookingData
+    );
+
+    console.log(
+      "================================"
+    );
+
+    // ------------------------------------------
+    // SEND TO FLASK
+    // ------------------------------------------
+
+    const response = await api.post(
+      "/bookings",
+      bookingData
+    );
+
+    console.log(
+      "================================"
+    );
+
+    console.log(
+      "BOOKING CREATED SUCCESSFULLY:"
+    );
+
+    console.log(
+      response.data
+    );
+
+    console.log(
+      "================================"
+    );
+
+    return response.data;
   };
 
   // ==========================================
   // HANDLE PAYMENT
   // ==========================================
 
-  const handlePayment = (e) => {
+  const handlePayment = async (e) => {
     e.preventDefault();
 
+    setError("");
+
     // ------------------------------------------
-    // MAKE SURE BOOKING EXISTS
+    // CHECK BOOKING
     // ------------------------------------------
 
     if (!booking) {
-      alert("Booking information is missing. Please return to booking.");
+      alert(
+        "Booking information is missing. Please return to booking."
+      );
+
       navigate("/services");
+      return;
+    }
+
+    // ------------------------------------------
+    // CHECK TOTAL
+    // ------------------------------------------
+
+    if (total <= 0) {
+      setError(
+        "The booking total is invalid."
+      );
+
       return;
     }
 
@@ -57,15 +233,22 @@ function Payment() {
     // ------------------------------------------
 
     if (paymentMethod === "mpesa") {
-      if (!phone.trim()) {
-        alert("Please enter your M-Pesa phone number.");
+      const cleanedPhone =
+        phone.replace(/\s+/g, "");
+
+      if (!cleanedPhone) {
+        setError(
+          "Please enter your M-Pesa phone number."
+        );
+
         return;
       }
 
-      if (!/^07\d{8}$/.test(phone)) {
-        alert(
+      if (!/^07\d{8}$/.test(cleanedPhone)) {
+        setError(
           "Please enter a valid Kenyan phone number, e.g. 0712345678."
         );
+
         return;
       }
     }
@@ -81,7 +264,10 @@ function Payment() {
         !expiry.trim() ||
         !cvv.trim()
       ) {
-        alert("Please complete all card details.");
+        setError(
+          "Please complete all card details."
+        );
+
         return;
       }
     }
@@ -92,24 +278,80 @@ function Payment() {
 
     setProcessing(true);
 
-    /*
-      This is currently a simulated payment.
+    try {
+      // ========================================
+      // IMPORTANT
+      // CREATE THE BOOKING IN DATABASE
+      // ========================================
 
-      Later you can replace this section with
-      your Flask payment API / M-Pesa integration.
-    */
+      const result =
+        await createBooking();
 
-    setTimeout(() => {
-      setProcessing(false);
+      // ========================================
+      // GO TO SUCCESS PAGE
+      // ========================================
 
       navigate("/success", {
         state: {
-          booking: booking,
+          booking: result.booking || result,
           total: total,
-          paymentMethod: paymentMethod
-        }
+          paymentMethod:
+            paymentMethod,
+        },
       });
-    }, 1200);
+
+    } catch (error) {
+
+      console.error(
+        "================================"
+      );
+
+      console.error(
+        "BOOKING FAILED"
+      );
+
+      console.error(
+        "================================"
+      );
+
+      console.error(
+        "Error:",
+        error
+      );
+
+      console.error(
+        "Server response:",
+        error.response?.data
+      );
+
+      console.error(
+        "Status:",
+        error.response?.status
+      );
+
+      console.error(
+        "================================"
+      );
+
+      // ----------------------------------------
+      // SHOW BACKEND ERROR
+      // ----------------------------------------
+
+      const serverMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error;
+
+      setError(
+        serverMessage ||
+        error.message ||
+        "Unable to create your booking. Please try again."
+      );
+
+    } finally {
+
+      setProcessing(false);
+
+    }
   };
 
   // ==========================================
@@ -126,16 +368,21 @@ function Payment() {
             ⚠️
           </div>
 
-          <h1>Booking Not Found</h1>
+          <h1>
+            Booking Not Found
+          </h1>
 
           <p>
-            We could not find your booking information.
-            Please return to the services page and make a booking.
+            We could not find your booking
+            information. Please return to the
+            services page and make a booking.
           </p>
 
           <button
             className="back-button"
-            onClick={() => navigate("/services")}
+            onClick={() =>
+              navigate("/services")
+            }
           >
             ← Back to Services
           </button>
@@ -165,13 +412,39 @@ function Payment() {
             💳
           </div>
 
-          <h1>Complete Payment</h1>
+          <h1>
+            Complete Payment
+          </h1>
 
           <p>
             Securely complete your service booking.
           </p>
 
         </div>
+
+
+        {/* =====================================
+            ERROR MESSAGE
+        ====================================== */}
+
+        {error && (
+          <div
+            className="payment-error"
+            style={{
+              padding: "14px",
+              marginBottom: "20px",
+              borderRadius: "8px",
+              background: "#ffe5e5",
+              color: "#b00020",
+              border: "1px solid #ffb3b3",
+            }}
+          >
+            <strong>
+              Booking failed:
+            </strong>{" "}
+            {error}
+          </div>
+        )}
 
 
         {/* =====================================
@@ -186,55 +459,101 @@ function Payment() {
 
           {booking.serviceName && (
             <div className="summary-row">
-              <span>Service</span>
+
+              <span>
+                Service
+              </span>
+
               <strong>
                 {booking.serviceName}
               </strong>
+
             </div>
           )}
 
-          {booking.cleaningType && (
+          {booking.categoryName && (
             <div className="summary-row">
-              <span>Service Type</span>
+
+              <span>
+                Category
+              </span>
+
               <strong>
-                {booking.cleaningType}
+                {booking.categoryName}
               </strong>
+
+            </div>
+          )}
+
+          {(booking.cleaningType ||
+            booking.cleaningLevel) && (
+            <div className="summary-row">
+
+              <span>
+                Service Type
+              </span>
+
+              <strong>
+                {booking.cleaningType ||
+                  booking.cleaningLevel}
+              </strong>
+
             </div>
           )}
 
           {booking.houseSize && (
             <div className="summary-row">
-              <span>House Size</span>
+
+              <span>
+                House Size
+              </span>
+
               <strong>
                 {booking.houseSize}
               </strong>
+
             </div>
           )}
 
           {booking.frequency && (
             <div className="summary-row">
-              <span>Frequency</span>
+
+              <span>
+                Frequency
+              </span>
+
               <strong>
                 {booking.frequency}
               </strong>
+
             </div>
           )}
 
           {booking.date && (
             <div className="summary-row">
-              <span>Date</span>
+
+              <span>
+                Date
+              </span>
+
               <strong>
                 {booking.date}
               </strong>
+
             </div>
           )}
 
           {booking.time && (
             <div className="summary-row">
-              <span>Time</span>
+
+              <span>
+                Time
+              </span>
+
               <strong>
                 {booking.time}
               </strong>
+
             </div>
           )}
 
@@ -247,7 +566,10 @@ function Payment() {
             </span>
 
             <strong>
-              Ksh {Number(total).toLocaleString()}
+              Ksh{" "}
+              {Number(
+                total
+              ).toLocaleString()}
             </strong>
 
           </div>
@@ -278,8 +600,11 @@ function Payment() {
                   : ""
               }`}
               onClick={() =>
-                changePaymentMethod("mpesa")
+                changePaymentMethod(
+                  "mpesa"
+                )
               }
+              disabled={processing}
             >
 
               <span className="payment-option-icon">
@@ -287,14 +612,20 @@ function Payment() {
               </span>
 
               <span>
-                <strong>M-Pesa</strong>
+                <strong>
+                  M-Pesa
+                </strong>
+
                 <small>
                   Pay using your mobile phone
                 </small>
               </span>
 
               <span className="radio-circle">
-                {paymentMethod === "mpesa" && "✓"}
+
+                {paymentMethod === "mpesa" &&
+                  "✓"}
+
               </span>
 
             </button>
@@ -310,8 +641,11 @@ function Payment() {
                   : ""
               }`}
               onClick={() =>
-                changePaymentMethod("card")
+                changePaymentMethod(
+                  "card"
+                )
               }
+              disabled={processing}
             >
 
               <span className="payment-option-icon">
@@ -319,14 +653,22 @@ function Payment() {
               </span>
 
               <span>
-                <strong>Debit / Credit Card</strong>
+
+                <strong>
+                  Debit / Credit Card
+                </strong>
+
                 <small>
                   Pay securely using your card
                 </small>
+
               </span>
 
               <span className="radio-circle">
-                {paymentMethod === "card" && "✓"}
+
+                {paymentMethod === "card" &&
+                  "✓"}
+
               </span>
 
             </button>
@@ -342,8 +684,11 @@ function Payment() {
                   : ""
               }`}
               onClick={() =>
-                changePaymentMethod("cash")
+                changePaymentMethod(
+                  "cash"
+                )
               }
+              disabled={processing}
             >
 
               <span className="payment-option-icon">
@@ -351,14 +696,22 @@ function Payment() {
               </span>
 
               <span>
-                <strong>Cash on Service</strong>
+
+                <strong>
+                  Cash on Service
+                </strong>
+
                 <small>
                   Pay the provider after service
                 </small>
+
               </span>
 
               <span className="radio-circle">
-                {paymentMethod === "cash" && "✓"}
+
+                {paymentMethod === "cash" &&
+                  "✓"}
+
               </span>
 
             </button>
@@ -367,7 +720,7 @@ function Payment() {
 
 
           {/* ===================================
-              M-PESA FORM
+              M-PESA
           ==================================== */}
 
           {paymentMethod === "mpesa" && (
@@ -390,8 +743,11 @@ function Payment() {
                 placeholder="0712345678"
                 value={phone}
                 onChange={(e) =>
-                  setPhone(e.target.value)
+                  setPhone(
+                    e.target.value
+                  )
                 }
+                disabled={processing}
                 required
               />
 
@@ -401,12 +757,11 @@ function Payment() {
               </p>
 
             </div>
-
           )}
 
 
           {/* ===================================
-              CARD FORM
+              CARD
           ==================================== */}
 
           {paymentMethod === "card" && (
@@ -426,14 +781,16 @@ function Payment() {
 
               <input
                 type="text"
-                placeholder="1234 5678 9012 3456"
+                placeholder="Card number"
                 value={cardNumber}
                 onChange={(e) =>
-                  setCardNumber(e.target.value)
+                  setCardNumber(
+                    e.target.value
+                  )
                 }
+                disabled={processing}
                 required
               />
-
 
               <label>
                 Card Holder Name
@@ -447,11 +804,13 @@ function Payment() {
                 placeholder="Enter card holder name"
                 value={cardName}
                 onChange={(e) =>
-                  setCardName(e.target.value)
+                  setCardName(
+                    e.target.value
+                  )
                 }
+                disabled={processing}
                 required
               />
-
 
               <div className="card-row">
 
@@ -469,13 +828,15 @@ function Payment() {
                     placeholder="MM/YY"
                     value={expiry}
                     onChange={(e) =>
-                      setExpiry(e.target.value)
+                      setExpiry(
+                        e.target.value
+                      )
                     }
+                    disabled={processing}
                     required
                   />
 
                 </div>
-
 
                 <div>
 
@@ -491,8 +852,11 @@ function Payment() {
                     placeholder="123"
                     value={cvv}
                     onChange={(e) =>
-                      setCvv(e.target.value)
+                      setCvv(
+                        e.target.value
+                      )
                     }
+                    disabled={processing}
                     required
                   />
 
@@ -500,13 +864,7 @@ function Payment() {
 
               </div>
 
-              <p className="payment-hint">
-                🔒 Your payment information is
-                handled securely.
-              </p>
-
             </div>
-
           )}
 
 
@@ -536,7 +894,6 @@ function Payment() {
               </div>
 
             </div>
-
           )}
 
 
@@ -549,7 +906,9 @@ function Payment() {
             <button
               type="button"
               className="back-button"
-              onClick={() => navigate(-1)}
+              onClick={() =>
+                navigate(-1)
+              }
               disabled={processing}
             >
               ← Back
@@ -565,7 +924,7 @@ function Payment() {
               {processing ? (
                 <>
                   <span className="payment-spinner"></span>
-                  Processing...
+                  Saving Booking...
                 </>
               ) : (
                 <>

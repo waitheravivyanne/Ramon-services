@@ -1,12 +1,28 @@
-
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
-// import "../styles/AdminDashboard.css";
+import "../styles/AdminDashboard.css";
 
 function AdminDashboard() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
+  // =====================================================
+  // LOGOUT
+  // =====================================================
+
+  const handleLogout = () => {
+    // Remove all stored authentication information
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("role");
+
+    // Return to Home page
+    navigate("/");
+  };
 
   // =====================================================
   // LOAD BOOKINGS
@@ -20,7 +36,7 @@ function AdminDashboard() {
         setLoading(true);
         setError("");
 
-        // Check whether the login token exists
+        // Check whether login token exists
         const token = localStorage.getItem("token");
 
         if (!token) {
@@ -37,9 +53,11 @@ function AdminDashboard() {
         // Check stored role
         const role = localStorage.getItem("role");
 
-        console.log("Admin Dashboard");
+        console.log("=================================");
+        console.log("ADMIN DASHBOARD");
         console.log("Token exists:", !!token);
         console.log("Stored role:", role);
+        console.log("=================================");
 
         if (role && role.toLowerCase() !== "admin") {
           if (!cancelled) {
@@ -52,18 +70,22 @@ function AdminDashboard() {
           return;
         }
 
-        // Axios instance should automatically attach
+        // Axios automatically attaches:
         // Authorization: Bearer <token>
         const response = await api.get("/admin/bookings");
 
         console.log("Bookings response:", response.data);
 
         if (!cancelled) {
-          setBookings(
-            Array.isArray(response.data)
-              ? response.data
-              : response.data?.bookings || []
-          );
+          const data = response.data;
+
+          if (Array.isArray(data)) {
+            setBookings(data);
+          } else if (Array.isArray(data?.bookings)) {
+            setBookings(data.bookings);
+          } else {
+            setBookings([]);
+          }
 
           setError("");
         }
@@ -81,8 +103,8 @@ function AdminDashboard() {
                 "Your administrator session is invalid or has expired. Please log in again."
             );
 
-            // Remove invalid login information
             localStorage.removeItem("token");
+            localStorage.removeItem("user");
             localStorage.removeItem("role");
           }
 
@@ -94,6 +116,26 @@ function AdminDashboard() {
             setError(
               err.response?.data?.message ||
                 "Access denied. Administrator privileges are required."
+            );
+          }
+
+          // =================================================
+          // 500 - SERVER ERROR
+          // =================================================
+
+          else if (err.response?.status === 500) {
+            setError(
+              "The server encountered an error while loading the orders. Please check your Flask backend."
+            );
+          }
+
+          // =================================================
+          // NETWORK ERROR
+          // =================================================
+
+          else if (err.request && !err.response) {
+            setError(
+              "Unable to connect to the server. Please make sure your Flask backend is running."
             );
           }
 
@@ -132,8 +174,15 @@ function AdminDashboard() {
 
       if (!token) {
         alert("Your session has expired. Please log in again.");
+
+        navigate("/login");
+
         return;
       }
+
+      console.log(
+        `Updating booking #${bookingId} to status: ${status}`
+      );
 
       await api.put(
         `/admin/bookings/${bookingId}`,
@@ -142,7 +191,7 @@ function AdminDashboard() {
         }
       );
 
-      // Update the booking immediately in the UI
+      // Update UI immediately
       setBookings((currentBookings) =>
         currentBookings.map((booking) =>
           booking.id === bookingId
@@ -153,19 +202,34 @@ function AdminDashboard() {
             : booking
         )
       );
+
+      console.log(
+        `Booking #${bookingId} successfully updated to ${status}`
+      );
     } catch (err) {
       console.error("Status update failed:", err);
 
+      // ===================================================
+      // 401
+      // ===================================================
+
       if (err.response?.status === 401) {
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
         localStorage.removeItem("role");
 
         alert(
           "Your administrator session has expired. Please log in again."
         );
 
+        navigate("/login");
+
         return;
       }
+
+      // ===================================================
+      // 403
+      // ===================================================
 
       if (err.response?.status === 403) {
         alert(
@@ -175,6 +239,10 @@ function AdminDashboard() {
 
         return;
       }
+
+      // ===================================================
+      // OTHER ERROR
+      // ===================================================
 
       alert(
         err.response?.data?.message ||
@@ -190,10 +258,21 @@ function AdminDashboard() {
   if (loading) {
     return (
       <div className="admin-dashboard">
+
         <div className="admin-message">
-          <h2>Loading Orders...</h2>
-          <p>Please wait.</p>
+
+          <div className="loading-spinner"></div>
+
+          <h2>
+            Loading Orders...
+          </h2>
+
+          <p>
+            Please wait while we load customer bookings.
+          </p>
+
         </div>
+
       </div>
     );
   }
@@ -205,19 +284,40 @@ function AdminDashboard() {
   if (error) {
     return (
       <div className="admin-dashboard">
+
         <div className="admin-error">
-          <h2>Unable to Load Orders</h2>
 
-          <p>{error}</p>
+          <div className="error-icon">
+            ⚠️
+          </div>
 
-          <button
-            onClick={() => {
-              window.location.href = "/login";
-            }}
-          >
-            Go to Login
-          </button>
+          <h2>
+            Unable to Load Orders
+          </h2>
+
+          <p>
+            {error}
+          </p>
+
+          <div className="error-actions">
+
+            <button
+              onClick={() => navigate("/login")}
+            >
+              Go to Login
+            </button>
+
+            <button
+              className="home-button"
+              onClick={() => navigate("/")}
+            >
+              Back to Home
+            </button>
+
+          </div>
+
         </div>
+
       </div>
     );
   }
@@ -228,17 +328,20 @@ function AdminDashboard() {
 
   const pendingCount = bookings.filter(
     (booking) =>
-      booking.status === "Pending"
+      String(booking.status).toLowerCase() ===
+      "pending"
   ).length;
 
   const confirmedCount = bookings.filter(
     (booking) =>
-      booking.status === "Confirmed"
+      String(booking.status).toLowerCase() ===
+      "confirmed"
   ).length;
 
   const completedCount = bookings.filter(
     (booking) =>
-      booking.status === "Completed"
+      String(booking.status).toLowerCase() ===
+      "completed"
   ).length;
 
   const totalRevenue = bookings.reduce(
@@ -254,98 +357,173 @@ function AdminDashboard() {
   return (
     <div className="admin-dashboard">
 
-      {/* HEADER */}
+      {/* =================================================
+          HEADER
+          ================================================= */}
 
       <div className="admin-header">
-        <div>
-          <span className="admin-label">
-            ADMINISTRATION
-          </span>
 
-          <h1>
-            Admin Dashboard
-          </h1>
+        <div className="admin-header-content">
 
-          <p>
-            Manage customer bookings and orders.
-          </p>
+          <div>
+
+            <span className="admin-label">
+              ADMINISTRATION
+            </span>
+
+            <h1>
+              Admin Dashboard
+            </h1>
+
+            <p>
+              Manage customer bookings and orders.
+            </p>
+
+          </div>
+
+          {/* LOGOUT BUTTON */}
+
+          <button
+            className="admin-logout-btn"
+            onClick={handleLogout}
+            type="button"
+          >
+            🚪 Logout
+          </button>
+
         </div>
+
       </div>
 
-      {/* STATISTICS */}
+      {/* =================================================
+          STATISTICS
+          ================================================= */}
 
       <div className="admin-stats">
 
+        {/* TOTAL ORDERS */}
+
         <div className="stat-card">
-          <span>📦</span>
+
+          <span>
+            📦
+          </span>
 
           <div>
-            <p>Total Orders</p>
+
+            <p>
+              Total Orders
+            </p>
 
             <h2>
               {bookings.length}
             </h2>
+
           </div>
+
         </div>
 
+        {/* PENDING */}
+
         <div className="stat-card">
-          <span>⏳</span>
+
+          <span>
+            ⏳
+          </span>
 
           <div>
-            <p>Pending</p>
+
+            <p>
+              Pending
+            </p>
 
             <h2>
               {pendingCount}
             </h2>
+
           </div>
+
         </div>
 
+        {/* CONFIRMED */}
+
         <div className="stat-card">
-          <span>✅</span>
+
+          <span>
+            ✅
+          </span>
 
           <div>
-            <p>Confirmed</p>
+
+            <p>
+              Confirmed
+            </p>
 
             <h2>
               {confirmedCount}
             </h2>
+
           </div>
+
         </div>
 
+        {/* COMPLETED */}
+
         <div className="stat-card">
-          <span>🎉</span>
+
+          <span>
+            🎉
+          </span>
 
           <div>
-            <p>Completed</p>
+
+            <p>
+              Completed
+            </p>
 
             <h2>
               {completedCount}
             </h2>
+
           </div>
+
         </div>
 
+        {/* REVENUE */}
+
         <div className="stat-card">
-          <span>💰</span>
+
+          <span>
+            💰
+          </span>
 
           <div>
-            <p>Total Revenue</p>
+
+            <p>
+              Total Revenue
+            </p>
 
             <h2>
               Ksh{" "}
               {totalRevenue.toLocaleString()}
             </h2>
+
           </div>
+
         </div>
 
       </div>
 
-      {/* ORDERS */}
+      {/* =================================================
+          ORDERS SECTION
+          ================================================= */}
 
       <div className="orders-section">
 
         <div className="orders-header">
 
           <div>
+
             <h2>
               Customer Orders
             </h2>
@@ -353,15 +531,21 @@ function AdminDashboard() {
             <p>
               All bookings made by customers.
             </p>
+
           </div>
 
           <span className="order-count">
-            {bookings.length} Orders
+            {bookings.length}{" "}
+            {bookings.length === 1
+              ? "Order"
+              : "Orders"}
           </span>
 
         </div>
 
-        {/* NO ORDERS */}
+        {/* =================================================
+            NO ORDERS
+            ================================================= */}
 
         {bookings.length === 0 ? (
 
@@ -383,7 +567,9 @@ function AdminDashboard() {
 
         ) : (
 
-          /* ORDERS TABLE */
+          /* =================================================
+             ORDERS TABLE
+             ================================================= */
 
           <div className="orders-table-wrapper">
 
@@ -392,14 +578,39 @@ function AdminDashboard() {
               <thead>
 
                 <tr>
-                  <th>Order</th>
-                  <th>Customer</th>
-                  <th>Service</th>
-                  <th>Date</th>
-                  <th>Time</th>
-                  <th>Location</th>
-                  <th>Amount</th>
-                  <th>Status</th>
+
+                  <th>
+                    Order
+                  </th>
+
+                  <th>
+                    Customer
+                  </th>
+
+                  <th>
+                    Service
+                  </th>
+
+                  <th>
+                    Date
+                  </th>
+
+                  <th>
+                    Time
+                  </th>
+
+                  <th>
+                    Location
+                  </th>
+
+                  <th>
+                    Amount
+                  </th>
+
+                  <th>
+                    Status
+                  </th>
+
                 </tr>
 
               </thead>
@@ -416,9 +627,11 @@ function AdminDashboard() {
                       {/* ORDER */}
 
                       <td>
+
                         <strong>
                           #{booking.id}
                         </strong>
+
                       </td>
 
                       {/* CUSTOMER */}
@@ -427,11 +640,13 @@ function AdminDashboard() {
 
                         <strong>
                           {booking.customerName ||
+                            booking.customer?.name ||
                             "Customer"}
                         </strong>
 
                         <small>
                           {booking.customerEmail ||
+                            booking.customer?.email ||
                             ""}
                         </small>
 
@@ -445,6 +660,12 @@ function AdminDashboard() {
                           {booking.serviceName ||
                             "Service"}
                         </strong>
+
+                        {booking.categoryName && (
+                          <small>
+                            {booking.categoryName}
+                          </small>
+                        )}
 
                       </td>
 
@@ -467,6 +688,12 @@ function AdminDashboard() {
                         <div>
                           {booking.address || "-"}
                         </div>
+
+                        {booking.estate && (
+                          <small>
+                            {booking.estate}
+                          </small>
+                        )}
 
                         {booking.city && (
                           <small>
@@ -550,4 +777,3 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
-

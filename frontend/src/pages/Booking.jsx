@@ -3,10 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import services from "../data/services";
 import "../styles/Booking.css";
 
-
-// ======================================================
-// GENERAL TIME SLOTS
-// ======================================================
+/* =========================================================
+   TIME SLOTS
+========================================================= */
 
 const TIME_SLOTS = [
   "8:00 AM - 10:00 AM",
@@ -16,176 +15,327 @@ const TIME_SLOTS = [
   "4:00 PM - 6:00 PM",
 ];
 
-
-// ======================================================
-// CLEANING PRICES
-// ======================================================
-
-const CLEANING_PRICES = {
-  Bedsitter: {
-    "Standard Cleaning": 1500,
-    "Deep Cleaning": 2200,
-    "Move In / Move Out": 2800,
-    "Post Construction": 3500,
-    Fumigation: 3000,
-  },
-
-  "1 Bedroom": {
-    "Standard Cleaning": 2000,
-    "Deep Cleaning": 3000,
-    "Move In / Move Out": 3800,
-    "Post Construction": 4500,
-    Fumigation: 3500,
-  },
-
-  "2 Bedroom": {
-    "Standard Cleaning": 2500,
-    "Deep Cleaning": 3750,
-    "Move In / Move Out": 4500,
-    "Post Construction": 5500,
-    Fumigation: 4500,
-  },
-
-  "3 Bedroom": {
-    "Standard Cleaning": 3000,
-    "Deep Cleaning": 4500,
-    "Move In / Move Out": 5400,
-    "Post Construction": 6500,
-    Fumigation: 5500,
-  },
-
-  "4 Bedroom": {
-    "Standard Cleaning": 4000,
-    "Deep Cleaning": 6000,
-    "Move In / Move Out": 7200,
-    "Post Construction": 8000,
-    Fumigation: 6500,
-  },
-
-  "5+ Bedroom": {
-    "Standard Cleaning": 5000,
-    "Deep Cleaning": 7500,
-    "Move In / Move Out": 9000,
-    "Post Construction": 10000,
-    Fumigation: 8000,
-  },
-};
-
+/* =========================================================
+   FREQUENCY DISCOUNTS
+========================================================= */
 
 const FREQUENCY_DISCOUNTS = {
   "One-Time": 0,
-  Weekly: 0.10,
+  Weekly: 0.1,
   "Bi-Weekly": 0.05,
   "Monthly Subscription": 0.15,
 };
 
+/* =========================================================
+   CLEANING EXTRAS
+========================================================= */
 
-// ======================================================
-// BOOKING COMPONENT
-// ======================================================
+const CLEANING_EXTRAS = [
+  {
+    name: "Inside Fridge",
+    price: 500,
+  },
+  {
+    name: "Inside Oven",
+    price: 400,
+  },
+  {
+    name: "Balcony Cleaning",
+    price: 300,
+  },
+  {
+    name: "Laundry",
+    price: 700,
+  },
+  {
+    name: "Ironing",
+    price: 500,
+  },
+  {
+    name: "Pest Control / Fumigation",
+    price: 2500,
+  },
+];
+
+/* =========================================================
+   CATEGORY CONFIGURATION
+========================================================= */
+
+const CATEGORY_CONFIG = {
+  /* ---------------- CLEANING ---------------- */
+
+  101: {
+    service: "Cleaning",
+    category: "House Cleaning",
+    type: "houseCleaning",
+    basePrice: 1500,
+  },
+
+  102: {
+    service: "Cleaning",
+    category: "Office Cleaning",
+    type: "officeCleaning",
+    basePrice: 2500,
+  },
+
+  103: {
+    service: "Cleaning",
+    category: "Window Cleaning",
+    type: "windowCleaning",
+    basePrice: 1000,
+  },
+
+  104: {
+    service: "Cleaning",
+    category: "Carpet Cleaning",
+    type: "carpetCleaning",
+    basePrice: 1500,
+  },
+
+  105: {
+    service: "Cleaning",
+    category: "Sofa Cleaning",
+    type: "sofaCleaning",
+    basePrice: 1200,
+  },
+
+  /* ---------------- LAUNDRY ---------------- */
+
+  201: {
+    service: "Laundry",
+    category: "Wash & Fold",
+    type: "washFold",
+    basePrice: 800,
+  },
+
+  202: {
+    service: "Laundry",
+    category: "Ironing",
+    type: "ironing",
+    basePrice: 500,
+  },
+
+  203: {
+    service: "Laundry",
+    category: "Dry Cleaning",
+    type: "dryCleaning",
+    basePrice: 1000,
+  },
+
+  /* ---------------- PLUMBING ---------------- */
+
+  301: {
+    service: "Plumbing",
+    category: "Leak Repair",
+    type: "leakRepair",
+    basePrice: 1000,
+  },
+
+  302: {
+    service: "Plumbing",
+    category: "Blocked Drain",
+    type: "blockedDrain",
+    basePrice: 1500,
+  },
+
+  303: {
+    service: "Plumbing",
+    category: "Pipe Installation",
+    type: "pipeInstallation",
+    basePrice: 2500,
+  },
+
+  /* ---------------- ELECTRICAL ---------------- */
+
+  401: {
+    service: "Electrical",
+    category: "Electrical Repair",
+    type: "electricalRepair",
+    basePrice: 1500,
+  },
+
+  402: {
+    service: "Electrical",
+    category: "Socket Installation",
+    type: "socketInstallation",
+    basePrice: 1000,
+  },
+
+  403: {
+    service: "Electrical",
+    category: "Lighting Installation",
+    type: "lightingInstallation",
+    basePrice: 1500,
+  },
+
+  /* ---------------- GARDENING ---------------- */
+
+  501: {
+    service: "Gardening",
+    category: "Lawn Maintenance",
+    type: "lawnMaintenance",
+    basePrice: 1000,
+  },
+
+  502: {
+    service: "Gardening",
+    category: "Garden Cleaning",
+    type: "gardenCleaning",
+    basePrice: 1200,
+  },
+
+  503: {
+    service: "Gardening",
+    category: "Landscaping",
+    type: "landscaping",
+    basePrice: 3000,
+  },
+
+  /* ---------------- PAINTING ---------------- */
+
+  601: {
+    service: "Painting",
+    category: "Interior Painting",
+    type: "interiorPainting",
+    basePrice: 3000,
+  },
+
+  602: {
+    service: "Painting",
+    category: "Exterior Painting",
+    type: "exteriorPainting",
+    basePrice: 4000,
+  },
+
+  603: {
+    service: "Painting",
+    category: "Room Painting",
+    type: "roomPainting",
+    basePrice: 2000,
+  },
+
+  /* ---------------- MOVING ---------------- */
+
+  701: {
+    service: "Moving",
+    category: "House Moving",
+    type: "houseMoving",
+    basePrice: 5000,
+  },
+
+  702: {
+    service: "Moving",
+    category: "Office Moving",
+    type: "officeMoving",
+    basePrice: 7000,
+  },
+
+  703: {
+    service: "Moving",
+    category: "Packing Service",
+    type: "packingService",
+    basePrice: 2500,
+  },
+};
+
+/* =========================================================
+   COMPONENT
+========================================================= */
 
 function Booking() {
-
   const navigate = useNavigate();
 
   const { serviceId, categoryId } = useParams();
 
+  const numericServiceId = Number(serviceId);
+  const numericCategoryId = Number(categoryId);
 
-  // ====================================================
-  // FIND SERVICE
-  // ====================================================
-
-  const service = services.find(
-    (item) =>
-      String(item.id) === String(serviceId)
+  const service = services?.find(
+    (item) => Number(item.id) === numericServiceId
   );
 
+  const config = CATEGORY_CONFIG[numericCategoryId];
 
-  // ====================================================
-  // FIND CATEGORY
-  // ====================================================
-
-  const category = service?.categories?.find(
-    (item) =>
-      String(item.id) === String(categoryId)
-  );
-
-
-  // ====================================================
-  // FORM
-  // ====================================================
+  /* =======================================================
+     FORM STATE
+  ======================================================= */
 
   const [form, setForm] = useState({
-
-    // General
+    /* General information */
     date: "",
     time: "",
-
     address: "",
     city: "",
     estate: "",
     houseNumber: "",
-
     notes: "",
 
-
-    // Cleaning
+    /* House cleaning */
     houseSize: "Bedsitter",
-    cleaningType: "Standard Cleaning",
+    cleaningLevel: "Standard Cleaning",
     frequency: "One-Time",
     cleaningExtras: [],
 
+    /* Office cleaning */
+    officeSize: "Small",
+    officeRooms: 1,
+    officeCleaningLevel: "Standard Cleaning",
+    officeFrequency: "One-Time",
 
-    // Laundry
-    laundryType: "",
-    laundryQuantity: "",
-    pickupDelivery: "Drop Off",
+    /* Window cleaning */
+    numberOfWindows: 1,
+    windowHeight: "Ground Floor",
+    windowSide: "Inside Only",
 
+    /* Carpet cleaning */
+    numberOfCarpets: 1,
+    carpetSize: "Small",
+    carpetTreatment: "Standard Cleaning",
 
-    // Plumbing
-    plumbingIssue: "",
+    /* Sofa cleaning */
+    sofaSeats: 1,
+    sofaMaterial: "Fabric",
+    sofaTreatment: "Standard Cleaning",
+
+    /* Laundry */
+    laundryQuantity: 1,
+    pickupDelivery: "Customer Drop-off",
+
+    /* Plumbing */
+    plumbingAreas: "",
     plumbingUrgency: "Normal",
+    plumbingDescription: "",
 
-
-    // Electrical
-    electricalIssue: "",
+    /* Electrical */
+    electricalPoints: 1,
     electricalUrgency: "Normal",
-    numberOfRooms: "",
+    electricalDescription: "",
 
-
-    // Gardening
-    gardenSize: "",
-    gardeningService: "",
+    /* Gardening */
+    gardenSize: "Small",
     gardeningFrequency: "One-Time",
+    gardeningDescription: "",
 
+    /* Painting */
+    paintingRooms: 1,
+    wallCondition: "Good",
+    paintProvided: "Customer Provides Paint",
+    paintingArea: "Interior",
 
-    // Painting
-    paintingType: "",
-    numberOfRoomsPainting: "",
-    wallCondition: "",
-    paintProvided: "No",
-
-
-    // Moving
-    movingType: "",
-    movingDistance: "",
-    numberOfItems: "",
+    /* Moving */
+    movingDistance: "Within Same Estate",
+    numberOfItems: 1,
     packingRequired: "No",
-
+    movingFloor: "Ground Floor",
+    movingDescription: "",
   });
 
+  /* =======================================================
+     GENERIC CHANGE HANDLER
+  ======================================================= */
 
-  // ====================================================
-  // HANDLE CHANGE
-  // ====================================================
-
-  const handleChange = (e) => {
-
-    const {
-      name,
-      value,
-    } = e.target;
-
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
     setForm((previous) => ({
       ...previous,
@@ -193,1523 +343,1058 @@ function Booking() {
     }));
   };
 
+  /* =======================================================
+     CLEANING EXTRA TOGGLE
+  ======================================================= */
 
-  // ====================================================
-  // CLEANING EXTRAS
-  // ====================================================
-
-  const cleaningExtrasList = [
-
-    {
-      name: "Inside Fridge",
-      price: 500,
-    },
-
-    {
-      name: "Inside Oven",
-      price: 400,
-    },
-
-    {
-      name: "Balcony Cleaning",
-      price: 300,
-    },
-
-    {
-      name: "Laundry",
-      price: 700,
-    },
-
-    {
-      name: "Ironing",
-      price: 500,
-    },
-
-    {
-      name: "Pest Control / Fumigation",
-      price: 2500,
-    },
-
-  ];
-
-
-  const handleCleaningExtra = (extra) => {
-
+  const toggleCleaningExtra = (extra) => {
     setForm((previous) => {
-
-      const exists =
-        previous.cleaningExtras.some(
-          (item) =>
-            item.name === extra.name
-        );
-
-
-      if (exists) {
-
-        return {
-
-          ...previous,
-
-          cleaningExtras:
-            previous.cleaningExtras.filter(
-              (item) =>
-                item.name !== extra.name
-            ),
-
-        };
-
-      }
-
-
-      return {
-
-        ...previous,
-
-        cleaningExtras: [
-          ...previous.cleaningExtras,
-          extra,
-        ],
-
-      };
-
-    });
-
-  };
-
-
-  // ====================================================
-  // PRICE CALCULATION
-  // ====================================================
-
-  const priceSummary = useMemo(() => {
-
-    let servicePrice = 0;
-
-    let extrasTotal = 0;
-
-    let discount = 0;
-
-
-    // ================================================
-    // CLEANING
-    // ================================================
-
-    if (service?.name === "Cleaning") {
-
-      servicePrice =
-        CLEANING_PRICES[
-          form.houseSize
-        ]?.[
-          form.cleaningType
-        ] || 0;
-
-
-      const discountRate =
-        FREQUENCY_DISCOUNTS[
-          form.frequency
-        ] || 0;
-
-
-      discount =
-        servicePrice *
-        discountRate;
-
-
-      extrasTotal =
-        form.cleaningExtras.reduce(
-          (total, extra) =>
-            total + Number(extra.price),
-          0
-        );
-
-    }
-
-
-    // ================================================
-    // LAUNDRY
-    // ================================================
-
-    else if (service?.name === "Laundry") {
-
-      const quantity =
-        Number(
-          form.laundryQuantity
-        ) || 0;
-
-
-      if (
-        form.laundryType ===
-        "Wash & Fold"
-      ) {
-
-        servicePrice =
-          quantity * 150;
-
-      }
-
-      else if (
-        form.laundryType ===
-        "Ironing"
-      ) {
-
-        servicePrice =
-          quantity * 100;
-
-      }
-
-      else if (
-        form.laundryType ===
-        "Dry Cleaning"
-      ) {
-
-        servicePrice =
-          quantity * 300;
-
-      }
-
-      if (
-        form.pickupDelivery ===
-        "Pickup & Delivery"
-      ) {
-
-        servicePrice += 300;
-
-      }
-
-    }
-
-
-    // ================================================
-    // PLUMBING
-    // ================================================
-
-    else if (service?.name === "Plumbing") {
-
-      const plumbingPrices = {
-
-        "Leak Repair": 1500,
-
-        "Blocked Drain": 1800,
-
-        "Toilet Repair": 2000,
-
-        "Pipe Installation": 3000,
-
-        "General Plumbing": 1500,
-
-      };
-
-
-      servicePrice =
-        plumbingPrices[
-          form.plumbingIssue
-        ] || 0;
-
-
-      if (
-        form.plumbingUrgency ===
-        "Urgent"
-      ) {
-
-        servicePrice += 500;
-
-      }
-
-
-      if (
-        form.plumbingUrgency ===
-        "Emergency"
-      ) {
-
-        servicePrice += 1000;
-
-      }
-
-    }
-
-
-    // ================================================
-    // ELECTRICAL
-    // ================================================
-
-    else if (
-      service?.name ===
-      "Electrical"
-    ) {
-
-      const electricalPrices = {
-
-        "Electrical Repair": 1500,
-
-        Wiring: 3000,
-
-        "Light Installation": 1000,
-
-        "Socket / Switch": 800,
-
-        Installation: 2000,
-
-      };
-
-
-      servicePrice =
-        electricalPrices[
-          form.electricalIssue
-        ] || 0;
-
-
-      const rooms =
-        Number(
-          form.numberOfRooms
-        ) || 1;
-
-
-      if (
-        form.electricalIssue ===
-        "Wiring"
-      ) {
-
-        servicePrice *= rooms;
-
-      }
-
-    }
-
-
-    // ================================================
-    // GARDENING
-    // ================================================
-
-    else if (
-      service?.name ===
-      "Gardening"
-    ) {
-
-      const gardeningPrices = {
-
-        "Lawn Mowing": 1500,
-
-        "Garden Maintenance": 2000,
-
-        "Tree Trimming": 2500,
-
-        "Landscaping": 5000,
-
-      };
-
-
-      servicePrice =
-        gardeningPrices[
-          form.gardeningService
-        ] || 0;
-
-
-      if (
-        form.gardenSize ===
-        "Large"
-      ) {
-
-        servicePrice *= 1.5;
-
-      }
-
-    }
-
-
-    // ================================================
-    // PAINTING
-    // ================================================
-
-    else if (
-      service?.name ===
-      "Painting"
-    ) {
-
-      const rooms =
-        Number(
-          form.numberOfRoomsPainting
-        ) || 0;
-
-
-      if (
-        form.paintingType ===
-        "Interior Painting"
-      ) {
-
-        servicePrice =
-          rooms * 5000;
-
-      }
-
-      else if (
-        form.paintingType ===
-        "Exterior Painting"
-      ) {
-
-        servicePrice =
-          rooms * 6500;
-
-      }
-
-      else if (
-        form.paintingType ===
-        "Room Painting"
-      ) {
-
-        servicePrice =
-          rooms * 4000;
-
-      }
-
-
-      if (
-        form.wallCondition ===
-        "Poor"
-      ) {
-
-        servicePrice +=
-          rooms * 1500;
-
-      }
-
-    }
-
-
-    // ================================================
-    // MOVING
-    // ================================================
-
-    else if (
-      service?.name ===
-      "Moving"
-    ) {
-
-      const movingPrices = {
-
-        "Single Item Moving": 1500,
-
-        "House Moving": 5000,
-
-        "Office Moving": 7000,
-
-      };
-
-
-      servicePrice =
-        movingPrices[
-          form.movingType
-        ] || 0;
-
-
-      const distance =
-        Number(
-          form.movingDistance
-        ) || 0;
-
-
-      if (distance > 10) {
-
-        servicePrice +=
-          (distance - 10) * 100;
-
-      }
-
-
-      if (
-        form.packingRequired ===
-        "Yes"
-      ) {
-
-        servicePrice += 2000;
-
-      }
-
-    }
-
-
-    const total =
-      servicePrice -
-      discount +
-      extrasTotal;
-
-
-    return {
-
-      servicePrice,
-
-      discount,
-
-      extrasTotal,
-
-      total,
-
-    };
-
-  }, [
-    service,
-    form,
-  ]);
-
-
-  // ====================================================
-  // SUBMIT
-  // ====================================================
-
-  const handleSubmit = (e) => {
-
-    e.preventDefault();
-
-
-    if (
-      !form.date ||
-      !form.time ||
-      !form.address ||
-      !form.city
-    ) {
-
-      alert(
-        "Please complete all required fields."
+      const exists = previous.cleaningExtras.some(
+        (item) => item.name === extra.name
       );
 
-      return;
-
-    }
-
-
-    const booking = {
-
-      serviceId,
-
-      categoryId,
-
-      serviceName:
-        service?.name || "",
-
-      categoryName:
-        category?.name || "",
-
-      ...form,
-
-      pricing:
-        priceSummary,
-
-    };
-
-
-    navigate(
-      "/checkout",
-      {
-        state: {
-          booking,
-
-          total:
-            priceSummary.total,
-        },
+      if (exists) {
+        return {
+          ...previous,
+          cleaningExtras: previous.cleaningExtras.filter(
+            (item) => item.name !== extra.name
+          ),
+        };
       }
-    );
 
+      return {
+        ...previous,
+        cleaningExtras: [...previous.cleaningExtras, extra],
+      };
+    });
   };
 
+  /* =======================================================
+     PRICE CALCULATION
+  ======================================================= */
 
-  // ====================================================
-  // INVALID
-  // ====================================================
+  const priceSummary = useMemo(() => {
+    let basePrice = 0;
+    let discount = 0;
+    let extrasTotal = 0;
+    let subtotal = 0;
 
-  if (!service || !category) {
+    /* =====================================================
+       HOUSE CLEANING
+    ===================================================== */
 
-    return (
+    if (config?.type === "houseCleaning") {
+      const houseMultipliers = {
+        Bedsitter: 1,
+        "1 Bedroom": 1.3,
+        "2 Bedroom": 1.7,
+        "3 Bedroom": 2.1,
+        "4 Bedroom": 2.6,
+        "5+ Bedroom": 3.2,
+      };
 
-      <div className="booking-error">
+      const cleaningMultipliers = {
+        "Standard Cleaning": 1,
+        "Deep Cleaning": 1.5,
+        "Move In / Move Out": 1.8,
+        "Post Construction": 2,
+        Fumigation: 2.5,
+      };
 
-        <h2>
-          Booking information not found
-        </h2>
+      const houseMultiplier =
+        houseMultipliers[form.houseSize] || 1;
 
-        <p>
-          The service you are trying to
-          book could not be found.
-        </p>
+      const cleaningMultiplier =
+        cleaningMultipliers[form.cleaningLevel] || 1;
 
-        <button
-          onClick={() =>
-            navigate("/services")
-          }
-        >
-          ← Back to Services
-        </button>
+      basePrice = Math.round(
+        config.basePrice *
+          houseMultiplier *
+          cleaningMultiplier
+      );
 
-      </div>
+      const discountRate =
+        FREQUENCY_DISCOUNTS[form.frequency] || 0;
 
+      discount = Math.round(basePrice * discountRate);
+
+      extrasTotal = form.cleaningExtras.reduce(
+        (sum, item) => sum + Number(item.price || 0),
+        0
+      );
+
+      subtotal = basePrice - discount + extrasTotal;
+    }
+
+    /* =====================================================
+       OFFICE CLEANING
+    ===================================================== */
+
+    else if (config?.type === "officeCleaning") {
+      const officePrices = {
+        Small: 2500,
+        Medium: 4000,
+        Large: 6500,
+      };
+
+      const levelMultipliers = {
+        "Standard Cleaning": 1,
+        "Deep Cleaning": 1.5,
+        "Post Construction": 2,
+      };
+
+      const officeBase =
+        officePrices[form.officeSize] || 2500;
+
+      const levelMultiplier =
+        levelMultipliers[form.officeCleaningLevel] || 1;
+
+      const additionalRooms =
+        Math.max(Number(form.officeRooms) - 3, 0) * 500;
+
+      basePrice = Math.round(
+        officeBase * levelMultiplier + additionalRooms
+      );
+
+      const discountRate =
+        FREQUENCY_DISCOUNTS[form.officeFrequency] || 0;
+
+      discount = Math.round(basePrice * discountRate);
+
+      subtotal = basePrice - discount;
+    }
+
+    /* =====================================================
+       WINDOW CLEANING
+    ===================================================== */
+
+    else if (config?.type === "windowCleaning") {
+      const windows = Number(form.numberOfWindows) || 1;
+
+      let pricePerWindow = 200;
+
+      if (form.windowHeight === "Upper Floor") {
+        pricePerWindow += 100;
+      }
+
+      if (form.windowSide === "Inside & Outside") {
+        pricePerWindow += 100;
+      }
+
+      basePrice = windows * pricePerWindow;
+
+      subtotal = basePrice;
+    }
+
+    /* =====================================================
+       CARPET CLEANING
+    ===================================================== */
+
+    else if (config?.type === "carpetCleaning") {
+      const carpetSizePrices = {
+        Small: 1000,
+        Medium: 1500,
+        Large: 2200,
+      };
+
+      const treatmentMultipliers = {
+        "Standard Cleaning": 1,
+        "Deep Cleaning": 1.5,
+        "Stain Removal": 1.8,
+      };
+
+      const sizePrice =
+        carpetSizePrices[form.carpetSize] || 1000;
+
+      const treatmentMultiplier =
+        treatmentMultipliers[form.carpetTreatment] || 1;
+
+      basePrice = Math.round(
+        Number(form.numberOfCarpets || 1) *
+          sizePrice *
+          treatmentMultiplier
+      );
+
+      subtotal = basePrice;
+    }
+
+    /* =====================================================
+       SOFA CLEANING
+    ===================================================== */
+
+    else if (config?.type === "sofaCleaning") {
+      const materialPrices = {
+        Fabric: 1200,
+        Leather: 1500,
+        Suede: 1800,
+      };
+
+      const treatmentMultipliers = {
+        "Standard Cleaning": 1,
+        "Deep Cleaning": 1.5,
+        "Stain Removal": 1.7,
+      };
+
+      const materialPrice =
+        materialPrices[form.sofaMaterial] || 1200;
+
+      const treatmentMultiplier =
+        treatmentMultipliers[form.sofaTreatment] || 1;
+
+      basePrice = Math.round(
+        Number(form.sofaSeats || 1) *
+          materialPrice *
+          treatmentMultiplier
+      );
+
+      subtotal = basePrice;
+    }
+
+    /* =====================================================
+       LAUNDRY
+    ===================================================== */
+
+    else if (
+      config?.type === "washFold" ||
+      config?.type === "ironing" ||
+      config?.type === "dryCleaning"
+    ) {
+      const quantity = Number(form.laundryQuantity) || 1;
+
+      let price = config.basePrice;
+
+      if (form.pickupDelivery === "Pickup & Delivery") {
+        price += 300;
+      }
+
+      basePrice = quantity * price;
+
+      subtotal = basePrice;
+    }
+
+    /* =====================================================
+       PLUMBING
+    ===================================================== */
+
+    else if (
+      config?.type === "leakRepair" ||
+      config?.type === "blockedDrain" ||
+      config?.type === "pipeInstallation"
+    ) {
+      const urgencyPrices = {
+        Normal: 0,
+        Urgent: 500,
+        Emergency: 1000,
+      };
+
+      basePrice = config.basePrice;
+
+      basePrice +=
+        urgencyPrices[form.plumbingUrgency] || 0;
+
+      subtotal = basePrice;
+    }
+
+    /* =====================================================
+       ELECTRICAL
+    ===================================================== */
+
+    else if (
+      config?.type === "electricalRepair" ||
+      config?.type === "socketInstallation" ||
+      config?.type === "lightingInstallation"
+    ) {
+      const urgencyPrices = {
+        Normal: 0,
+        Urgent: 500,
+        Emergency: 1000,
+      };
+
+      const points =
+        Number(form.electricalPoints) || 1;
+
+      basePrice =
+        config.basePrice +
+        Math.max(points - 1, 0) * 300;
+
+      basePrice +=
+        urgencyPrices[form.electricalUrgency] || 0;
+
+      subtotal = basePrice;
+    }
+
+    /* =====================================================
+       GARDENING
+    ===================================================== */
+
+    else if (
+      config?.type === "lawnMaintenance" ||
+      config?.type === "gardenCleaning" ||
+      config?.type === "landscaping"
+    ) {
+      const gardenMultipliers = {
+        Small: 1,
+        Medium: 1.5,
+        Large: 2.2,
+      };
+
+      const frequencyMultipliers = {
+        "One-Time": 1,
+        Weekly: 0.9,
+        "Bi-Weekly": 0.95,
+        Monthly: 0.97,
+      };
+
+      const gardenMultiplier =
+        gardenMultipliers[form.gardenSize] || 1;
+
+      const frequencyMultiplier =
+        frequencyMultipliers[form.gardeningFrequency] || 1;
+
+      basePrice = Math.round(
+        config.basePrice *
+          gardenMultiplier *
+          frequencyMultiplier
+      );
+
+      subtotal = basePrice;
+    }
+
+    /* =====================================================
+       PAINTING
+    ===================================================== */
+
+    else if (
+      config?.type === "interiorPainting" ||
+      config?.type === "exteriorPainting" ||
+      config?.type === "roomPainting"
+    ) {
+      const roomCount =
+        Number(form.paintingRooms) || 1;
+
+      const wallConditionPrices = {
+        Good: 0,
+        "Needs Preparation": 1000,
+        "Damaged Walls": 2000,
+      };
+
+      const paintPrices = {
+        "Customer Provides Paint": 0,
+        "Ramon's Marketplace Provides Paint": 2500,
+      };
+
+      basePrice =
+        config.basePrice * roomCount;
+
+      basePrice +=
+        wallConditionPrices[form.wallCondition] || 0;
+
+      basePrice +=
+        paintPrices[form.paintProvided] || 0;
+
+      subtotal = basePrice;
+    }
+
+    /* =====================================================
+       MOVING
+    ===================================================== */
+
+    else if (
+      config?.type === "houseMoving" ||
+      config?.type === "officeMoving" ||
+      config?.type === "packingService"
+    ) {
+      const distancePrices = {
+        "Within Same Estate": 0,
+        "Within Same Town": 1500,
+        "Within Same County": 3000,
+        "Outside County": 5000,
+      };
+
+      const floorPrices = {
+        "Ground Floor": 0,
+        "1st Floor": 500,
+        "2nd Floor": 1000,
+        "3rd Floor or Higher": 1500,
+      };
+
+      const packingPrices = {
+        No: 0,
+        Yes: 1500,
+      };
+
+      const items =
+        Number(form.numberOfItems) || 1;
+
+      basePrice =
+        config.basePrice +
+        Math.max(items - 5, 0) * 300;
+
+      basePrice +=
+        distancePrices[form.movingDistance] || 0;
+
+      basePrice +=
+        floorPrices[form.movingFloor] || 0;
+
+      basePrice +=
+        packingPrices[form.packingRequired] || 0;
+
+      subtotal = basePrice;
+    }
+
+    return {
+      basePrice,
+      discount,
+      extrasTotal,
+      total: Math.max(0, subtotal),
+    };
+  }, [config, form]);
+
+  /* =======================================================
+     VALIDATION
+  ======================================================= */
+
+  const validateBooking = () => {
+    if (!serviceId || Number.isNaN(numericServiceId)) {
+      alert("The selected service is invalid.");
+      return false;
+    }
+
+    if (!categoryId || Number.isNaN(numericCategoryId)) {
+      alert("The selected service category is invalid.");
+      return false;
+    }
+
+    if (!config) {
+      alert("This service category could not be found.");
+      return false;
+    }
+
+    if (!form.date) {
+      alert("Please select your preferred date.");
+      return false;
+    }
+
+    if (!form.time) {
+      alert("Please select your preferred time.");
+      return false;
+    }
+
+    if (!form.address.trim()) {
+      alert("Please enter your address.");
+      return false;
+    }
+
+    if (!form.city.trim()) {
+      alert("Please enter your city.");
+      return false;
+    }
+
+    if (!form.estate.trim()) {
+      alert("Please enter your estate/area.");
+      return false;
+    }
+
+    if (priceSummary.total <= 0) {
+      alert("The booking total must be greater than zero.");
+      return false;
+    }
+
+    return true;
+  };
+
+  /* =======================================================
+     PROCEED TO CHECKOUT
+  ======================================================= */
+
+  const proceedToCheckout = () => {
+    if (!validateBooking()) {
+      return;
+    }
+
+    /*
+      IMPORTANT:
+
+      This object is what gets passed to Checkout.jsx.
+
+      We deliberately include both cleaningLevel and
+      cleaningType because your existing Checkout.jsx
+      expects cleaningType while the form uses cleaningLevel.
+    */
+
+    const bookingData = {
+      ...form,
+
+      serviceId: numericServiceId,
+
+      categoryId: numericCategoryId,
+
+      serviceName:
+        service?.name ||
+        config?.service ||
+        "Service",
+
+      categoryName:
+        config?.category ||
+        "Service Category",
+
+      /* Fix for cleaning naming mismatch */
+      cleaningType:
+        form.cleaningLevel || "",
+
+      cleaningLevel:
+        form.cleaningLevel || "",
+
+      /* Normalize extras */
+      extras:
+        form.cleaningExtras || [],
+
+      /* Price */
+      total:
+        Number(priceSummary.total) || 0,
+
+      /* Useful category information */
+      serviceType:
+        config?.type || "",
+
+      categoryType:
+        config?.type || "",
+    };
+
+    console.log(
+      "BOOKING DATA BEING SENT TO CHECKOUT:",
+      bookingData
     );
 
+    navigate("/checkout", {
+      state: {
+        booking: bookingData,
+        total: Number(priceSummary.total) || 0,
+      },
+    });
+  };
+
+  /* =======================================================
+     IF SERVICE NOT FOUND
+  ======================================================= */
+
+  if (!config) {
+    return (
+      <div className="booking-page">
+        <div className="booking-container">
+          <div className="booking-error">
+            <h2>Service Not Found</h2>
+
+            <p>
+              The service category you selected could not
+              be found.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => navigate("/services")}
+            >
+              Back to Services
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
-
-  // ====================================================
-  // RENDER
-  // ====================================================
+  /* =======================================================
+     RENDER
+  ======================================================= */
 
   return (
-
     <div className="booking-page">
 
-      <div className="booking-card">
+      <div className="booking-container">
 
-
-        {/* HEADER */}
+        {/* =================================================
+            HEADER
+        ================================================= */}
 
         <div className="booking-header">
 
+          <button
+            type="button"
+            className="back-button"
+            onClick={() => navigate(-1)}
+          >
+            ← Back
+          </button>
+
+          <h1>
+            Book {config.category}
+          </h1>
+
+          <p>
+            Tell us what you need and choose your preferred
+            date and time.
+          </p>
+
+        </div>
+
+        {/* =================================================
+            SERVICE INFORMATION
+        ================================================= */}
+
+        <div className="booking-service-info">
+
           <div>
+            <span>Service</span>
+            <strong>
+              {service?.name || config.service}
+            </strong>
+          </div>
 
-            <span className="booking-badge">
-
-              {service.icon}
-
-              {" "}
-
-              {service.name}
-
-            </span>
-
-
-            <h1>
-
-              Book{" "}
-
-              {category.name}
-
-            </h1>
-
-
-            <p>
-
-              Schedule your service and
-              customize your booking.
-
-            </p>
-
+          <div>
+            <span>Category</span>
+            <strong>
+              {config.category}
+            </strong>
           </div>
 
         </div>
 
+        {/* =================================================
+            GENERAL BOOKING INFORMATION
+        ================================================= */}
 
-        <form
-          className="booking-form"
-          onSubmit={handleSubmit}
-        >
+        <section className="booking-section">
 
+          <h2>1. Appointment Details</h2>
 
-          {/* =================================================
-              SERVICE SPECIFIC DETAILS
-          ================================================= */}
+          <div className="form-grid">
 
+            <div className="form-group">
+
+              <label htmlFor="date">
+                Preferred Date
+              </label>
+
+              <input
+                id="date"
+                type="date"
+                name="date"
+                value={form.date}
+                onChange={handleChange}
+                min={
+                  new Date()
+                    .toISOString()
+                    .split("T")[0]
+                }
+              />
+
+            </div>
+
+            <div className="form-group">
+
+              <label htmlFor="time">
+                Preferred Time
+              </label>
+
+              <select
+                id="time"
+                name="time"
+                value={form.time}
+                onChange={handleChange}
+              >
+
+                <option value="">
+                  Select Time
+                </option>
+
+                {TIME_SLOTS.map((slot) => (
+                  <option
+                    key={slot}
+                    value={slot}
+                  >
+                    {slot}
+                  </option>
+                ))}
+
+              </select>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* =================================================
+            LOCATION
+        ================================================= */}
+
+        <section className="booking-section">
+
+          <h2>2. Service Location</h2>
+
+          <div className="form-grid">
+
+            <div className="form-group full-width">
+
+              <label htmlFor="address">
+                Physical Address
+              </label>
+
+              <input
+                id="address"
+                type="text"
+                name="address"
+                value={form.address}
+                onChange={handleChange}
+                placeholder="Enter your physical address"
+              />
+
+            </div>
+
+            <div className="form-group">
+
+              <label htmlFor="city">
+                City / Town
+              </label>
+
+              <input
+                id="city"
+                type="text"
+                name="city"
+                value={form.city}
+                onChange={handleChange}
+                placeholder="e.g. Nairobi"
+              />
+
+            </div>
+
+            <div className="form-group">
+
+              <label htmlFor="estate">
+                Estate / Area
+              </label>
+
+              <input
+                id="estate"
+                type="text"
+                name="estate"
+                value={form.estate}
+                onChange={handleChange}
+                placeholder="e.g. Kilimani"
+              />
+
+            </div>
+
+            <div className="form-group">
+
+              <label htmlFor="houseNumber">
+                House / Apartment Number
+              </label>
+
+              <input
+                id="houseNumber"
+                type="text"
+                name="houseNumber"
+                value={form.houseNumber}
+                onChange={handleChange}
+                placeholder="e.g. House A12"
+              />
+
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* =================================================
+            HOUSE CLEANING
+        ================================================= */}
+
+        {config.type === "houseCleaning" && (
           <section className="booking-section">
 
-            <div className="section-heading">
+            <h2>3. House Cleaning Details</h2>
 
-              <span className="section-number">
-                1
-              </span>
+            <div className="form-grid">
 
-              <div>
+              <div className="form-group">
 
-                <h2>
-                  Service Details
-                </h2>
+                <label htmlFor="houseSize">
+                  House Size
+                </label>
 
-                <p>
-                  Tell us what you need.
-                </p>
+                <select
+                  id="houseSize"
+                  name="houseSize"
+                  value={form.houseSize}
+                  onChange={handleChange}
+                >
+
+                  <option value="Bedsitter">
+                    Bedsitter
+                  </option>
+
+                  <option value="1 Bedroom">
+                    1 Bedroom
+                  </option>
+
+                  <option value="2 Bedroom">
+                    2 Bedroom
+                  </option>
+
+                  <option value="3 Bedroom">
+                    3 Bedroom
+                  </option>
+
+                  <option value="4 Bedroom">
+                    4 Bedroom
+                  </option>
+
+                  <option value="5+ Bedroom">
+                    5+ Bedroom
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="cleaningLevel">
+                  Cleaning Type
+                </label>
+
+                <select
+                  id="cleaningLevel"
+                  name="cleaningLevel"
+                  value={form.cleaningLevel}
+                  onChange={handleChange}
+                >
+
+                  <option value="Standard Cleaning">
+                    Standard Cleaning
+                  </option>
+
+                  <option value="Deep Cleaning">
+                    Deep Cleaning
+                  </option>
+
+                  <option value="Move In / Move Out">
+                    Move In / Move Out
+                  </option>
+
+                  <option value="Post Construction">
+                    Post Construction
+                  </option>
+
+                  <option value="Fumigation">
+                    Fumigation
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="frequency">
+                  Cleaning Frequency
+                </label>
+
+                <select
+                  id="frequency"
+                  name="frequency"
+                  value={form.frequency}
+                  onChange={handleChange}
+                >
+
+                  <option value="One-Time">
+                    One-Time
+                  </option>
+
+                  <option value="Weekly">
+                    Weekly
+                  </option>
+
+                  <option value="Bi-Weekly">
+                    Bi-Weekly
+                  </option>
+
+                  <option value="Monthly Subscription">
+                    Monthly Subscription
+                  </option>
+
+                </select>
 
               </div>
 
             </div>
 
+            <div className="extras-section">
 
-            <div className="form-grid">
+              <h3>Additional Services</h3>
 
+              <div className="extras-grid">
 
-              {/* ================= CLEANING ================= */}
+                {CLEANING_EXTRAS.map((extra) => {
 
-              {service.name === "Cleaning" && (
+                  const selected =
+                    form.cleaningExtras.some(
+                      (item) =>
+                        item.name === extra.name
+                    );
 
-                <>
-
-                  <div className="form-group">
-
-                    <label>
-                      House Size *
-                    </label>
-
-                    <select
-                      name="houseSize"
-                      value={
-                        form.houseSize
-                      }
-                      onChange={
-                        handleChange
-                      }
-                      required
+                  return (
+                    <label
+                      key={extra.name}
+                      className={`extra-item ${
+                        selected
+                          ? "selected"
+                          : ""
+                      }`}
                     >
 
-                      {Object.keys(
-                        CLEANING_PRICES
-                      ).map(
-                        (size) => (
+                      <input
+                        type="checkbox"
+                        checked={selected}
+                        onChange={() =>
+                          toggleCleaningExtra(extra)
+                        }
+                      />
 
-                          <option
-                            key={size}
-                          >
-                            {size}
-                          </option>
+                      <span>
+                        {extra.name}
+                      </span>
 
-                        )
-                      )}
+                      <strong>
+                        + KSh{" "}
+                        {extra.price.toLocaleString()}
+                      </strong>
 
-                    </select>
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Cleaning Type *
                     </label>
+                  );
+                })}
 
-                    <select
-                      name="cleaningType"
-                      value={
-                        form.cleaningType
-                      }
-                      onChange={
-                        handleChange
-                      }
-                      required
-                    >
-
-                      {Object.keys(
-                        CLEANING_PRICES.Bedsitter
-                      ).map(
-                        (type) => (
-
-                          <option
-                            key={type}
-                          >
-                            {type}
-                          </option>
-
-                        )
-                      )}
-
-                    </select>
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Frequency *
-                    </label>
-
-                    <select
-                      name="frequency"
-                      value={
-                        form.frequency
-                      }
-                      onChange={
-                        handleChange
-                      }
-                      required
-                    >
-
-                      {Object.keys(
-                        FREQUENCY_DISCOUNTS
-                      ).map(
-                        (frequency) => (
-
-                          <option
-                            key={frequency}
-                          >
-                            {frequency}
-                          </option>
-
-                        )
-                      )}
-
-                    </select>
-
-                  </div>
-
-                </>
-
-              )}
-
-
-              {/* ================= LAUNDRY ================= */}
-
-              {service.name === "Laundry" && (
-
-                <>
-
-                  <div className="form-group">
-
-                    <label>
-                      Laundry Type *
-                    </label>
-
-                    <select
-                      name="laundryType"
-                      value={
-                        form.laundryType
-                      }
-                      onChange={
-                        handleChange
-                      }
-                      required
-                    >
-
-                      <option value="">
-                        Select laundry type
-                      </option>
-
-                      <option>
-                        Wash & Fold
-                      </option>
-
-                      <option>
-                        Ironing
-                      </option>
-
-                      <option>
-                        Dry Cleaning
-                      </option>
-
-                    </select>
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Quantity *
-                    </label>
-
-                    <input
-                      type="number"
-                      name="laundryQuantity"
-                      min="1"
-                      placeholder="Number of items"
-                      value={
-                        form.laundryQuantity
-                      }
-                      onChange={
-                        handleChange
-                      }
-                      required
-                    />
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Pickup / Delivery
-                    </label>
-
-                    <select
-                      name="pickupDelivery"
-                      value={
-                        form.pickupDelivery
-                      }
-                      onChange={
-                        handleChange
-                      }
-                    >
-
-                      <option>
-                        Drop Off
-                      </option>
-
-                      <option>
-                        Pickup & Delivery
-                      </option>
-
-                    </select>
-
-                  </div>
-
-                </>
-
-              )}
-
-
-              {/* ================= PLUMBING ================= */}
-
-              {service.name === "Plumbing" && (
-
-                <>
-
-                  <div className="form-group">
-
-                    <label>
-                      Plumbing Issue *
-                    </label>
-
-                    <select
-                      name="plumbingIssue"
-                      value={
-                        form.plumbingIssue
-                      }
-                      onChange={
-                        handleChange
-                      }
-                      required
-                    >
-
-                      <option value="">
-                        Select issue
-                      </option>
-
-                      <option>
-                        Leak Repair
-                      </option>
-
-                      <option>
-                        Blocked Drain
-                      </option>
-
-                      <option>
-                        Toilet Repair
-                      </option>
-
-                      <option>
-                        Pipe Installation
-                      </option>
-
-                      <option>
-                        General Plumbing
-                      </option>
-
-                    </select>
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Urgency *
-                    </label>
-
-                    <select
-                      name="plumbingUrgency"
-                      value={
-                        form.plumbingUrgency
-                      }
-                      onChange={
-                        handleChange
-                      }
-                    >
-
-                      <option>
-                        Normal
-                      </option>
-
-                      <option>
-                        Urgent
-                      </option>
-
-                      <option>
-                        Emergency
-                      </option>
-
-                    </select>
-
-                  </div>
-
-                </>
-
-              )}
-
-
-              {/* ================= ELECTRICAL ================= */}
-
-              {service.name === "Electrical" && (
-
-                <>
-
-                  <div className="form-group">
-
-                    <label>
-                      Electrical Issue *
-                    </label>
-
-                    <select
-                      name="electricalIssue"
-                      value={
-                        form.electricalIssue
-                      }
-                      onChange={
-                        handleChange
-                      }
-                      required
-                    >
-
-                      <option value="">
-                        Select issue
-                      </option>
-
-                      <option>
-                        Electrical Repair
-                      </option>
-
-                      <option>
-                        Wiring
-                      </option>
-
-                      <option>
-                        Light Installation
-                      </option>
-
-                      <option>
-                        Socket / Switch
-                      </option>
-
-                      <option>
-                        Installation
-                      </option>
-
-                    </select>
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Number of Rooms
-                    </label>
-
-                    <input
-                      type="number"
-                      name="numberOfRooms"
-                      min="1"
-                      value={
-                        form.numberOfRooms
-                      }
-                      onChange={
-                        handleChange
-                      }
-                    />
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Urgency
-                    </label>
-
-                    <select
-                      name="electricalUrgency"
-                      value={
-                        form.electricalUrgency
-                      }
-                      onChange={
-                        handleChange
-                      }
-                    >
-
-                      <option>
-                        Normal
-                      </option>
-
-                      <option>
-                        Urgent
-                      </option>
-
-                    </select>
-
-                  </div>
-
-                </>
-
-              )}
-
-
-              {/* ================= GARDENING ================= */}
-
-              {service.name === "Gardening" && (
-
-                <>
-
-                  <div className="form-group">
-
-                    <label>
-                      Gardening Service *
-                    </label>
-
-                    <select
-                      name="gardeningService"
-                      value={
-                        form.gardeningService
-                      }
-                      onChange={
-                        handleChange
-                      }
-                      required
-                    >
-
-                      <option value="">
-                        Select service
-                      </option>
-
-                      <option>
-                        Lawn Mowing
-                      </option>
-
-                      <option>
-                        Garden Maintenance
-                      </option>
-
-                      <option>
-                        Tree Trimming
-                      </option>
-
-                      <option>
-                        Landscaping
-                      </option>
-
-                    </select>
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Garden Size *
-                    </label>
-
-                    <select
-                      name="gardenSize"
-                      value={
-                        form.gardenSize
-                      }
-                      onChange={
-                        handleChange
-                      }
-                      required
-                    >
-
-                      <option value="">
-                        Select size
-                      </option>
-
-                      <option>
-                        Small
-                      </option>
-
-                      <option>
-                        Medium
-                      </option>
-
-                      <option>
-                        Large
-                      </option>
-
-                    </select>
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Frequency
-                    </label>
-
-                    <select
-                      name="gardeningFrequency"
-                      value={
-                        form.gardeningFrequency
-                      }
-                      onChange={
-                        handleChange
-                      }
-                    >
-
-                      <option>
-                        One-Time
-                      </option>
-
-                      <option>
-                        Weekly
-                      </option>
-
-                      <option>
-                        Bi-Weekly
-                      </option>
-
-                      <option>
-                        Monthly
-                      </option>
-
-                    </select>
-
-                  </div>
-
-                </>
-
-              )}
-
-
-              {/* ================= PAINTING ================= */}
-
-              {service.name === "Painting" && (
-
-                <>
-
-                  <div className="form-group">
-
-                    <label>
-                      Painting Type *
-                    </label>
-
-                    <select
-                      name="paintingType"
-                      value={
-                        form.paintingType
-                      }
-                      onChange={
-                        handleChange
-                      }
-                      required
-                    >
-
-                      <option value="">
-                        Select type
-                      </option>
-
-                      <option>
-                        Interior Painting
-                      </option>
-
-                      <option>
-                        Exterior Painting
-                      </option>
-
-                      <option>
-                        Room Painting
-                      </option>
-
-                    </select>
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Number of Rooms *
-                    </label>
-
-                    <input
-                      type="number"
-                      name="numberOfRoomsPainting"
-                      min="1"
-                      value={
-                        form.numberOfRoomsPainting
-                      }
-                      onChange={
-                        handleChange
-                      }
-                      required
-                    />
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Wall Condition
-                    </label>
-
-                    <select
-                      name="wallCondition"
-                      value={
-                        form.wallCondition
-                      }
-                      onChange={
-                        handleChange
-                      }
-                    >
-
-                      <option value="">
-                        Select condition
-                      </option>
-
-                      <option>
-                        Good
-                      </option>
-
-                      <option>
-                        Average
-                      </option>
-
-                      <option>
-                        Poor
-                      </option>
-
-                    </select>
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Will you provide the paint?
-                    </label>
-
-                    <select
-                      name="paintProvided"
-                      value={
-                        form.paintProvided
-                      }
-                      onChange={
-                        handleChange
-                      }
-                    >
-
-                      <option>
-                        No
-                      </option>
-
-                      <option>
-                        Yes
-                      </option>
-
-                    </select>
-
-                  </div>
-
-                </>
-
-              )}
-
-
-              {/* ================= MOVING ================= */}
-
-              {service.name === "Moving" && (
-
-                <>
-
-                  <div className="form-group">
-
-                    <label>
-                      Moving Type *
-                    </label>
-
-                    <select
-                      name="movingType"
-                      value={
-                        form.movingType
-                      }
-                      onChange={
-                        handleChange
-                      }
-                      required
-                    >
-
-                      <option value="">
-                        Select moving type
-                      </option>
-
-                      <option>
-                        House Moving
-                      </option>
-
-                      <option>
-                        Office Moving
-                      </option>
-
-                      <option>
-                        Single Item Moving
-                      </option>
-
-                    </select>
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Distance (KM) *
-                    </label>
-
-                    <input
-                      type="number"
-                      name="movingDistance"
-                      min="1"
-                      placeholder="e.g. 15"
-                      value={
-                        form.movingDistance
-                      }
-                      onChange={
-                        handleChange
-                      }
-                      required
-                    />
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Approximate Number of Items
-                    </label>
-
-                    <input
-                      type="number"
-                      name="numberOfItems"
-                      min="1"
-                      value={
-                        form.numberOfItems
-                      }
-                      onChange={
-                        handleChange
-                      }
-                    />
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Packing Required?
-                    </label>
-
-                    <select
-                      name="packingRequired"
-                      value={
-                        form.packingRequired
-                      }
-                      onChange={
-                        handleChange
-                      }
-                    >
-
-                      <option>
-                        No
-                      </option>
-
-                      <option>
-                        Yes
-                      </option>
-
-                    </select>
-
-                  </div>
-
-                </>
-
-              )}
+              </div>
 
             </div>
 
           </section>
+        )}
 
+        {/* =================================================
+            OFFICE CLEANING
+        ================================================= */}
 
-          {/* =================================================
-              DATE & TIME
-          ================================================= */}
-
+        {config.type === "officeCleaning" && (
           <section className="booking-section">
 
-            <div className="section-heading">
-
-              <span className="section-number">
-                2
-              </span>
-
-              <div>
-
-                <h2>
-                  Date & Time
-                </h2>
-
-                <p>
-                  When would you like the service?
-                </p>
-
-              </div>
-
-            </div>
-
+            <h2>3. Office Cleaning Details</h2>
 
             <div className="form-grid">
 
               <div className="form-group">
 
-                <label>
-                  Service Date *
+                <label htmlFor="officeSize">
+                  Office Size
+                </label>
+
+                <select
+                  id="officeSize"
+                  name="officeSize"
+                  value={form.officeSize}
+                  onChange={handleChange}
+                >
+
+                  <option value="Small">
+                    Small Office
+                  </option>
+
+                  <option value="Medium">
+                    Medium Office
+                  </option>
+
+                  <option value="Large">
+                    Large Office
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="officeRooms">
+                  Number of Rooms
                 </label>
 
                 <input
-                  type="date"
-                  name="date"
-                  value={form.date}
-                  min={
-                    new Date()
-                      .toISOString()
-                      .split("T")[0]
-                  }
+                  id="officeRooms"
+                  type="number"
+                  name="officeRooms"
+                  min="1"
+                  value={form.officeRooms}
                   onChange={handleChange}
-                  required
                 />
 
               </div>
 
-
               <div className="form-group">
 
-                <label>
-                  Preferred Time *
+                <label htmlFor="officeCleaningLevel">
+                  Cleaning Type
                 </label>
 
                 <select
-                  name="time"
-                  value={form.time}
+                  id="officeCleaningLevel"
+                  name="officeCleaningLevel"
+                  value={form.officeCleaningLevel}
                   onChange={handleChange}
-                  required
                 >
 
-                  <option value="">
-                    Select a time
+                  <option value="Standard Cleaning">
+                    Standard Cleaning
                   </option>
 
-                  {TIME_SLOTS.map(
-                    (slot) => (
+                  <option value="Deep Cleaning">
+                    Deep Cleaning
+                  </option>
 
-                      <option
-                        key={slot}
-                      >
-                        {slot}
-                      </option>
+                  <option value="Post Construction">
+                    Post Construction
+                  </option>
 
-                    )
-                  )}
+                </select>
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="officeFrequency">
+                  Frequency
+                </label>
+
+                <select
+                  id="officeFrequency"
+                  name="officeFrequency"
+                  value={form.officeFrequency}
+                  onChange={handleChange}
+                >
+
+                  <option value="One-Time">
+                    One-Time
+                  </option>
+
+                  <option value="Weekly">
+                    Weekly
+                  </option>
+
+                  <option value="Bi-Weekly">
+                    Bi-Weekly
+                  </option>
+
+                  <option value="Monthly Subscription">
+                    Monthly Subscription
+                  </option>
 
                 </select>
 
@@ -1718,102 +1403,413 @@ function Booking() {
             </div>
 
           </section>
+        )}
 
+        {/* =================================================
+            WINDOW CLEANING
+        ================================================= */}
 
-          {/* =================================================
-              LOCATION
-          ================================================= */}
-
+        {config.type === "windowCleaning" && (
           <section className="booking-section">
 
-            <div className="section-heading">
+            <h2>3. Window Cleaning Details</h2>
 
-              <span className="section-number">
-                3
-              </span>
+            <div className="form-grid">
 
-              <div>
+              <div className="form-group">
 
-                <h2>
-                  Service Location
-                </h2>
+                <label htmlFor="numberOfWindows">
+                  Number of Windows
+                </label>
 
-                <p>
-                  Where should the professional come?
-                </p>
+                <input
+                  id="numberOfWindows"
+                  type="number"
+                  min="1"
+                  name="numberOfWindows"
+                  value={form.numberOfWindows}
+                  onChange={handleChange}
+                />
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="windowHeight">
+                  Building Level
+                </label>
+
+                <select
+                  id="windowHeight"
+                  name="windowHeight"
+                  value={form.windowHeight}
+                  onChange={handleChange}
+                >
+
+                  <option value="Ground Floor">
+                    Ground Floor
+                  </option>
+
+                  <option value="Upper Floor">
+                    Upper Floor
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="windowSide">
+                  Cleaning Side
+                </label>
+
+                <select
+                  id="windowSide"
+                  name="windowSide"
+                  value={form.windowSide}
+                  onChange={handleChange}
+                >
+
+                  <option value="Inside Only">
+                    Inside Only
+                  </option>
+
+                  <option value="Outside Only">
+                    Outside Only
+                  </option>
+
+                  <option value="Inside & Outside">
+                    Inside & Outside
+                  </option>
+
+                </select>
 
               </div>
 
             </div>
 
+          </section>
+        )}
+
+        {/* =================================================
+            CARPET CLEANING
+        ================================================= */}
+
+        {config.type === "carpetCleaning" && (
+          <section className="booking-section">
+
+            <h2>3. Carpet Cleaning Details</h2>
+
+            <div className="form-grid">
+
+              <div className="form-group">
+
+                <label htmlFor="numberOfCarpets">
+                  Number of Carpets
+                </label>
+
+                <input
+                  id="numberOfCarpets"
+                  type="number"
+                  min="1"
+                  name="numberOfCarpets"
+                  value={form.numberOfCarpets}
+                  onChange={handleChange}
+                />
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="carpetSize">
+                  Carpet Size
+                </label>
+
+                <select
+                  id="carpetSize"
+                  name="carpetSize"
+                  value={form.carpetSize}
+                  onChange={handleChange}
+                >
+
+                  <option value="Small">
+                    Small
+                  </option>
+
+                  <option value="Medium">
+                    Medium
+                  </option>
+
+                  <option value="Large">
+                    Large
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="carpetTreatment">
+                  Treatment
+                </label>
+
+                <select
+                  id="carpetTreatment"
+                  name="carpetTreatment"
+                  value={form.carpetTreatment}
+                  onChange={handleChange}
+                >
+
+                  <option value="Standard Cleaning">
+                    Standard Cleaning
+                  </option>
+
+                  <option value="Deep Cleaning">
+                    Deep Cleaning
+                  </option>
+
+                  <option value="Stain Removal">
+                    Stain Removal
+                  </option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+          </section>
+        )}
+
+        {/* =================================================
+            SOFA CLEANING
+        ================================================= */}
+
+        {config.type === "sofaCleaning" && (
+          <section className="booking-section">
+
+            <h2>3. Sofa Cleaning Details</h2>
+
+            <div className="form-grid">
+
+              <div className="form-group">
+
+                <label htmlFor="sofaSeats">
+                  Number of Seats
+                </label>
+
+                <input
+                  id="sofaSeats"
+                  type="number"
+                  min="1"
+                  name="sofaSeats"
+                  value={form.sofaSeats}
+                  onChange={handleChange}
+                />
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="sofaMaterial">
+                  Sofa Material
+                </label>
+
+                <select
+                  id="sofaMaterial"
+                  name="sofaMaterial"
+                  value={form.sofaMaterial}
+                  onChange={handleChange}
+                >
+
+                  <option value="Fabric">
+                    Fabric
+                  </option>
+
+                  <option value="Leather">
+                    Leather
+                  </option>
+
+                  <option value="Suede">
+                    Suede
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="sofaTreatment">
+                  Treatment
+                </label>
+
+                <select
+                  id="sofaTreatment"
+                  name="sofaTreatment"
+                  value={form.sofaTreatment}
+                  onChange={handleChange}
+                >
+
+                  <option value="Standard Cleaning">
+                    Standard Cleaning
+                  </option>
+
+                  <option value="Deep Cleaning">
+                    Deep Cleaning
+                  </option>
+
+                  <option value="Stain Removal">
+                    Stain Removal
+                  </option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+          </section>
+        )}
+
+        {/* =================================================
+            LAUNDRY
+        ================================================= */}
+
+        {[
+          "washFold",
+          "ironing",
+          "dryCleaning",
+        ].includes(config.type) && (
+          <section className="booking-section">
+
+            <h2>3. Laundry Details</h2>
+
+            <div className="form-grid">
+
+              <div className="form-group">
+
+                <label htmlFor="laundryQuantity">
+                  Quantity
+                </label>
+
+                <input
+                  id="laundryQuantity"
+                  type="number"
+                  min="1"
+                  name="laundryQuantity"
+                  value={form.laundryQuantity}
+                  onChange={handleChange}
+                />
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="pickupDelivery">
+                  Collection Method
+                </label>
+
+                <select
+                  id="pickupDelivery"
+                  name="pickupDelivery"
+                  value={form.pickupDelivery}
+                  onChange={handleChange}
+                >
+
+                  <option value="Customer Drop-off">
+                    Customer Drop-off
+                  </option>
+
+                  <option value="Pickup & Delivery">
+                    Pickup & Delivery
+                  </option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+          </section>
+        )}
+
+        {/* =================================================
+            PLUMBING
+        ================================================= */}
+
+        {[
+          "leakRepair",
+          "blockedDrain",
+          "pipeInstallation",
+        ].includes(config.type) && (
+          <section className="booking-section">
+
+            <h2>3. Plumbing Details</h2>
 
             <div className="form-grid">
 
               <div className="form-group full-width">
 
-                <label>
-                  Address *
+                <label htmlFor="plumbingAreas">
+                  Affected Area
                 </label>
 
                 <input
+                  id="plumbingAreas"
                   type="text"
-                  name="address"
-                  placeholder="Street / Building"
-                  value={form.address}
+                  name="plumbingAreas"
+                  value={form.plumbingAreas}
                   onChange={handleChange}
-                  required
+                  placeholder="e.g. Kitchen sink, bathroom, toilet"
                 />
 
               </div>
 
-
               <div className="form-group">
 
-                <label>
-                  City *
+                <label htmlFor="plumbingUrgency">
+                  Urgency
                 </label>
 
-                <input
-                  type="text"
-                  name="city"
-                  placeholder="e.g. Nairobi"
-                  value={form.city}
+                <select
+                  id="plumbingUrgency"
+                  name="plumbingUrgency"
+                  value={form.plumbingUrgency}
                   onChange={handleChange}
-                  required
-                />
+                >
+
+                  <option value="Normal">
+                    Normal
+                  </option>
+
+                  <option value="Urgent">
+                    Urgent
+                  </option>
+
+                  <option value="Emergency">
+                    Emergency
+                  </option>
+
+                </select>
 
               </div>
 
+              <div className="form-group full-width">
 
-              <div className="form-group">
-
-                <label>
-                  Estate
+                <label htmlFor="plumbingDescription">
+                  Describe the Problem
                 </label>
 
-                <input
-                  type="text"
-                  name="estate"
-                  placeholder="e.g. Kilimani"
-                  value={form.estate}
+                <textarea
+                  id="plumbingDescription"
+                  name="plumbingDescription"
+                  value={form.plumbingDescription}
                   onChange={handleChange}
-                />
-
-              </div>
-
-
-              <div className="form-group">
-
-                <label>
-                  House / Apartment Number
-                </label>
-
-                <input
-                  type="text"
-                  name="houseNumber"
-                  placeholder="e.g. A12"
-                  value={form.houseNumber}
-                  onChange={handleChange}
+                  rows="4"
+                  placeholder="Describe the plumbing problem..."
                 />
 
               </div>
@@ -1821,262 +1817,570 @@ function Booking() {
             </div>
 
           </section>
+        )}
 
+        {/* =================================================
+            ELECTRICAL
+        ================================================= */}
 
-          {/* =================================================
-              CLEANING EXTRAS
-          ================================================= */}
-
-          {service.name === "Cleaning" && (
-
-            <section className="booking-section">
-
-              <div className="section-heading">
-
-                <span className="section-number">
-                  4
-                </span>
-
-                <div>
-
-                  <h2>
-                    Extra Services
-                  </h2>
-
-                  <p>
-                    Add additional cleaning services.
-                  </p>
-
-                </div>
-
-              </div>
-
-
-              <div className="extras-grid">
-
-                {cleaningExtrasList.map(
-                  (extra) => {
-
-                    const selected =
-                      form.cleaningExtras.some(
-                        (item) =>
-                          item.name ===
-                          extra.name
-                      );
-
-
-                    return (
-
-                      <label
-                        key={extra.name}
-                        className={
-                          `extra-option ${
-                            selected
-                              ? "selected"
-                              : ""
-                          }`
-                        }
-                      >
-
-                        <input
-                          type="checkbox"
-                          checked={selected}
-                          onChange={() =>
-                            handleCleaningExtra(
-                              extra
-                            )
-                          }
-                        />
-
-
-                        <div className="extra-content">
-
-                          <strong>
-                            {extra.name}
-                          </strong>
-
-                          <span>
-                            + Ksh{" "}
-                            {extra.price.toLocaleString()}
-                          </span>
-
-                        </div>
-
-                      </label>
-
-                    );
-
-                  }
-                )}
-
-              </div>
-
-            </section>
-
-          )}
-
-
-          {/* =================================================
-              NOTES
-          ================================================= */}
-
+        {[
+          "electricalRepair",
+          "socketInstallation",
+          "lightingInstallation",
+        ].includes(config.type) && (
           <section className="booking-section">
 
-            <div className="section-heading">
+            <h2>3. Electrical Details</h2>
 
-              <span className="section-number">
-                5
-              </span>
+            <div className="form-grid">
 
-              <div>
+              <div className="form-group">
 
-                <h2>
-                  Special Instructions
-                </h2>
+                <label htmlFor="electricalPoints">
+                  Number of Points
+                </label>
 
-                <p>
-                  Anything else we should know?
-                </p>
+                <input
+                  id="electricalPoints"
+                  type="number"
+                  min="1"
+                  name="electricalPoints"
+                  value={form.electricalPoints}
+                  onChange={handleChange}
+                />
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="electricalUrgency">
+                  Urgency
+                </label>
+
+                <select
+                  id="electricalUrgency"
+                  name="electricalUrgency"
+                  value={form.electricalUrgency}
+                  onChange={handleChange}
+                >
+
+                  <option value="Normal">
+                    Normal
+                  </option>
+
+                  <option value="Urgent">
+                    Urgent
+                  </option>
+
+                  <option value="Emergency">
+                    Emergency
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div className="form-group full-width">
+
+                <label htmlFor="electricalDescription">
+                  Describe the Work Required
+                </label>
+
+                <textarea
+                  id="electricalDescription"
+                  name="electricalDescription"
+                  value={form.electricalDescription}
+                  onChange={handleChange}
+                  rows="4"
+                  placeholder="Describe the electrical work..."
+                />
 
               </div>
 
             </div>
 
+          </section>
+        )}
 
-            <div className="form-group">
+        {/* =================================================
+            GARDENING
+        ================================================= */}
 
-              <textarea
-                name="notes"
-                rows="5"
-                placeholder="Enter any special instructions..."
-                value={form.notes}
-                onChange={handleChange}
-              />
+        {[
+          "lawnMaintenance",
+          "gardenCleaning",
+          "landscaping",
+        ].includes(config.type) && (
+          <section className="booking-section">
+
+            <h2>3. Gardening Details</h2>
+
+            <div className="form-grid">
+
+              <div className="form-group">
+
+                <label htmlFor="gardenSize">
+                  Garden Size
+                </label>
+
+                <select
+                  id="gardenSize"
+                  name="gardenSize"
+                  value={form.gardenSize}
+                  onChange={handleChange}
+                >
+
+                  <option value="Small">
+                    Small
+                  </option>
+
+                  <option value="Medium">
+                    Medium
+                  </option>
+
+                  <option value="Large">
+                    Large
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="gardeningFrequency">
+                  Frequency
+                </label>
+
+                <select
+                  id="gardeningFrequency"
+                  name="gardeningFrequency"
+                  value={form.gardeningFrequency}
+                  onChange={handleChange}
+                >
+
+                  <option value="One-Time">
+                    One-Time
+                  </option>
+
+                  <option value="Weekly">
+                    Weekly
+                  </option>
+
+                  <option value="Bi-Weekly">
+                    Bi-Weekly
+                  </option>
+
+                  <option value="Monthly">
+                    Monthly
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div className="form-group full-width">
+
+                <label htmlFor="gardeningDescription">
+                  Gardening Requirements
+                </label>
+
+                <textarea
+                  id="gardeningDescription"
+                  name="gardeningDescription"
+                  value={form.gardeningDescription}
+                  onChange={handleChange}
+                  rows="4"
+                  placeholder="Describe the gardening work required..."
+                />
+
+              </div>
 
             </div>
 
           </section>
+        )}
 
+        {/* =================================================
+            PAINTING
+        ================================================= */}
 
-          {/* =================================================
-              PRICE SUMMARY
-          ================================================= */}
+        {[
+          "interiorPainting",
+          "exteriorPainting",
+          "roomPainting",
+        ].includes(config.type) && (
+          <section className="booking-section">
 
-          <section className="price-summary">
+            <h2>3. Painting Details</h2>
 
-            <div className="price-summary-header">
+            <div className="form-grid">
 
-              <h2>
-                Price Summary
-              </h2>
+              <div className="form-group">
 
-              <span>
-                💰
-              </span>
+                <label htmlFor="paintingRooms">
+                  Number of Rooms
+                </label>
+
+                <input
+                  id="paintingRooms"
+                  type="number"
+                  min="1"
+                  name="paintingRooms"
+                  value={form.paintingRooms}
+                  onChange={handleChange}
+                />
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="wallCondition">
+                  Wall Condition
+                </label>
+
+                <select
+                  id="wallCondition"
+                  name="wallCondition"
+                  value={form.wallCondition}
+                  onChange={handleChange}
+                >
+
+                  <option value="Good">
+                    Good
+                  </option>
+
+                  <option value="Needs Preparation">
+                    Needs Preparation
+                  </option>
+
+                  <option value="Damaged Walls">
+                    Damaged Walls
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="paintProvided">
+                  Paint
+                </label>
+
+                <select
+                  id="paintProvided"
+                  name="paintProvided"
+                  value={form.paintProvided}
+                  onChange={handleChange}
+                >
+
+                  <option value="Customer Provides Paint">
+                    Customer Provides Paint
+                  </option>
+
+                  <option value="Ramon's Marketplace Provides Paint">
+                    Ramon&apos;s Marketplace Provides Paint
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="paintingArea">
+                  Painting Area
+                </label>
+
+                <select
+                  id="paintingArea"
+                  name="paintingArea"
+                  value={form.paintingArea}
+                  onChange={handleChange}
+                >
+
+                  <option value="Interior">
+                    Interior
+                  </option>
+
+                  <option value="Exterior">
+                    Exterior
+                  </option>
+
+                  <option value="Both">
+                    Both
+                  </option>
+
+                </select>
+
+              </div>
 
             </div>
 
+          </section>
+        )}
 
+        {/* =================================================
+            MOVING
+        ================================================= */}
+
+        {[
+          "houseMoving",
+          "officeMoving",
+          "packingService",
+        ].includes(config.type) && (
+          <section className="booking-section">
+
+            <h2>3. Moving Details</h2>
+
+            <div className="form-grid">
+
+              <div className="form-group">
+
+                <label htmlFor="movingDistance">
+                  Moving Distance
+                </label>
+
+                <select
+                  id="movingDistance"
+                  name="movingDistance"
+                  value={form.movingDistance}
+                  onChange={handleChange}
+                >
+
+                  <option value="Within Same Estate">
+                    Within Same Estate
+                  </option>
+
+                  <option value="Within Same Town">
+                    Within Same Town
+                  </option>
+
+                  <option value="Within Same County">
+                    Within Same County
+                  </option>
+
+                  <option value="Outside County">
+                    Outside County
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="numberOfItems">
+                  Number of Items
+                </label>
+
+                <input
+                  id="numberOfItems"
+                  type="number"
+                  min="1"
+                  name="numberOfItems"
+                  value={form.numberOfItems}
+                  onChange={handleChange}
+                />
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="packingRequired">
+                  Packing Required?
+                </label>
+
+                <select
+                  id="packingRequired"
+                  name="packingRequired"
+                  value={form.packingRequired}
+                  onChange={handleChange}
+                >
+
+                  <option value="No">
+                    No
+                  </option>
+
+                  <option value="Yes">
+                    Yes
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div className="form-group">
+
+                <label htmlFor="movingFloor">
+                  Current Floor
+                </label>
+
+                <select
+                  id="movingFloor"
+                  name="movingFloor"
+                  value={form.movingFloor}
+                  onChange={handleChange}
+                >
+
+                  <option value="Ground Floor">
+                    Ground Floor
+                  </option>
+
+                  <option value="1st Floor">
+                    1st Floor
+                  </option>
+
+                  <option value="2nd Floor">
+                    2nd Floor
+                  </option>
+
+                  <option value="3rd Floor or Higher">
+                    3rd Floor or Higher
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div className="form-group full-width">
+
+                <label htmlFor="movingDescription">
+                  Moving Details
+                </label>
+
+                <textarea
+                  id="movingDescription"
+                  name="movingDescription"
+                  value={form.movingDescription}
+                  onChange={handleChange}
+                  rows="4"
+                  placeholder="Describe the items and moving requirements..."
+                />
+
+              </div>
+
+            </div>
+
+          </section>
+        )}
+
+        {/* =================================================
+            NOTES
+        ================================================= */}
+
+        <section className="booking-section">
+
+          <h2>4. Additional Notes</h2>
+
+          <div className="form-group">
+
+            <label htmlFor="notes">
+              Additional Information
+            </label>
+
+            <textarea
+              id="notes"
+              name="notes"
+              value={form.notes}
+              onChange={handleChange}
+              rows="5"
+              placeholder="Add any other information that will help our service provider..."
+            />
+
+          </div>
+
+        </section>
+
+        {/* =================================================
+            PRICE SUMMARY
+        ================================================= */}
+
+        <section className="price-summary">
+
+          <h2>Price Summary</h2>
+
+          <div className="price-row">
+
+            <span>
+              Base Price
+            </span>
+
+            <strong>
+              KSh{" "}
+              {priceSummary.basePrice.toLocaleString()}
+            </strong>
+
+          </div>
+
+          {priceSummary.discount > 0 && (
+            <div className="price-row discount">
+
+              <span>
+                Frequency Discount
+              </span>
+
+              <strong>
+                - KSh{" "}
+                {priceSummary.discount.toLocaleString()}
+              </strong>
+
+            </div>
+          )}
+
+          {priceSummary.extrasTotal > 0 && (
             <div className="price-row">
 
               <span>
-                Service
+                Additional Services
               </span>
 
               <strong>
-                Ksh{" "}
-                {priceSummary.servicePrice.toLocaleString()}
+                KSh{" "}
+                {priceSummary.extrasTotal.toLocaleString()}
               </strong>
 
             </div>
+          )}
 
+          <div className="price-divider" />
 
-            {priceSummary.discount > 0 && (
+          <div className="price-row total-row">
 
-              <div className="price-row discount">
+            <span>
+              Total
+            </span>
 
-                <span>
-                  Discount
-                </span>
+            <strong>
+              KSh{" "}
+              {priceSummary.total.toLocaleString()}
+            </strong>
 
-                <strong>
-                  - Ksh{" "}
-                  {priceSummary.discount.toLocaleString()}
-                </strong>
+          </div>
 
-              </div>
+        </section>
 
-            )}
+        {/* =================================================
+            CHECKOUT BUTTON
+        ================================================= */}
 
-
-            {priceSummary.extrasTotal > 0 && (
-
-              <div className="price-row">
-
-                <span>
-                  Extras
-                </span>
-
-                <strong>
-                  Ksh{" "}
-                  {priceSummary.extrasTotal.toLocaleString()}
-                </strong>
-
-              </div>
-
-            )}
-
-
-            <div className="price-divider" />
-
-
-            <div className="price-total">
-
-              <span>
-                Total
-              </span>
-
-              <strong>
-                Ksh{" "}
-                {priceSummary.total.toLocaleString()}
-              </strong>
-
-            </div>
-
-          </section>
-
-
-          {/* =================================================
-              SUBMIT
-          ================================================= */}
+        <div className="booking-actions">
 
           <button
-            type="submit"
-            className="booking-submit"
+            type="button"
+            className="checkout-button"
+            onClick={proceedToCheckout}
           >
             Proceed to Checkout →
           </button>
 
-
-          <p className="required-note">
-
-            <span>*</span>
-
-            {" "}
-            Required fields
-
-          </p>
-
-
-        </form>
+        </div>
 
       </div>
 
     </div>
-
   );
-
 }
-
 
 export default Booking;

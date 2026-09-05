@@ -1,26 +1,41 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://127.0.0.1:5000",
-  headers: {
-    "Content-Type": "application/json",
-  },
+    baseURL: "http://127.0.0.1:5000",
+    headers: {
+        "Content-Type": "application/json",
+    },
 });
 
-// Automatically attach JWT token to every request
 api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
+    (config) => {
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+        const token = localStorage.getItem("token");
+
+        if (token) {
+
+            config.headers =
+                config.headers || {};
+
+            config.headers.Authorization =
+                `Bearer ${token}`;
+
+        }
+
+        console.log(
+            "API REQUEST:",
+            config.method?.toUpperCase(),
+            config.url,
+            "JWT:",
+            token ? "ATTACHED" : "MISSING"
+        );
+
+        return config;
+    },
+
+    (error) => {
+        return Promise.reject(error);
     }
-
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
 );
 
 export default api;

@@ -15,6 +15,8 @@ import "./App.css";
 import AdminDashboard from "./pages/AdminDashboard";
 import Dashboard from "./pages/Dashboard";
 // import AdminRoute from "./components/AminRoute";
+import Bookings from "./pages/Bookings";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -52,6 +54,15 @@ function App() {
             path="/register"
             element={<Register />}
           />
+          <Route
+  path="/bookings"
+  element={<Bookings />}
+/>
+
+<Route
+  path="/profile"
+  element={<Profile />}
+/>
 
    
 

@@ -3,7 +3,6 @@ import useAuth from "../hooks/useAuth";
 import "../styles/Dashboard.css";
 
 function Dashboard() {
-
   const { user } = useAuth();
 
   if (!user) {
@@ -13,6 +12,7 @@ function Dashboard() {
   return (
     <div className="dashboard">
 
+      {/* Dashboard Header */}
       <div className="dashboard-header">
 
         <h1>
@@ -25,10 +25,18 @@ function Dashboard() {
 
       </div>
 
+
+      {/* Dashboard Cards */}
       <div className="dashboard-cards">
 
-        {/* Book a Service */}
-        <Link to="/services" className="dashboard-card">
+        {/* ============================= */}
+        {/* BOOK A SERVICE */}
+        {/* ============================= */}
+
+        <Link
+          to="/services"
+          className="dashboard-card"
+        >
 
           <h2>🧹</h2>
 
@@ -40,11 +48,21 @@ function Dashboard() {
             Find and book a professional service.
           </p>
 
+          <span className="dashboard-card-action">
+            Browse Services →
+          </span>
+
         </Link>
 
 
-        {/* My Bookings */}
-        <div className="dashboard-card">
+        {/* ============================= */}
+        {/* MY BOOKINGS */}
+        {/* ============================= */}
+
+        <Link
+          to="/bookings"
+          className="dashboard-card"
+        >
 
           <h2>📋</h2>
 
@@ -56,11 +74,21 @@ function Dashboard() {
             View your current and previous bookings.
           </p>
 
-        </div>
+          <span className="dashboard-card-action">
+            View Bookings →
+          </span>
+
+        </Link>
 
 
-        {/* My Profile */}
-        <div className="dashboard-card">
+        {/* ============================= */}
+        {/* MY PROFILE */}
+        {/* ============================= */}
+
+        <Link
+          to="/profile"
+          className="dashboard-card"
+        >
 
           <h2>👤</h2>
 
@@ -72,7 +100,11 @@ function Dashboard() {
             Manage your account information.
           </p>
 
-        </div>
+          <span className="dashboard-card-action">
+            View Profile →
+          </span>
+
+        </Link>
 
       </div>
 

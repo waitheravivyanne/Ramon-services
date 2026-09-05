@@ -1,0 +1,614 @@
+/* =========================================================
+   ADMIN DASHBOARD
+   ========================================================= */
+
+.admin-dashboard {
+  min-height: 100vh;
+  background: #f5f7fb;
+  padding: 30px;
+  color: #1f2937;
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.admin-header {
+  background: linear-gradient(135deg, #0f766e, #115e59);
+  color: white;
+  padding: 30px;
+  border-radius: 18px;
+  margin-bottom: 28px;
+  box-shadow: 0 10px 25px rgba(15, 118, 110, 0.15);
+}
+
+.admin-header h1 {
+  margin: 8px 0 6px;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.admin-header p {
+  margin: 0;
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+.admin-label {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+
+/* =========================================================
+   STATISTICS
+   ========================================================= */
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 16px;
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-height: 100px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card > span {
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ecfdf5;
+  border-radius: 13px;
+  font-size: 25px;
+}
+
+.stat-card p {
+  margin: 0 0 5px;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.stat-card h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   ORDERS SECTION
+   ========================================================= */
+
+.orders-section {
+  background: white;
+  border-radius: 18px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+}
+
+.orders-header {
+  padding: 24px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.orders-header h2 {
+  margin: 0 0 5px;
+  font-size: 21px;
+  color: #111827;
+}
+
+.orders-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.order-count {
+  background: #ecfdf5;
+  color: #047857;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   ORDERS TABLE
+   ========================================================= */
+
+.orders-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1050px;
+}
+
+.orders-table thead {
+  background: #f9fafb;
+}
+
+.orders-table th {
+  padding: 15px 18px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+.orders-table td {
+  padding: 17px 18px;
+  border-bottom: 1px solid #f0f1f3;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.orders-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.orders-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.orders-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* =========================================================
+   CUSTOMER INFORMATION
+   ========================================================= */
+
+.orders-table td strong {
+  display: block;
+  color: #111827;
+  font-weight: 600;
+}
+
+.orders-table td small {
+  display: block;
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   ORDER ID
+   ========================================================= */
+
+.orders-table td:first-child strong {
+  color: #0f766e;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   LOCATION
+   ========================================================= */
+
+.orders-table td:nth-child(6) {
+  max-width: 220px;
+}
+
+.orders-table td:nth-child(6) div {
+  color: #374151;
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   AMOUNT
+   ========================================================= */
+
+.orders-table td:nth-child(7) strong {
+  color: #047857;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   STATUS SELECT
+   ========================================================= */
+
+.orders-table select {
+  min-width: 130px;
+  padding: 9px 32px 9px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.orders-table select:hover {
+  border-color: #0f766e;
+}
+
+.orders-table select:focus {
+  border-color: #0f766e;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+}
+
+
+/* =========================================================
+   NO ORDERS
+   ========================================================= */
+
+.no-orders {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.no-orders > div {
+  width: 75px;
+  height: 75px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  border-radius: 50%;
+  font-size: 35px;
+}
+
+.no-orders h3 {
+  margin: 0 0 8px;
+  color: #111827;
+  font-size: 20px;
+}
+
+.no-orders p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   LOADING MESSAGE
+   ========================================================= */
+
+.admin-message {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.admin-message h2 {
+  margin: 0 0 8px;
+  color: #111827;
+  font-size: 24px;
+}
+
+.admin-message p {
+  margin: 0;
+  color: #6b7280;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.admin-error {
+  max-width: 550px;
+  margin: 100px auto;
+  background: white;
+  border: 1px solid #fecaca;
+  border-radius: 18px;
+  padding: 35px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.admin-error h2 {
+  margin: 0 0 12px;
+  color: #b91c1c;
+  font-size: 23px;
+}
+
+.admin-error p {
+  margin: 0 0 25px;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.admin-error button {
+  border: none;
+  background: #0f766e;
+  color: white;
+  padding: 11px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.admin-error button:hover {
+  background: #115e59;
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1200px) {
+
+  .admin-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+}
+
+
+/* =========================================================
+   TABLET / SMALL LAPTOP
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .admin-dashboard {
+    padding: 20px;
+  }
+
+  .admin-header {
+    padding: 24px;
+  }
+
+  .admin-header h1 {
+    font-size: 27px;
+  }
+
+  .admin-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .orders-header {
+    padding: 20px;
+  }
+
+}
+.admin-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.admin-logout-btn {
+  border: none;
+  background: white;
+  color: #0f766e;
+  padding: 12px 22px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.admin-logout-btn:hover {
+  background: #f0fdfa;
+  color: #115e59;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
+}
+
+.admin-logout-btn:active {
+  transform: translateY(0);
+}
+
+
+/* Loading spinner */
+
+.loading-spinner {
+  width: 42px;
+  height: 42px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #0f766e;
+  border-radius: 50%;
+  animation: adminSpin 0.8s linear infinite;
+  margin-bottom: 18px;
+}
+
+@keyframes adminSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* Error icon */
+
+.error-icon {
+  font-size: 45px;
+  margin-bottom: 12px;
+}
+
+
+/* Error buttons */
+
+.error-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.admin-error button {
+  border: none;
+  background: #0f766e;
+  color: white;
+  padding: 11px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-error button:hover {
+  background: #115e59;
+}
+
+.admin-error .home-button {
+  background: #374151;
+}
+
+.admin-error .home-button:hover {
+  background: #1f2937;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+  .admin-header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-logout-btn {
+    width: 100%;
+  }
+
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .admin-dashboard {
+    padding: 12px;
+  }
+
+  .admin-header {
+    padding: 22px 18px;
+    border-radius: 14px;
+  }
+
+  .admin-header h1 {
+    font-size: 24px;
+  }
+
+  .admin-header p {
+    font-size: 13px;
+  }
+
+  .admin-stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 18px;
+  }
+
+  .orders-section {
+    border-radius: 14px;
+  }
+
+  .orders-header {
+    padding: 18px;
+    align-items: flex-start;
+    gap: 12px;
+    flex-direction: column;
+  }
+
+  .orders-header h2 {
+    font-size: 19px;
+  }
+
+  .order-count {
+    align-self: flex-start;
+  }
+
+  .orders-table {
+    min-width: 1000px;
+  }
+
+  .admin-error {
+    margin: 50px 10px;
+    padding: 25px 20px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+  .admin-dashboard {
+    padding: 8px;
+  }
+
+  .admin-header h1 {
+    font-size: 21px;
+  }
+
+  .stat-card h2 {
+    font-size: 22px;
+  }
+
+}
