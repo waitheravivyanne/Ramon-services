@@ -87,6 +87,7 @@ CORS(
             "origins": [
                 "http://localhost:5173",
                 "http://127.0.0.1:5173",
+                os.getenv("FRONTEND_URL", ""),
             ],
             "methods": [
                 "GET",
@@ -4001,38 +4002,6 @@ app.config["JWT_TOKEN_LOCATION"] = ["headers"]
 app.config["JWT_HEADER_NAME"] = "Authorization"
 
 app.config["JWT_HEADER_TYPE"] = "Bearer"
-
-
-# ============================================================
-# CORS
-# ============================================================
-
-CORS(
-    app,
-    resources={
-        r"/*": {
-            "origins": [
-                "http://localhost:5173",
-                "http://127.0.0.1:5173",
-            ],
-            "methods": [
-                "GET",
-                "POST",
-                "PUT",
-                "DELETE",
-                "OPTIONS",
-            ],
-            "allow_headers": [
-                "Content-Type",
-                "Authorization",
-            ],
-            "expose_headers": [
-                "Content-Type",
-            ],
-        }
-    },
-    supports_credentials=True,
-)
 
 
 # ============================================================
