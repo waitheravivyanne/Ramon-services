@@ -1,6 +1,6 @@
-
-
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 import {
   FaBroom,
   FaTshirt,
@@ -12,15 +12,19 @@ import {
   FaTools
 } from "react-icons/fa";
 
-import services from "../data/services";
+import api from "../api/axios";
 import "../styles/Services.css";
 
 function Services() {
 
-  // Choose a professional icon based on service name
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Choose an icon based on service name
   const getServiceIcon = (serviceName) => {
 
-    switch (serviceName.toLowerCase()) {
+    switch (serviceName?.toLowerCase()) {
 
       case "cleaning":
         return <FaBroom />;
@@ -47,6 +51,91 @@ function Services() {
         return <FaTools />;
     }
   };
+
+
+  // Get services from Flask backend
+  useEffect(() => {
+
+    const fetchServices = async () => {
+
+      try {
+
+        setLoading(true);
+        setError("");
+
+        const response = await api.get("/services");
+
+        console.log("SERVICES FROM API:", response.data);
+
+        setServices(response.data);
+
+      } catch (err) {
+
+        console.error("FAILED TO LOAD SERVICES:", err);
+
+        setError(
+          "Unable to load services. Please try again."
+        );
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
+
+    fetchServices();
+
+  }, []);
+
+
+  // Loading state
+  if (loading) {
+
+    return (
+
+      <div className="services-container">
+
+        <div className="services-header">
+
+          <h1>Our Services</h1>
+
+          <p className="services-subtitle">
+            Loading available services...
+          </p>
+
+        </div>
+
+      </div>
+
+    );
+
+  }
+
+
+  // Error state
+  if (error) {
+
+    return (
+
+      <div className="services-container">
+
+        <div className="services-header">
+
+          <h1>Our Services</h1>
+
+          <p className="services-subtitle">
+            {error}
+          </p>
+
+        </div>
+
+      </div>
+
+    );
+
+  }
 
 
   return (
@@ -104,19 +193,15 @@ function Services() {
             </p>
 
 
-            {/* NUMBER OF SERVICES */}
+            {/* PRICE */}
 
             <p className="category-count">
 
+              Starting from{" "}
+
               <strong>
-                {service.categories?.length || 0}
+                Ksh {Number(service.price || 0).toLocaleString()}
               </strong>
-
-              {" "}
-
-              {service.categories?.length === 1
-                ? "service available"
-                : "services available"}
 
             </p>
 
