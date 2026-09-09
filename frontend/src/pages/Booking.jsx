@@ -471,7 +471,7 @@ function Booking() {
     else if (config?.type === "windowCleaning") {
       const windows = Number(form.numberOfWindows) || 1;
 
-      let pricePerWindow = 200;
+      let pricePerWindow = 1;
 
       if (form.windowHeight === "Upper Floor") {
         pricePerWindow += 100;

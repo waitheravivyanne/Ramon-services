@@ -8,7 +8,7 @@ import "../styles/Payment.css";
 // ============================================================
 
 const MPESA_TILL_NUMBER =
-  import.meta.env.VITE_MPESA_TILL_NUMBER || "169138";
+  import.meta.env.VITE_MPESA_TILL_NUMBER || "1699138";
 
 // ============================================================
 // PAYMENT COMPONENT
