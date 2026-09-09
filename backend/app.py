@@ -7120,6 +7120,93 @@ def initialize_database():
 
 
             # ------------------------------------------------
+            # DEFAULT SERVICES
+            # ------------------------------------------------
+
+            default_services = [
+                {
+                    "title": "Cleaning",
+                    "description": "Professional home, office and school cleaning services.",
+                    "price": 1500,
+                    "location": "Nairobi",
+                    "provider": "Ramon's Marketplace",
+                },
+                {
+                    "title": "Laundry",
+                    "description": "Professional washing, ironing, folding and laundry services.",
+                    "price": 800,
+                    "location": "Nairobi",
+                    "provider": "Ramon's Marketplace",
+                },
+                {
+                    "title": "Plumbing",
+                    "description": "Reliable plumbing repair, installation and maintenance services.",
+                    "price": 1000,
+                    "location": "Nairobi",
+                    "provider": "Ramon's Marketplace",
+                },
+                {
+                    "title": "Electrical",
+                    "description": "Professional electrical repair, installation and maintenance services.",
+                    "price": 1500,
+                    "location": "Nairobi",
+                    "provider": "Ramon's Marketplace",
+                },
+                {
+                    "title": "Gardening",
+                    "description": "Lawn maintenance, garden cleaning and landscaping services.",
+                    "price": 1000,
+                    "location": "Nairobi",
+                    "provider": "Ramon's Marketplace",
+                },
+                {
+                    "title": "Painting",
+                    "description": "Interior, exterior and room painting services.",
+                    "price": 3000,
+                    "location": "Nairobi",
+                    "provider": "Ramon's Marketplace",
+                },
+                {
+                    "title": "Moving",
+                    "description": "House and office moving, packing and relocation services.",
+                    "price": 5000,
+                    "location": "Nairobi",
+                    "provider": "Ramon's Marketplace",
+                },
+            ]
+
+            services_created = 0
+
+            for service_data in default_services:
+
+                existing_service = Service.query.filter_by(
+                    title=service_data["title"]
+                ).first()
+
+                if not existing_service:
+
+                    db.session.add(
+                        Service(**service_data)
+                    )
+
+                    services_created += 1
+
+            if services_created:
+
+                db.session.commit()
+
+                print(
+                    f"DEFAULT SERVICES CREATED: {services_created}"
+                )
+
+            else:
+
+                print(
+                    "DEFAULT SERVICES ALREADY EXIST"
+                )
+
+
+            # ------------------------------------------------
             # Update old tables
             # ------------------------------------------------
 
