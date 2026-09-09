@@ -14,9 +14,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import "./App.css";
 import AdminDashboard from "./pages/AdminDashboard";
 import Dashboard from "./pages/Dashboard";
-// import AdminRoute from "./components/AminRoute";
 import Bookings from "./pages/Bookings";
 import Profile from "./pages/Profile";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -55,13 +56,30 @@ function App() {
             element={<Register />}
           />
           <Route
+  path="/forgot-password"
+  element={<ForgotPassword />}
+/>
+
+<Route
+  path="/reset-password"
+  element={<ResetPassword />}
+/>
+          <Route
   path="/bookings"
-  element={<Bookings />}
+  element={
+    <ProtectedRoute>
+      <Bookings />
+    </ProtectedRoute>
+  }
 />
 
 <Route
   path="/profile"
-  element={<Profile />}
+  element={
+    <ProtectedRoute>
+      <Profile />
+    </ProtectedRoute>
+  }
 />
 
    

@@ -12,25 +12,13 @@ function Login() {
 
   const { login } = useAuth();
 
-  // =====================================================
-  // FORM
-  // =====================================================
-
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  // =====================================================
-  // STATE
-  // =====================================================
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  // =====================================================
-  // HANDLE INPUT
-  // =====================================================
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -45,10 +33,6 @@ function Login() {
     }
   };
 
-  // =====================================================
-  // LOGIN
-  // =====================================================
-
   const submit = async (event) => {
     event.preventDefault();
 
@@ -61,17 +45,9 @@ function Login() {
       console.log("EMAIL:", form.email);
       console.log("=================================");
 
-      // -------------------------------------------------
-      // SEND LOGIN REQUEST
-      // -------------------------------------------------
-
       const response = await api.post("/login", form);
 
       console.log("LOGIN RESPONSE:", response.data);
-
-      // -------------------------------------------------
-      // GET TOKEN
-      // -------------------------------------------------
 
       const token = response.data?.token;
 
@@ -80,10 +56,6 @@ function Login() {
           "Login succeeded but no authentication token was returned."
         );
       }
-
-      // -------------------------------------------------
-      // GET USER
-      // -------------------------------------------------
 
       const user = response.data?.user;
 
@@ -94,14 +66,6 @@ function Login() {
       }
 
       console.log("LOGIN USER:", user);
-      console.log("USER ID:", user.id);
-      console.log("USER NAME:", user.name);
-      console.log("USER EMAIL:", user.email);
-      console.log("USER ROLE:", user.role);
-
-      // -------------------------------------------------
-      // NORMALIZE ROLE
-      // -------------------------------------------------
 
       const role = String(user.role || "")
         .trim()
@@ -114,18 +78,16 @@ function Login() {
       // -------------------------------------------------
 
       login({
-        token: token,
+        token,
         id: user.id,
         name: user.name,
         email: user.email,
-        role: role,
+        phone: user.phone || "",
+        role,
       });
 
       // -------------------------------------------------
-      // ALSO SAVE DIRECTLY TO LOCAL STORAGE
-      //
-      // This makes sure the token and role are available
-      // immediately to axios/protected routes.
+      // SAVE TO LOCAL STORAGE
       // -------------------------------------------------
 
       localStorage.setItem("token", token);
@@ -136,28 +98,30 @@ function Login() {
           id: user.id,
           name: user.name,
           email: user.email,
-          role: role,
+          phone: user.phone || "",
+          role,
         })
       );
 
       localStorage.setItem("role", role);
 
       console.log("AUTHENTICATION SAVED");
-      console.log("TOKEN EXISTS:", !!localStorage.getItem("token"));
+      console.log(
+        "TOKEN EXISTS:",
+        !!localStorage.getItem("token")
+      );
       console.log(
         "STORED ROLE:",
         localStorage.getItem("role")
       );
 
-      // =================================================
-      // ADMIN REDIRECT
-      // =================================================
+      // -------------------------------------------------
+      // ADMIN
+      // -------------------------------------------------
 
       if (role === "admin") {
-        console.log("=================================");
         console.log("ADMIN DETECTED");
         console.log("REDIRECTING TO /admin");
-        console.log("=================================");
 
         navigate("/admin", {
           replace: true,
@@ -166,9 +130,9 @@ function Login() {
         return;
       }
 
-      // =================================================
-      // CUSTOMER REDIRECT
-      // =================================================
+      // -------------------------------------------------
+      // CUSTOMER
+      // -------------------------------------------------
 
       const previousPage =
         location.state?.from?.pathname;
@@ -195,13 +159,10 @@ function Login() {
         return;
       }
 
-      console.log(
-        "CUSTOMER REDIRECTING TO /dashboard"
-      );
-
       navigate("/dashboard", {
         replace: true,
       });
+
     } catch (err) {
       console.error("LOGIN ERROR:", err);
 
@@ -212,14 +173,11 @@ function Login() {
         "Invalid email or password.";
 
       setError(message);
+
     } finally {
       setLoading(false);
     }
   };
-
-  // =====================================================
-  // PAGE
-  // =====================================================
 
   return (
     <div className="login-page">
@@ -293,6 +251,19 @@ function Login() {
             autoComplete="current-password"
             required
           />
+
+        </div>
+
+        {/* FORGOT PASSWORD */}
+
+        <div className="forgot-password-container">
+
+          <Link
+            to="/forgot-password"
+            className="forgot-password-link"
+          >
+            Forgot Password?
+          </Link>
 
         </div>
 

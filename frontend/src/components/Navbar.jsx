@@ -1,69 +1,112 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import "../styles/Navbar.css";
 
 function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleBack = () => {
+    // Don't go back if the user is already on the home page
+    if (location.pathname === "/") {
+      return;
+    }
+
+    navigate(-1);
+  };
 
   const handleLogout = () => {
-    // Use the logout function from useAuth
     logout();
 
-    // Return the client to the home page
-    navigate("/");
+    // Make sure the user is returned to the home page
+    navigate("/", { replace: true });
   };
+
+  // Get the user's role safely
+  const userRole = String(user?.role || "").toLowerCase();
+  
 
   return (
     <nav className="navbar">
 
-      {/* Logo */}
-      <Link
-        to="/"
-        className="logo"
-      >
+      {/* =========================
+          LOGO
+      ========================== */}
+      <Link to="/" className="logo">
         Ramon's Marketplace
       </Link>
 
-      {/* Navigation Links */}
+      {/* =========================
+          NAVIGATION
+      ========================== */}
       <div className="nav-links">
 
-        <Link to="/">
-          Home
+        {/* HOME */}
+        <Link to="/" className="nav-link">
+          🏠 Home
         </Link>
 
-        <Link to="/services">
-          Services
+        {/* SERVICES */}
+        <Link to="/services" className="nav-link">
+          🛠️ Services
         </Link>
 
+        {/* =========================
+            USER IS LOGGED IN
+        ========================== */}
         {user ? (
           <>
-            {/* Welcome message */}
+            {/* USER NAME */}
             <span className="welcome-user">
-              Welcome, {user.name}
+              Welcome, {user.name || "Client"}
             </span>
 
-            {/* Customer links */}
-            <Link to="/dashboard">
-              Dashboard
+            {/* BACK */}
+            <button
+              type="button"
+              className="back-button"
+              onClick={handleBack}
+              disabled={location.pathname === "/"}
+            >
+              ← Back
+            </button>
+
+            {/* DASHBOARD */}
+            <Link
+              to="/dashboard"
+              className="nav-link"
+            >
+              📊 Dashboard
             </Link>
 
-            <Link to="/bookings">
-              My Bookings
+            {/* BOOKINGS */}
+            <Link
+              to="/bookings"
+              className="nav-link booking-link"
+            >
+              📅 My Bookings
             </Link>
 
-            <Link to="/profile">
-              Profile
+            {/* PROFILE */}
+            <Link
+              to="/profile"
+              className="nav-link profile-link"
+            >
+              👤 Profile
             </Link>
 
-            {/* Admin link */}
-            {user.role?.toLowerCase() === "admin" && (
-              <Link to="/admin">
-                Admin Dashboard
+            {/* ADMIN */}
+            {userRole === "admin" && (
+              <Link
+                to="/admin"
+                className="nav-link admin-link"
+              >
+                ⚙️ Admin Dashboard
               </Link>
             )}
 
-            {/* Logout */}
+            {/* LOGOUT */}
             <button
               type="button"
               className="logout-button"
@@ -73,21 +116,39 @@ function Navbar() {
             </button>
           </>
         ) : (
+          /* =========================
+             USER NOT LOGGED IN
+          ========================== */
           <>
-            <Link to="/login">
-              Login
+            <button
+              type="button"
+              className="back-button"
+              onClick={handleBack}
+              disabled={location.pathname === "/"}
+            >
+              ← Back
+            </button>
+
+            <Link
+              to="/login"
+              className="nav-link"
+            >
+              🔐 Login
             </Link>
 
-            <Link to="/register">
-              Register
+            <Link
+              to="/register"
+              className="nav-link register-link"
+            >
+              📝 Register
             </Link>
           </>
         )}
 
       </div>
-
     </nav>
   );
 }
+
 
 export default Navbar;

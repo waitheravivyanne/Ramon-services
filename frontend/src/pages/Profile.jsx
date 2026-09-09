@@ -7,8 +7,19 @@ function Profile() {
   const navigate = useNavigate();
 
   const [profile, setProfile] = useState(null);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [editing, setEditing] = useState(false);
+
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   /* =====================================================
      LOAD PROFILE
@@ -29,15 +40,23 @@ function Profile() {
 
         const response = await api.get("/profile");
 
-        console.log(
-          "PROFILE RESPONSE:",
-          response.data
-        );
+        console.log("PROFILE RESPONSE:", response.data);
 
-        setProfile(
+        const user =
           response.data.user ||
-            response.data
-        );
+          response.data;
+
+        setProfile(user);
+
+        setFormData({
+          name: user?.name || "",
+          email: user?.email || "",
+          phone:
+            user?.phone ||
+            user?.phoneNumber ||
+            "",
+        });
+
       } catch (err) {
         console.error(
           "FAILED TO LOAD PROFILE:",
@@ -66,6 +85,175 @@ function Profile() {
   }, [navigate]);
 
   /* =====================================================
+     HANDLE INPUT
+  ===================================================== */
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormData((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
+  };
+
+  /* =====================================================
+     START EDITING
+  ===================================================== */
+
+  const handleEdit = () => {
+    setSuccess("");
+    setError("");
+
+    setFormData({
+      name: profile?.name || "",
+      email: profile?.email || "",
+      phone:
+        profile?.phone ||
+        profile?.phoneNumber ||
+        "",
+    });
+
+    setEditing(true);
+  };
+
+  /* =====================================================
+     CANCEL EDITING
+  ===================================================== */
+
+  const handleCancel = () => {
+    setFormData({
+      name: profile?.name || "",
+      email: profile?.email || "",
+      phone:
+        profile?.phone ||
+        profile?.phoneNumber ||
+        "",
+    });
+
+    setError("");
+    setSuccess("");
+    setEditing(false);
+  };
+
+  /* =====================================================
+     SAVE PROFILE
+  ===================================================== */
+
+  const handleSave = async (event) => {
+    event.preventDefault();
+
+    setError("");
+    setSuccess("");
+
+    const name = formData.name.trim();
+    const email = formData.email.trim();
+    const phone = formData.phone.trim();
+
+    if (!name) {
+      setError("Please enter your full name.");
+      return;
+    }
+
+    if (!email) {
+      setError("Please enter your email address.");
+      return;
+    }
+
+    if (!phone) {
+      setError("Please enter your phone number.");
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      const response = await api.put(
+        "/profile",
+        {
+          name,
+          email,
+          phone,
+        }
+      );
+
+      console.log(
+        "UPDATED PROFILE:",
+        response.data
+      );
+
+      const updatedUser =
+        response.data.user ||
+        response.data;
+
+      setProfile(updatedUser);
+
+      setFormData({
+        name: updatedUser?.name || name,
+        email: updatedUser?.email || email,
+        phone:
+          updatedUser?.phone ||
+          updatedUser?.phoneNumber ||
+          phone,
+      });
+
+      /*
+       * Keep localStorage user information
+       * synchronized with the updated profile.
+       */
+      const storedUser =
+        localStorage.getItem("user");
+
+      let userToStore = {
+        ...(storedUser
+          ? JSON.parse(storedUser)
+          : {}),
+        ...updatedUser,
+      };
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(userToStore)
+      );
+
+      if (updatedUser?.role) {
+        localStorage.setItem(
+          "role",
+          updatedUser.role
+        );
+      }
+
+      setSuccess(
+        "Your profile has been updated successfully."
+      );
+
+      setEditing(false);
+
+    } catch (err) {
+      console.error(
+        "FAILED TO UPDATE PROFILE:",
+        err
+      );
+
+      if (err.response?.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("role");
+
+        navigate("/login");
+        return;
+      }
+
+      setError(
+        err.response?.data?.message ||
+          "Unable to update your profile."
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  /* =====================================================
      LOGOUT
   ===================================================== */
 
@@ -84,17 +272,13 @@ function Profile() {
   if (loading) {
     return (
       <div className="profile-page">
-
         <div className="profile-loading">
-
           <div className="profile-spinner"></div>
 
           <p>
             Loading your profile...
           </p>
-
         </div>
-
       </div>
     );
   }
@@ -103,10 +287,9 @@ function Profile() {
      ERROR
   ===================================================== */
 
-  if (error) {
+  if (error && !profile) {
     return (
       <div className="profile-page">
-
         <div className="profile-error">
 
           <h2>
@@ -125,7 +308,6 @@ function Profile() {
           </button>
 
         </div>
-
       </div>
     );
   }
@@ -153,6 +335,7 @@ function Profile() {
 
   const initials = name
     .split(" ")
+    .filter(Boolean)
     .map((word) => word[0])
     .join("")
     .substring(0, 2)
@@ -195,6 +378,26 @@ function Profile() {
         </div>
 
         {/* =================================================
+            SUCCESS MESSAGE
+        ================================================= */}
+
+        {success && (
+          <div className="profile-success">
+            ✅ {success}
+          </div>
+        )}
+
+        {/* =================================================
+            ERROR MESSAGE
+        ================================================= */}
+
+        {error && profile && (
+          <div className="profile-error-message">
+            ⚠️ {error}
+          </div>
+        )}
+
+        {/* =================================================
             PROFILE CARD
         ================================================= */}
 
@@ -220,81 +423,200 @@ function Profile() {
 
           </div>
 
+          {!editing && (
+            <button
+              type="button"
+              className="edit-profile-button"
+              onClick={handleEdit}
+            >
+              ✏️ Edit Profile
+            </button>
+          )}
+
         </div>
 
         {/* =================================================
-            INFORMATION
+            EDIT PROFILE
         ================================================= */}
 
-        <section className="profile-section">
+        {editing ? (
 
-          <div className="section-heading">
+          <section className="profile-section edit-profile-section">
 
-            <div>
-              <h2>
-                Personal Information
-              </h2>
+            <div className="section-heading">
+              <div>
+                <h2>
+                  Edit Profile
+                </h2>
 
-              <p>
-                Your account information
-              </p>
+                <p>
+                  Update your personal account information.
+                </p>
+              </div>
             </div>
 
-          </div>
+            <form
+              className="profile-edit-form"
+              onSubmit={handleSave}
+            >
 
-          <div className="profile-info-grid">
+              <div className="profile-form-group">
 
-            <div className="profile-info-item">
+                <label htmlFor="name">
+                  Full Name
+                </label>
 
-              <span>
-                Full Name
-              </span>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Enter your full name"
+                  autoComplete="name"
+                />
 
-              <strong>
-                {name}
-              </strong>
+              </div>
+
+              <div className="profile-form-group">
+
+                <label htmlFor="email">
+                  Email Address
+                </label>
+
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Enter your email address"
+                  autoComplete="email"
+                />
+
+              </div>
+
+              <div className="profile-form-group">
+
+                <label htmlFor="phone">
+                  Phone Number
+                </label>
+
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="e.g. 0712345678"
+                  autoComplete="tel"
+                />
+
+              </div>
+
+              <div className="profile-edit-actions">
+
+                <button
+                  type="button"
+                  className="cancel-profile-button"
+                  onClick={handleCancel}
+                  disabled={saving}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="save-profile-button"
+                  disabled={saving}
+                >
+                  {saving
+                    ? "Saving..."
+                    : "💾 Save Changes"}
+                </button>
+
+              </div>
+
+            </form>
+
+          </section>
+
+        ) : (
+
+          /* =================================================
+             PERSONAL INFORMATION
+          ================================================= */
+
+          <section className="profile-section">
+
+            <div className="section-heading">
+
+              <div>
+                <h2>
+                  Personal Information
+                </h2>
+
+                <p>
+                  Your account information
+                </p>
+              </div>
 
             </div>
 
-            <div className="profile-info-item">
+            <div className="profile-info-grid">
 
-              <span>
-                Email Address
-              </span>
+              <div className="profile-info-item">
 
-              <strong>
-                {email}
-              </strong>
+                <span>
+                  Full Name
+                </span>
+
+                <strong>
+                  {name}
+                </strong>
+
+              </div>
+
+              <div className="profile-info-item">
+
+                <span>
+                  Email Address
+                </span>
+
+                <strong>
+                  {email}
+                </strong>
+
+              </div>
+
+              <div className="profile-info-item">
+
+                <span>
+                  Phone Number
+                </span>
+
+                <strong>
+                  {phone}
+                </strong>
+
+              </div>
+
+              <div className="profile-info-item">
+
+                <span>
+                  Account Type
+                </span>
+
+                <strong>
+                  {role}
+                </strong>
+
+              </div>
 
             </div>
 
-            <div className="profile-info-item">
-
-              <span>
-                Phone Number
-              </span>
-
-              <strong>
-                {phone}
-              </strong>
-
-            </div>
-
-            <div className="profile-info-item">
-
-              <span>
-                Account Type
-              </span>
-
-              <strong>
-                {role}
-              </strong>
-
-            </div>
-
-          </div>
-
-        </section>
+          </section>
+        )}
 
         {/* =================================================
             BOOKING AREA
@@ -333,8 +655,8 @@ function Profile() {
                 </strong>
 
                 <small>
-                  View your bookings and track their
-                  status
+                  View your bookings and track
+                  their status
                 </small>
               </div>
 
@@ -390,7 +712,7 @@ function Profile() {
               className="logout-button"
               onClick={handleLogout}
             >
-              Log Out
+              🚪 Log Out
             </button>
 
           </div>
