@@ -43,7 +43,277 @@
   border-radius: 28px;
 
   overflow: hidden;
+/* =========================================================
+   EXTRA SMALL PHONE FIXES
+   ========================================================= */
 
+@media (max-width: 520px) {
+
+  .booking-page {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px 8px 35px;
+    overflow-x: hidden;
+  }
+
+  .booking-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .booking-header {
+    width: 100%;
+    padding: 22px 16px;
+    gap: 14px;
+  }
+
+  .booking-header h1 {
+    font-size: 24px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+
+  .booking-header p {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .back-button {
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  .booking-form {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .booking-section {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 18px;
+    padding: 15px;
+    border-radius: 14px;
+  }
+
+  /* Section headings */
+  .section-heading {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .section-heading > div {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .section-heading h2 {
+    font-size: 17px;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  .section-heading p {
+    font-size: 12px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  .section-number {
+    flex: 0 0 34px;
+  }
+
+  /* All form grids become single column */
+  .form-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .form-group,
+  .form-group.full-width {
+    width: 100%;
+    min-width: 0;
+    grid-column: auto;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    font-size: 14px;
+    padding: 12px;
+    border-radius: 9px;
+  }
+
+  .form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  /* Prevent date/time controls from overflowing */
+  input[type="date"],
+  input[type="time"] {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Option/card grids */
+  .house-size-grid,
+  .cleaning-type-grid,
+  .frequency-grid,
+  .time-slots,
+  .time-slot-grid {
+    width: 100%;
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+  }
+
+  .house-size-card,
+  .cleaning-type-card,
+  .frequency-card,
+  .time-slot,
+  .time-slot-card {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Make long option text wrap instead of pushing the page sideways */
+  .house-size-card *,
+  .cleaning-type-card *,
+  .frequency-card *,
+  .time-slot *,
+  .time-slot-card * {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* Extras */
+  .extras-grid {
+    width: 100%;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+  }
+
+  .extras-grid > * {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Price summary */
+  .price-summary {
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .price-summary * {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .price-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .price-total strong {
+    font-size: 22px;
+  }
+
+  /* Submit button */
+  .booking-submit {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+  .booking-page {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .booking-form {
+    padding: 7px;
+  }
+
+  .booking-section {
+    padding: 12px;
+  }
+
+  .booking-header {
+    padding: 18px 13px;
+  }
+
+  .booking-header h1 {
+    font-size: 21px;
+  }
+
+  .section-heading h2 {
+    font-size: 16px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 13px;
+    padding: 11px;
+  }
+
+  .house-size-grid,
+  .cleaning-type-grid,
+  .frequency-grid,
+  .time-slots,
+  .time-slot-grid,
+  .extras-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .price-total strong {
+    font-size: 20px;
+  }
+}
   box-shadow:
     0 25px 70px rgba(15, 23, 42, 0.12);
 
