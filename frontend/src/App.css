@@ -1,69 +1,173 @@
-body {
 
-  margin:0;
+/* ================================
+   GLOBAL RESET
+================================ */
 
-  font-family: Arial, sans-serif;
-
-  background:#F5F7FA;
-
-  color:#263238;
-
+* {
+  box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
+html {
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #F5F7FA;
+  color: #263238;
+  overflow-x: hidden;
+}
+
+/* ================================
+   APP CONTAINER
+================================ */
 
 .app-container {
-
-  min-height:100vh;
-
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-
+/* ================================
+   HEADINGS
+================================ */
 
 .app-title {
-
-  text-align:center;
-
-  color:#1565C0;
-
-  font-size:40px;
-
+  text-align: center;
+  color: #1565C0;
+  font-size: 40px;
+  line-height: 1.2;
+  margin: 20px auto;
+  padding: 0 16px;
 }
-
-
 
 .app-description {
-
-  text-align:center;
-
-  color:#546E7A;
-
+  max-width: 800px;
+  margin: 0 auto 20px;
+  padding: 0 16px;
+  text-align: center;
+  color: #546E7A;
+  line-height: 1.6;
 }
 
-
+/* ================================
+   BUTTONS
+================================ */
 
 button {
-
-  background:#2E7D32;
-
-  color:white;
-
-  border:none;
-
-  padding:12px 25px;
-
-  border-radius:8px;
-
-  cursor:pointer;
-
-  font-size:16px;
-
+  background: #2E7D32;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  min-height: 44px;
+  max-width: 100%;
 }
 
-
-
 button:hover {
+  background: #1B5E20;
+}
 
-  background:#1B5E20;
+/* Prevent long text from breaking layouts */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  overflow-wrap: break-word;
+}
 
+/* Images should never overflow their container */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Inputs and selects should fit inside mobile screens */
+input,
+select,
+textarea {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* ================================
+   TABLET
+================================ */
+
+@media (max-width: 768px) {
+
+  .app-title {
+    font-size: 32px;
+    margin: 16px auto;
+  }
+
+  .app-description {
+    font-size: 15px;
+    padding: 0 20px;
+  }
+
+  button {
+    padding: 11px 20px;
+    font-size: 15px;
+  }
+}
+
+/* ================================
+   SMALL PHONES
+================================ */
+
+@media (max-width: 480px) {
+
+  .app-title {
+    font-size: 27px;
+    line-height: 1.25;
+    margin: 15px auto;
+    padding: 0 12px;
+  }
+
+  .app-description {
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 0 15px;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+  }
+}
+
+/* ================================
+   VERY SMALL PHONES
+================================ */
+
+@media (max-width: 360px) {
+
+  .app-title {
+    font-size: 24px;
+  }
+
+  .app-description {
+    font-size: 13px;
+  }
+
+  button {
+    font-size: 14px;
+  }
 }
