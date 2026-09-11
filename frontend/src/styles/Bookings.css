@@ -612,7 +612,7 @@
 
   /* Statistics become one column on very narrow phones */
 
-  .booking-statistics {
+  /* .booking-statistics {
     grid-template-columns: 1fr 1fr;
     gap: 8px;
   }
@@ -638,7 +638,7 @@
 
   .booking-stat-card strong {
     font-size: 16px;
-  }
+  } */
 
   /* Filters */
 
