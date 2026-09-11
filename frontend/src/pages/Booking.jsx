@@ -2361,21 +2361,43 @@ function Booking() {
 
         </section>
 
-        {/* =================================================
-            CHECKOUT BUTTON
-        ================================================= */}
+       
+{/* =================================================
+    FINAL BOOKING ACTION
+================================================= */}
 
-        <div className="booking-actions">
+<section className="booking-final-action">
 
-          <button
-            type="button"
-            className="checkout-button"
-            onClick={proceedToCheckout}
-          >
-            Proceed to Checkout →
-          </button>
+  <div className="final-action-content">
 
-        </div>
+    <div>
+      <h2>Ready to Book?</h2>
+
+      <p>
+        Review your booking details and continue to
+        secure your service appointment.
+      </p>
+
+      <div className="final-total">
+        <span>Total to Pay</span>
+
+        <strong>
+          KSh {priceSummary.total.toLocaleString()}
+        </strong>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      className="checkout-button"
+      onClick={proceedToCheckout}
+    >
+      Continue to Payment →
+    </button>
+
+  </div>
+
+</section>
 
       </div>
 
