@@ -1,29 +1,27 @@
 /* =====================================
-   NAVBAR
+   RAMON'S MARKETPLACE NAVBAR
 ===================================== */
 
 .navbar {
   width: 100%;
-  min-height: 70px;
+  min-height: 72px;
 
-  padding: 10px 25px;
+  padding: 12px 28px;
 
-  display: flex;
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
 
-  background: #171834;
+  column-gap: 28px;
 
-  border-bottom: 1px solid #e5e7eb;
+  background: #251e50;
+  border-bottom: 1px solid #12151d;
 
   box-sizing: border-box;
 
   position: sticky;
   top: 0;
-
   z-index: 1000;
-
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 
@@ -32,135 +30,193 @@
 ===================================== */
 
 .logo {
+  display: flex;
+  align-items: center;
+
+  width: 240px;
+  min-width: 240px;
+  max-width: 240px;
+
+  color: #ffffff;
   text-decoration: none;
 
-  font-size: 22px;
-  font-weight: 700;
-
-  color: #cbd0dc;
+  font-size: 1.3rem;
+  font-weight: 800;
 
   white-space: nowrap;
+  line-height: 1;
+
+  box-sizing: border-box;
+
+  position: relative;
+  z-index: 2;
+
+  flex-shrink: 0;
+
+  transition: color 0.2s ease;
 }
 
 .logo:hover {
-  color: #2563eb;
+  color: #dbeafe;
 }
 
-
 /* =====================================
-   NAVIGATION CONTAINER
+   NAVIGATION AREA
 ===================================== */
 
 .nav-links {
+  width: 100%;
+  min-width: 0;
+
   display: flex;
-
   align-items: center;
-
   justify-content: flex-end;
 
-  gap: 8px;
+  gap: 12px;
 
   flex-wrap: wrap;
+
+  box-sizing: border-box;
 }
 
 
 /* =====================================
-   NORMAL NAVIGATION LINKS
+   HOME + SERVICES
+===================================== */
+
+.nav-main-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 6px;
+
+  flex-shrink: 0;
+
+  position: relative;
+  z-index: 3;
+}
+
+
+/* =====================================
+   USER LINKS
+===================================== */
+
+.user-nav-links {
+  display: flex;
+  align-items: center;
+
+  gap: 4px;
+
+  flex-shrink: 0;
+
+  position: relative;
+  z-index: 3;
+}
+
+
+/* =====================================
+   GENERAL NAV LINKS
 ===================================== */
 
 .nav-link {
   display: inline-flex;
-
   align-items: center;
   justify-content: center;
 
-  text-decoration: none;
-
-  color: #1f2937;
-
-  background: #ffffff;
-
   padding: 9px 12px;
 
-  border-radius: 7px;
+  border-radius: 8px;
 
-  font-size: 14px;
+  color: #ffffff;
 
+  text-decoration: none;
+
+  font-size: 0.9rem;
   font-weight: 600;
 
   white-space: nowrap;
 
-  transition: all 0.2s ease;
+  flex-shrink: 0;
+
+  box-sizing: border-box;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 .nav-link:hover {
-  background: #eff6ff;
-
-  color: #2563eb;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
 }
 
-
-/* =====================================
-   DASHBOARD
-===================================== */
-
-.nav-link[href="/dashboard"] {
-  color: #1d4ed8;
+.nav-link.active {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
 }
-
-
-/* =====================================
-   MY BOOKINGS
-===================================== */
-
-.booking-link {
-  color: #047857 !important;
-
-  background: #ecfdf5;
-}
-
-.booking-link:hover {
-  background: #d1fae5;
-
-  color: #065f46 !important;
-}
-
-
-/* =====================================
-   PROFILE
-===================================== */
-
-.profile-link {
-  color: #7c3aed !important;
-
-  background: #f5f3ff;
-}
-
-.profile-link:hover {
-  background: #ede9fe;
-
-  color: #6d28d9 !important;
-}
-
 
 /* =====================================
    WELCOME USER
 ===================================== */
 
 .welcome-user {
-  display: inline-flex;
-
+  display: flex;
   align-items: center;
 
-  padding: 8px 10px;
+  flex-shrink: 0;
 
-  color: #111827;
+  padding: 8px 14px;
 
-  font-size: 14px;
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
 
-  font-weight: 700;
+  color: #dbeafe;
+
+  font-size: 0.88rem;
 
   white-space: nowrap;
+
+  box-sizing: border-box;
+}
+
+.welcome-user strong {
+  margin-left: 4px;
+  color: #ffffff;
+}
+
+/* =====================================
+   ADMIN
+===================================== */
+
+.admin-link {
+  color: #7c3aed;
+}
+
+.admin-link:hover {
+  background: #f5f3ff;
+  color: #6d28d9;
+}
+
+.admin-link.active {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+
+/* =====================================
+   ACTIONS
+===================================== */
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  flex-shrink: 0;
+
+  position: relative;
+  z-index: 3;
 }
 
 
@@ -169,35 +225,79 @@
 ===================================== */
 
 .back-button {
-  border: 1px solid #d1d5db;
+  border: 1px solid rgba(255, 255, 255, 0.5);
 
-  background: #f3f4f6;
+  background: rgba(255, 255, 255, 0.1);
 
-  color: #111827;
+  color: #ffffff;
 
   padding: 9px 13px;
 
-  border-radius: 7px;
+  border-radius: 8px;
 
-  font-size: 14px;
-
+  font-size: 0.88rem;
   font-weight: 600;
 
   cursor: pointer;
 
-  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  flex-shrink: 0;
+
+  box-sizing: border-box;
 }
 
-.back-button:hover:not(:disabled) {
-  background: #e5e7eb;
-
-  color: #000000;
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #ffffff;
+  color: #ffffff;
 }
 
-.back-button:disabled {
-  opacity: 0.5;
+/* =====================================
+   LOGIN
+===================================== */
 
-  cursor: not-allowed;
+.login-link {
+  border: 1px solid #d1d5db;
+}
+
+
+/* =====================================
+   REGISTER
+===================================== */
+
+.register-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 9px 14px;
+
+  border-radius: 8px;
+
+  background: #16a34a;
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-size: 0.88rem;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  flex-shrink: 0;
+
+  box-sizing: border-box;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.register-link:hover {
+  background: #15803d;
+  transform: translateY(-1px);
 }
 
 
@@ -208,160 +308,303 @@
 .logout-button {
   border: none;
 
-  background: #dc2626;
+  background: #fee2e2;
 
-  color: #ffffff;
+  color: #b91c1c;
 
-  padding: 9px 14px;
+  padding: 9px 13px;
 
-  border-radius: 7px;
+  border-radius: 8px;
 
-  font-size: 14px;
-
+  font-size: 0.88rem;
   font-weight: 700;
 
   cursor: pointer;
 
-  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  flex-shrink: 0;
+
+  box-sizing: border-box;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 .logout-button:hover {
-  background: #b91c1c;
+  background: #fecaca;
+  color: #991b1b;
 }
 
 
 /* =====================================
-   ADMIN
+   LAPTOP
 ===================================== */
 
-.admin-link {
-  color: #7c3aed !important;
-
-  background: #f5f3ff;
-}
-
-.admin-link:hover {
-  background: #ede9fe;
-
-  color: #6d28d9 !important;
-}
-
-
-/* =====================================
-   REGISTER
-===================================== */
-
-.register-link {
-  background: #2563eb;
-
-  color: #ffffff !important;
-}
-
-.register-link:hover {
-  background: #1d4ed8;
-
-  color: #ffffff !important;
-}
-
-
-/* =========================================================
-   RESPONSIVE NAVBAR
-========================================================= */
-
-@media (max-width: 850px) {
+@media (max-width: 1250px) {
 
   .navbar {
-    flex-wrap: wrap;
-    gap: 10px;
+    grid-template-columns: 220px minmax(0, 1fr);
+
+    column-gap: 20px;
+
+    padding: 12px 20px;
+  }
+
+  .logo {
+    width: 220px;
+    min-width: 220px;
+    max-width: 220px;
+
+    font-size: 1.15rem;
+  }
+
+  .nav-links {
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .nav-main-links {
+    gap: 2px;
+  }
+
+  .user-nav-links {
+    gap: 2px;
+  }
+
+  .nav-link {
+    padding: 8px 9px;
+    font-size: 0.82rem;
+  }
+
+  .welcome-user {
+    padding: 7px 9px;
+    font-size: 0.8rem;
+  }
+
+  .back-button,
+  .logout-button,
+  .register-link {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+}
+
+
+/* =====================================
+   SMALL LAPTOP / LARGE TABLET
+===================================== */
+
+@media (max-width: 1050px) {
+
+  .navbar {
+    grid-template-columns: 210px minmax(0, 1fr);
+
+    column-gap: 16px;
+
     padding: 12px 16px;
   }
 
   .logo {
-    font-size: 19px;
+    width: 210px;
+    min-width: 210px;
+    max-width: 210px;
+
+    font-size: 1.08rem;
   }
 
   .nav-links {
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
+    justify-content: flex-end;
 
-  .nav-link,
-  .back-button,
-  .logout-button {
-    font-size: 13px;
-    padding: 8px 10px;
-  }
-
-  .welcome-user {
-    font-size: 13px;
-    white-space: normal;
-    text-align: center;
+    row-gap: 6px;
   }
 }
 
 
-@media (max-width: 600px) {
+/* =====================================
+   TABLET
+===================================== */
+
+@media (max-width: 900px) {
+
+  .navbar {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 14px 18px;
+
+    gap: 12px;
+  }
+
+  .logo {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+
+    justify-content: center;
+
+    text-align: center;
+
+    font-size: 1.25rem;
+  }
+
+  .nav-links {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+  }
+
+  .nav-main-links,
+  .user-nav-links,
+  .nav-actions {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+  }
+
+  .welcome-user {
+    width: 100%;
+
+    justify-content: center;
+
+    border-left: none;
+    border-top: 1px solid #e5e7eb;
+
+    padding-top: 10px;
+  }
+}
+
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 650px) {
+
+  .navbar {
+    width: 100%;
+
+    padding: 12px;
+
+    gap: 10px;
+  }
+
+  .logo {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+
+    font-size: 19px;
+
+    text-align: center;
+
+    justify-content: center;
+  }
+
+  .nav-links {
+    width: 100%;
+
+    gap: 8px;
+  }
+
+  .nav-main-links,
+  .user-nav-links,
+  .nav-actions {
+    width: 100%;
+
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+  }
+
+  .nav-link,
+  .back-button,
+  .logout-button,
+  .register-link {
+    font-size: 12px;
+
+    padding: 8px 9px;
+
+    min-height: 38px;
+
+    box-sizing: border-box;
+  }
+
+  .welcome-user {
+    width: 100%;
+
+    justify-content: center;
+
+    text-align: center;
+
+    font-size: 13px;
+
+    padding: 8px 0;
+  }
+}
+
+
+/* =====================================
+   VERY SMALL PHONES
+===================================== */
+
+@media (max-width: 400px) {
 
   .navbar {
     padding: 10px;
   }
 
   .logo {
-    width: 100%;
-    text-align: center;
-    font-size: 18px;
-    white-space: normal;
+    font-size: 17px;
   }
 
-  .nav-links {
+  .nav-main-links,
+  .user-nav-links,
+  .nav-actions {
     width: 100%;
+
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    grid-template-columns: 1fr 1fr;
+
     gap: 6px;
   }
 
   .nav-link,
   .back-button,
-  .logout-button {
+  .logout-button,
+  .register-link {
     width: 100%;
-    max-width: 100%;
+
     min-width: 0;
 
-    padding: 9px 7px;
-
-    font-size: 12px;
-    white-space: normal;
     text-align: center;
+
+    justify-content: center;
   }
 
   .welcome-user {
-    width: 100%;
-    padding: 6px;
-  }
-}
-
-
-@media (max-width: 360px) {
-
-  .navbar {
-    padding: 8px;
-  }
-
-  .nav-links {
-    grid-template-columns: 1fr 1fr;
-    gap: 5px;
-  }
-
-  .nav-link,
-  .back-button,
-  .logout-button {
-    font-size: 11px;
-    padding: 8px 5px;
-  }
-
-  .logo {
-    font-size: 17px;
+    font-size: 12px;
   }
 }

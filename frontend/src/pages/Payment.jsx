@@ -3,24 +3,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import "../styles/Payment.css";
 
-// ============================================================
-// M-PESA TILL NUMBER
-// ============================================================
-
 const MPESA_TILL_NUMBER =
   import.meta.env.VITE_MPESA_TILL_NUMBER || "1699138";
-
-// ============================================================
-// PAYMENT COMPONENT
-// ============================================================
 
 const Payment = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
-  // ============================================================
-  // BOOKING DATA
-  // ============================================================
 
   const booking = location.state?.booking;
 
@@ -29,10 +17,6 @@ const Payment = () => {
       booking?.total ??
       0
   );
-
-  // ============================================================
-  // PAYMENT STATE
-  // ============================================================
 
   const [paymentMethod, setPaymentMethod] =
     useState("mpesa");
@@ -61,9 +45,18 @@ const Payment = () => {
   const [error, setError] =
     useState("");
 
-  // ============================================================
-  // GET SERVICE ID
-  // ============================================================
+  /*
+   * Show the detailed booking summary only
+   * after the customer enters an M-PESA
+   * transaction code.
+   */
+  const showBookingSummary =
+    paymentMethod === "mpesa" &&
+    mpesaTransactionCode.trim().length > 0;
+
+  /* =====================================================
+     SERVICE HELPERS
+  ===================================================== */
 
   const getServiceId = () => {
     const value =
@@ -78,10 +71,6 @@ const Payment = () => {
       : null;
   };
 
-  // ============================================================
-  // GET CATEGORY ID
-  // ============================================================
-
   const getCategoryId = () => {
     const value =
       booking?.categoryId ??
@@ -95,9 +84,47 @@ const Payment = () => {
       : null;
   };
 
-  // ============================================================
-  // CREATE BOOKING
-  // ============================================================
+  const getServiceName = () => {
+    return (
+      booking?.serviceName ||
+      booking?.service_name ||
+      booking?.service?.name ||
+      booking?.service?.title ||
+      booking?.category?.serviceName ||
+      booking?.category?.name ||
+      "Cleaning Service"
+    );
+  };
+
+  const getExtras = () => {
+    if (!Array.isArray(booking?.extras)) {
+      return [];
+    }
+
+    return booking.extras;
+  };
+
+  const formatExtra = (extra) => {
+    if (typeof extra === "string") {
+      return extra;
+    }
+
+    if (extra && typeof extra === "object") {
+      return (
+        extra.name ||
+        extra.label ||
+        extra.title ||
+        extra.description ||
+        "Additional service"
+      );
+    }
+
+    return "Additional service";
+  };
+
+  /* =====================================================
+     CREATE BOOKING
+  ===================================================== */
 
   const createBooking = async () => {
     if (!booking) {
@@ -127,32 +154,20 @@ const Payment = () => {
       );
     }
 
-    // ==========================================================
-    // PAYLOAD MATCHES YOUR FLASK /bookings ROUTE
-    // ==========================================================
-
     const payload = {
-      serviceId: serviceId,
-
-      categoryId: categoryId,
-
+      serviceId,
+      categoryId,
       total: Number(total),
 
       date: booking.date || "",
-
       time: booking.time || "",
 
       address: booking.address || "",
-
       city: booking.city || "",
-
       estate: booking.estate || "",
+      houseNumber: booking.houseNumber || "",
 
-      houseNumber:
-        booking.houseNumber || "",
-
-      houseSize:
-        booking.houseSize || "",
+      houseSize: booking.houseSize || "",
 
       cleaningType:
         booking.cleaningType ||
@@ -175,8 +190,6 @@ const Payment = () => {
           ? "mpesa_till"
           : paymentMethod,
 
-      // Manual Till payment does NOT need
-      // the customer's phone number.
       paymentPhone: "",
     };
 
@@ -184,9 +197,7 @@ const Payment = () => {
       "======================================"
     );
 
-    console.log(
-      "CREATING BOOKING"
-    );
+    console.log("CREATING BOOKING");
 
     console.log(
       "SERVICE ID:",
@@ -225,9 +236,7 @@ const Payment = () => {
       );
 
       return response;
-
     } catch (err) {
-
       console.error(
         "======================================"
       );
@@ -259,14 +268,11 @@ const Payment = () => {
     }
   };
 
-  // ============================================================
-  // GET BOOKING ID
-  // ============================================================
+  /* =====================================================
+     GET BOOKING ID
+  ===================================================== */
 
-  const getBookingId = (
-    response
-  ) => {
-
+  const getBookingId = (response) => {
     return (
       response?.data?.booking?.id ??
       response?.data?.id ??
@@ -276,14 +282,13 @@ const Payment = () => {
     );
   };
 
-  // ============================================================
-  // SUBMIT MANUAL M-PESA PAYMENT
-  // ============================================================
+  /* =====================================================
+     SUBMIT M-PESA PAYMENT
+  ===================================================== */
 
   const submitMpesaPayment = async (
     bookingId
   ) => {
-
     if (!bookingId) {
       throw new Error(
         "The booking was created but no booking ID was returned."
@@ -308,14 +313,9 @@ const Payment = () => {
     }
 
     const payload = {
-      bookingId:
-        Number(bookingId),
-
-      transactionCode:
-        transactionCode,
-
-      amount:
-        Number(total),
+      bookingId: Number(bookingId),
+      transactionCode,
+      amount: Number(total),
     };
 
     console.log(
@@ -324,7 +324,6 @@ const Payment = () => {
     );
 
     try {
-
       const response =
         await api.post(
           "/api/mpesa/manual-payment",
@@ -337,9 +336,7 @@ const Payment = () => {
       );
 
       return response;
-
     } catch (err) {
-
       console.error(
         "MANUAL M-PESA PAYMENT ERROR:",
         err
@@ -354,93 +351,77 @@ const Payment = () => {
     }
   };
 
-  // ============================================================
-  // COPY TILL
-  // ============================================================
+  /* =====================================================
+     COPY TILL NUMBER
+  ===================================================== */
 
-  const copyTillNumber =
-    async () => {
+  const copyTillNumber = async () => {
+    try {
+      await navigator.clipboard.writeText(
+        MPESA_TILL_NUMBER
+      );
 
-      try {
+      setPaymentMessage(
+        "Till Number copied successfully."
+      );
 
-        await navigator.clipboard.writeText(
-          MPESA_TILL_NUMBER
-        );
+      setTimeout(() => {
+        setPaymentMessage("");
+      }, 3000);
+    } catch (err) {
+      console.error(
+        "COPY ERROR:",
+        err
+      );
 
-        setPaymentMessage(
-          "Till Number copied successfully."
-        );
+      setPaymentMessage(
+        `Till Number: ${MPESA_TILL_NUMBER}`
+      );
+    }
+  };
 
-        setTimeout(() => {
-          setPaymentMessage("");
-        }, 3000);
+  /* =====================================================
+     CARD FORMATTERS
+  ===================================================== */
 
-      } catch (err) {
+  const formatCardNumber = (value) => {
+    const cleaned =
+      value
+        .replace(/\D/g, "")
+        .slice(0, 16);
 
-        console.error(
-          "COPY ERROR:",
-          err
-        );
+    return cleaned
+      .replace(
+        /(.{4})/g,
+        "$1 "
+      )
+      .trim();
+  };
 
-        setPaymentMessage(
-          `Till Number: ${MPESA_TILL_NUMBER}`
-        );
-      }
-    };
+  const formatExpiry = (value) => {
+    const cleaned =
+      value
+        .replace(/\D/g, "")
+        .slice(0, 4);
 
-  // ============================================================
-  // FORMAT CARD NUMBER
-  // ============================================================
+    if (cleaned.length >= 3) {
+      return `${cleaned.slice(
+        0,
+        2
+      )}/${cleaned.slice(2)}`;
+    }
 
-  const formatCardNumber =
-    (value) => {
+    return cleaned;
+  };
 
-      const cleaned =
-        value
-          .replace(/\D/g, "")
-          .slice(0, 16);
-
-      return cleaned
-        .replace(
-          /(.{4})/g,
-          "$1 "
-        )
-        .trim();
-    };
-
-  // ============================================================
-  // FORMAT EXPIRY
-  // ============================================================
-
-  const formatExpiry =
-    (value) => {
-
-      const cleaned =
-        value
-          .replace(/\D/g, "")
-          .slice(0, 4);
-
-      if (
-        cleaned.length >= 3
-      ) {
-        return `${cleaned.slice(
-          0,
-          2
-        )}/${cleaned.slice(2)}`;
-      }
-
-      return cleaned;
-    };
-
-  // ============================================================
-  // SUCCESS PAGE
-  // ============================================================
+  /* =====================================================
+     SUCCESS PAGE
+  ===================================================== */
 
   const goToSuccess = (
     bookingResponse,
     paymentResponse = null
   ) => {
-
     const bookingId =
       getBookingId(
         bookingResponse
@@ -454,15 +435,11 @@ const Payment = () => {
       "/success",
       {
         state: {
+          booking: savedBooking,
 
-          booking:
-            savedBooking,
+          bookingId,
 
-          bookingId:
-            bookingId,
-
-          total:
-            Number(total),
+          total: Number(total),
 
           paymentMethod:
             paymentMethod === "mpesa"
@@ -496,256 +473,201 @@ const Payment = () => {
     );
   };
 
-  // ============================================================
-  // HANDLE PAYMENT
-  // ============================================================
+  /* =====================================================
+     HANDLE PAYMENT
+  ===================================================== */
 
-  const handlePayment =
-    async (event) => {
+  const handlePayment = async (
+    event
+  ) => {
+    event.preventDefault();
 
-      event.preventDefault();
+    setError("");
+    setPaymentMessage("");
 
-      setError("");
+    if (!booking) {
+      setError(
+        "Booking information is missing. Please return to the booking page."
+      );
 
-      setPaymentMessage("");
+      return;
+    }
 
-      // --------------------------------------------------------
-      // BOOKING CHECK
-      // --------------------------------------------------------
+    if (
+      !Number.isFinite(total) ||
+      total <= 0
+    ) {
+      setError(
+        "The booking amount is invalid. Please return to the booking page."
+      );
 
-      if (!booking) {
+      return;
+    }
 
+    if (
+      paymentMethod === "mpesa"
+    ) {
+      const transactionCode =
+        mpesaTransactionCode
+          .trim()
+          .toUpperCase();
+
+      if (!transactionCode) {
         setError(
-          "Booking information is missing. Please return to the booking page."
+          "Please make the M-PESA payment first, then enter the transaction code."
         );
 
         return;
       }
-
-      // --------------------------------------------------------
-      // TOTAL CHECK
-      // --------------------------------------------------------
 
       if (
-        !Number.isFinite(total) ||
-        total <= 0
+        transactionCode.length < 5
       ) {
-
         setError(
-          "The booking amount is invalid. Please return to the booking page."
+          "The M-PESA transaction code appears too short. Please check it."
         );
 
         return;
       }
+    }
 
-      // --------------------------------------------------------
-      // M-PESA VALIDATION
-      // --------------------------------------------------------
+    if (
+      paymentMethod === "card"
+    ) {
+      setError(
+        "Card payments are not connected yet. Please use M-PESA or Cash."
+      );
+
+      return;
+    }
+
+    setProcessing(true);
+
+    try {
+      setPaymentMessage(
+        "Creating your booking..."
+      );
+
+      const bookingResponse =
+        await createBooking();
+
+      const bookingId =
+        getBookingId(
+          bookingResponse
+        );
+
+      console.log(
+        "NEW BOOKING ID:",
+        bookingId
+      );
+
+      if (!bookingId) {
+        throw new Error(
+          "The booking was created but the server did not return a booking ID."
+        );
+      }
 
       if (
         paymentMethod === "mpesa"
       ) {
+        setPaymentMessage(
+          "Submitting your M-PESA transaction code..."
+        );
 
-        const transactionCode =
-          mpesaTransactionCode
-            .trim()
-            .toUpperCase();
-
-        if (!transactionCode) {
-
-          setError(
-            "Please make the M-PESA payment first, then enter the transaction code."
+        const paymentResponse =
+          await submitMpesaPayment(
+            bookingId
           );
 
-          return;
-        }
+        setPaymentMessage(
+          "Payment submitted for verification."
+        );
 
-        if (
-          transactionCode.length < 5
-        ) {
-
-          setError(
-            "The M-PESA transaction code appears too short. Please check it."
-          );
-
-          return;
-        }
-      }
-
-      // --------------------------------------------------------
-      // CARD
-      // --------------------------------------------------------
-
-      if (
-        paymentMethod === "card"
-      ) {
-
-        setError(
-          "Card payments are not connected yet. Please use M-PESA or Cash."
+        goToSuccess(
+          bookingResponse,
+          paymentResponse
         );
 
         return;
       }
 
-      setProcessing(true);
-
-      try {
-
-        // ======================================================
-        // STEP 1 — CREATE BOOKING
-        // ======================================================
-
+      if (
+        paymentMethod === "cash"
+      ) {
         setPaymentMessage(
-          "Creating your booking..."
+          "Booking created successfully."
         );
 
-        const bookingResponse =
-          await createBooking();
-
-        const bookingId =
-          getBookingId(
-            bookingResponse
-          );
-
-        console.log(
-          "NEW BOOKING ID:",
-          bookingId
+        goToSuccess(
+          bookingResponse
         );
 
-        if (!bookingId) {
-
-          throw new Error(
-            "The booking was created but the server did not return a booking ID."
-          );
-        }
-
-        // ======================================================
-        // STEP 2 — M-PESA
-        // ======================================================
-
-        if (
-          paymentMethod === "mpesa"
-        ) {
-
-          setPaymentMessage(
-            "Submitting your M-PESA transaction code..."
-          );
-
-          const paymentResponse =
-            await submitMpesaPayment(
-              bookingId
-            );
-
-          setPaymentMessage(
-            "Payment submitted for verification."
-          );
-
-          goToSuccess(
-            bookingResponse,
-            paymentResponse
-          );
-
-          return;
-        }
-
-        // ======================================================
-        // STEP 3 — CASH
-        // ======================================================
-
-        if (
-          paymentMethod === "cash"
-        ) {
-
-          setPaymentMessage(
-            "Booking created successfully."
-          );
-
-          goToSuccess(
-            bookingResponse
-          );
-
-          return;
-        }
-
-      } catch (err) {
-
-        console.error(
-          "PAYMENT ERROR:",
-          err
-        );
-
-        const backendMessage =
-          err?.response?.data?.message ||
-          err?.response?.data?.error ||
-          err?.response?.data?.msg;
-
-        const statusCode =
-          err?.response?.status;
-
-        if (
-          statusCode === 400
-        ) {
-
-          setError(
-            backendMessage ||
-            "The server rejected the booking. Please check the selected service, category, date, time and amount."
-          );
-
-        } else if (
-          statusCode === 401
-        ) {
-
-          setError(
-            "Your login session has expired. Please log in again."
-          );
-
-        } else if (
-          statusCode === 403
-        ) {
-
-          setError(
-            "You are not authorized to perform this action."
-          );
-
-        } else if (
-          statusCode === 404
-        ) {
-
-          setError(
-            backendMessage ||
-            "The requested backend endpoint was not found."
-          );
-
-        } else if (
-          statusCode >= 500
-        ) {
-
-          setError(
-            backendMessage ||
-            "The server encountered an error. Check the Flask terminal for details."
-          );
-
-        } else {
-
-          setError(
-            backendMessage ||
-            err?.message ||
-            "Something went wrong while processing your booking."
-          );
-        }
-
-      } finally {
-
-        setProcessing(false);
+        return;
       }
-    };
+    } catch (err) {
+      console.error(
+        "PAYMENT ERROR:",
+        err
+      );
 
-  // ============================================================
-  // NO BOOKING
-  // ============================================================
+      const backendMessage =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        err?.response?.data?.msg;
+
+      const statusCode =
+        err?.response?.status;
+
+      if (
+        statusCode === 400
+      ) {
+        setError(
+          backendMessage ||
+          "The server rejected the booking. Please check the selected service, category, date, time and amount."
+        );
+      } else if (
+        statusCode === 401
+      ) {
+        setError(
+          "Your login session has expired. Please log in again."
+        );
+      } else if (
+        statusCode === 403
+      ) {
+        setError(
+          "You are not authorized to perform this action."
+        );
+      } else if (
+        statusCode === 404
+      ) {
+        setError(
+          backendMessage ||
+          "The requested backend endpoint was not found."
+        );
+      } else if (
+        statusCode >= 500
+      ) {
+        setError(
+          backendMessage ||
+          "The server encountered an error. Check the Flask terminal for details."
+        );
+      } else {
+        setError(
+          backendMessage ||
+          err?.message ||
+          "Something went wrong while processing your booking."
+        );
+      }
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  /* =====================================================
+     DIRECT PAYMENT PAGE ACCESS
+  ===================================================== */
 
   if (!booking) {
-
     return (
       <div className="payment-page">
 
@@ -765,10 +687,10 @@ const Payment = () => {
 
             </div>
 
-            <div className="payment-error">
+            <div className="payment-error-message">
 
-              Please return to the booking page and
-              select your service again.
+              Please return to the booking page
+              and select your service again.
 
             </div>
 
@@ -790,18 +712,14 @@ const Payment = () => {
     );
   }
 
-  // ============================================================
-  // MAIN UI
-  // ============================================================
+  /* =====================================================
+     MAIN PAYMENT PAGE
+  ===================================================== */
 
   return (
     <div className="payment-page">
 
       <div className="payment-container">
-
-        {/* =====================================================
-            HEADER
-        ====================================================== */}
 
         <div className="payment-header">
 
@@ -816,12 +734,10 @@ const Payment = () => {
 
         </div>
 
-        {/* =====================================================
-            ERROR
-        ====================================================== */}
+        {/* ERROR MESSAGE */}
 
         {error && (
-          <div className="payment-error">
+          <div className="payment-error-message">
 
             <strong>
               Payment Error
@@ -834,21 +750,19 @@ const Payment = () => {
           </div>
         )}
 
-        {/* =====================================================
-            MESSAGE
-        ====================================================== */}
+        {/* SUCCESS / INFO MESSAGE */}
 
         {paymentMessage && (
-          <div className="payment-message">
+          <div className="payment-success-message">
             {paymentMessage}
           </div>
         )}
 
-        <div className="payment-layout">
+        {/* =================================================
+            SINGLE PAYMENT COLUMN
+        ================================================== */}
 
-          {/* ===================================================
-              PAYMENT METHODS
-          ==================================================== */}
+        <div className="payment-layout single-payment-column">
 
           <div className="payment-card">
 
@@ -856,11 +770,18 @@ const Payment = () => {
               Payment Method
             </h2>
 
+            <p>
+              Select how you would like to pay
+              for your booking.
+            </p>
+
+            {/* =================================================
+                PAYMENT METHOD SELECTOR
+            ================================================== */}
+
             <div className="payment-methods">
 
-              {/* =================================================
-                  M-PESA
-              ================================================== */}
+              {/* M-PESA */}
 
               <button
                 type="button"
@@ -873,24 +794,18 @@ const Payment = () => {
                   setPaymentMethod(
                     "mpesa"
                   );
+
                   setError("");
+                  setPaymentMessage("");
                 }}
               >
 
                 <div className="payment-method-icon">
-                  M
+                  📱
                 </div>
 
-                <div className="payment-method-info">
-
-                  <strong>
-                    M-PESA
-                  </strong>
-
-                  <span>
-                    Pay using our Till Number
-                  </span>
-
+                <div className="payment-method-text">
+                  M-PESA
                 </div>
 
                 <div className="payment-method-radio">
@@ -903,9 +818,7 @@ const Payment = () => {
 
               </button>
 
-              {/* =================================================
-                  CARD
-              ================================================== */}
+              {/* CARD */}
 
               <button
                 type="button"
@@ -918,7 +831,9 @@ const Payment = () => {
                   setPaymentMethod(
                     "card"
                   );
+
                   setError("");
+                  setPaymentMessage("");
                 }}
               >
 
@@ -926,16 +841,8 @@ const Payment = () => {
                   💳
                 </div>
 
-                <div className="payment-method-info">
-
-                  <strong>
-                    Card
-                  </strong>
-
-                  <span>
-                    Debit or credit card
-                  </span>
-
+                <div className="payment-method-text">
+                  Card
                 </div>
 
                 <div className="payment-method-radio">
@@ -948,9 +855,7 @@ const Payment = () => {
 
               </button>
 
-              {/* =================================================
-                  CASH
-              ================================================== */}
+              {/* CASH */}
 
               <button
                 type="button"
@@ -963,7 +868,9 @@ const Payment = () => {
                   setPaymentMethod(
                     "cash"
                   );
+
                   setError("");
+                  setPaymentMessage("");
                 }}
               >
 
@@ -971,16 +878,8 @@ const Payment = () => {
                   💵
                 </div>
 
-                <div className="payment-method-info">
-
-                  <strong>
-                    Cash
-                  </strong>
-
-                  <span>
-                    Pay in cash
-                  </span>
-
+                <div className="payment-method-text">
+                  Cash
                 </div>
 
                 <div className="payment-method-radio">
@@ -995,98 +894,30 @@ const Payment = () => {
 
             </div>
 
-            {/* ==================================================
-                M-PESA PANEL
-            =================================================== */}
+            {/* =================================================
+                M-PESA
+            ================================================== */}
 
             {paymentMethod === "mpesa" && (
-
-              <div className="mpesa-payment-panel">
+              <div className="mpesa-section">
 
                 <h3>
                   Pay with M-PESA
                 </h3>
 
                 <p>
-                  Use the M-PESA menu on your phone
-                  to pay the amount shown below.
+                  Follow the steps below to make
+                  your payment, then enter your
+                  M-PESA transaction code.
                 </p>
 
-                <div className="mpesa-payment-box">
-
-                  <span>
-                    Till Number
-                  </span>
-
-                  <strong>
-                    {MPESA_TILL_NUMBER}
-                  </strong>
-
-                  <button
-                    type="button"
-                    onClick={
-                      copyTillNumber
-                    }
-                  >
-                    Copy Till Number
-                  </button>
-
-                </div>
-
-                <div className="mpesa-payment-box">
-
-                  <span>
-                    Amount
-                  </span>
-
-                  <strong>
-                    KSh{" "}
-                    {total.toLocaleString(
-                      "en-KE"
-                    )}
-                  </strong>
-
-                </div>
-
-                <div className="form-group">
-
-                  <label htmlFor="mpesaTransactionCode">
-                    M-PESA Transaction Code
-                  </label>
-
-                  <input
-                    id="mpesaTransactionCode"
-                    type="text"
-                    value={
-                      mpesaTransactionCode
-                    }
-                    onChange={(event) =>
-                      setMpesaTransactionCode(
-                        event.target.value
-                          .toUpperCase()
-                          .replace(
-                            /\s/g,
-                            ""
-                          )
-                      )
-                    }
-                    placeholder="Enter transaction code"
-                    maxLength={30}
-                    autoComplete="off"
-                  />
-
-                  <small>
-                    Enter the transaction code from
-                    your M-PESA confirmation message.
-                  </small>
-
-                </div>
+                {/* HOW TO PAY */}
 
                 <div className="mpesa-instructions">
 
-                  <strong>
-                    How to pay
-                  </strong>
+                  <h4>
+                    How to Pay
+                  </h4>
 
                   <ol>
 
@@ -1095,11 +926,17 @@ const Payment = () => {
                     </li>
 
                     <li>
-                      Select Lipa na M-PESA.
+                      Select
+                      <strong>
+                        {" "}Lipa na M-PESA
+                      </strong>.
                     </li>
 
                     <li>
-                      Select Buy Goods and Services.
+                      Select
+                      <strong>
+                        {" "}Buy Goods and Services
+                      </strong>.
                     </li>
 
                     <li>
@@ -1122,31 +959,330 @@ const Payment = () => {
                     </li>
 
                     <li>
-                      Complete the payment.
+                      Confirm and complete
+                      the payment.
                     </li>
 
                     <li>
-                      Enter the M-PESA transaction
-                      code above.
+                      Enter the transaction
+                      code below.
                     </li>
 
                   </ol>
 
                 </div>
 
-              </div>
+                {/* =================================================
+                    TILL NUMBER
+                ================================================== */}
 
+                <div className="mpesa-till">
+
+                  <span className="mpesa-till-label">
+                    M-PESA Till Number
+                  </span>
+
+                  <div className="mpesa-till-number">
+                    {MPESA_TILL_NUMBER}
+                  </div>
+
+                  <button
+                    type="button"
+                    className="mpesa-copy-button"
+                    onClick={
+                      copyTillNumber
+                    }
+                  >
+                    📋 Copy Till Number
+                  </button>
+
+                </div>
+
+                {/* SECURITY MESSAGE */}
+
+                <div className="mpesa-security">
+
+                  <span>
+                    🔒
+                  </span>
+
+                  <div>
+                    <strong>
+                      Secure Payment
+                    </strong>
+                    <br />
+                    Only enter the transaction
+                    code shown in your official
+                    M-PESA confirmation message.
+                  </div>
+
+                </div>
+
+                {/* =================================================
+                    TRANSACTION CODE
+                ================================================== */}
+
+                <label
+                  htmlFor="mpesaTransactionCode"
+                  className="mpesa-transaction-label"
+                >
+                  M-PESA Transaction Code
+                </label>
+
+                <input
+                  id="mpesaTransactionCode"
+                  type="text"
+                  className="mpesa-transaction-input"
+                  value={
+                    mpesaTransactionCode
+                  }
+                  onChange={(event) => {
+
+                    const value =
+                      event.target.value
+                        .toUpperCase()
+                        .replace(
+                          /\s/g,
+                          ""
+                        );
+
+                    setMpesaTransactionCode(
+                      value
+                    );
+
+                    setError("");
+                  }}
+                  placeholder="Enter transaction code"
+                  maxLength={30}
+                  autoComplete="off"
+                />
+
+                {/* =================================================
+                    BOOKING SUMMARY
+                ================================================== */}
+
+                {showBookingSummary && (
+                  <div className="booking-summary-card">
+
+                    <h3>
+                      Review Your Booking
+                    </h3>
+
+                    {/* SERVICE */}
+
+                    <div className="booking-summary-row">
+
+                      <span>
+                        Service
+                      </span>
+
+                      <span>
+                        {getServiceName()}
+                      </span>
+
+                    </div>
+
+                    {/* HOUSE SIZE */}
+
+                    <div className="booking-summary-row">
+
+                      <span>
+                        House Size
+                      </span>
+
+                      <span>
+                        {booking.houseSize ||
+                          "Not selected"}
+                      </span>
+
+                    </div>
+
+                    {/* CLEANING TYPE */}
+
+                    <div className="booking-summary-row">
+
+                      <span>
+                        Cleaning Type
+                      </span>
+
+                      <span>
+                        {booking.cleaningType ||
+                          booking.cleaningLevel ||
+                          "Standard"}
+                      </span>
+
+                    </div>
+
+                    {/* FREQUENCY */}
+
+                    <div className="booking-summary-row">
+
+                      <span>
+                        Frequency
+                      </span>
+
+                      <span>
+                        {booking.frequency ||
+                          "One-Time"}
+                      </span>
+
+                    </div>
+
+                    {/* DATE */}
+
+                    <div className="booking-summary-row">
+
+                      <span>
+                        Date
+                      </span>
+
+                      <span>
+                        {booking.date ||
+                          "Not selected"}
+                      </span>
+
+                    </div>
+
+                    {/* TIME */}
+
+                    <div className="booking-summary-row">
+
+                      <span>
+                        Time
+                      </span>
+
+                      <span>
+                        {booking.time ||
+                          "Not selected"}
+                      </span>
+
+                    </div>
+
+                    {/* LOCATION */}
+
+                    <div className="booking-summary-row">
+
+                      <span>
+                        Location
+                      </span>
+
+                      <span>
+                        {booking.address ||
+                          booking.estate ||
+                          booking.city ||
+                          "Not provided"}
+                      </span>
+
+                    </div>
+
+                    {/* HOUSE NUMBER */}
+
+                    {booking.houseNumber && (
+                      <div className="booking-summary-row">
+
+                        <span>
+                          House Number
+                        </span>
+
+                        <span>
+                          {booking.houseNumber}
+                        </span>
+
+                      </div>
+                    )}
+
+                    {/* EXTRAS */}
+
+                    <div className="booking-summary-row">
+
+                      <span>
+                        Extras
+                      </span>
+
+                      <span>
+
+                        {getExtras().length > 0
+                          ? getExtras()
+                              .map(
+                                (
+                                  extra,
+                                  index
+                                ) => (
+                                  <span
+                                    key={`${formatExtra(
+                                      extra
+                                    )}-${index}`}
+                                  >
+                                    {formatExtra(
+                                      extra
+                                    )}
+                                    {index <
+                                    getExtras()
+                                      .length -
+                                      1
+                                      ? ", "
+                                      : ""}
+                                  </span>
+                                )
+                              )
+                          : "None"}
+
+                      </span>
+
+                    </div>
+
+                    {/* TOTAL */}
+
+                    <div className="booking-summary-row booking-summary-total">
+
+                      <span>
+                        Total Amount
+                      </span>
+
+                      <span>
+                        KSh{" "}
+                        {total.toLocaleString(
+                          "en-KE"
+                        )}
+                      </span>
+
+                    </div>
+
+                    {/* CONFIRM */}
+
+                    <button
+                      type="button"
+                      className="payment-submit-button"
+                      disabled={
+                        processing ||
+                        mpesaTransactionCode.trim()
+                          .length < 5
+                      }
+                      onClick={
+                        handlePayment
+                      }
+                    >
+
+                      {processing
+                        ? "Processing..."
+                        : "Confirm M-PESA Payment"}
+
+                    </button>
+
+                  </div>
+                )}
+
+              </div>
             )}
 
-            {/* ==================================================
-                CARD PANEL
-            =================================================== */}
+            {/* =================================================
+                CARD
+            ================================================== */}
 
             {paymentMethod === "card" && (
-
               <div className="card-payment-panel">
 
-                <div className="form-group">
+                <div className="payment-form-group">
 
                   <label>
                     Card Number
@@ -1167,7 +1303,7 @@ const Payment = () => {
 
                 </div>
 
-                <div className="form-group">
+                <div className="payment-form-group">
 
                   <label>
                     Name on Card
@@ -1186,210 +1322,105 @@ const Payment = () => {
 
                 </div>
 
-                <div className="card-row">
+                <div className="payment-form-group">
 
-                  <div className="form-group">
+                  <label>
+                    Expiry
+                  </label>
 
-                    <label>
-                      Expiry
-                    </label>
-
-                    <input
-                      type="text"
-                      value={expiry}
-                      onChange={(event) =>
-                        setExpiry(
-                          formatExpiry(
-                            event.target.value
-                          )
-                        )
-                      }
-                      placeholder="MM/YY"
-                    />
-
-                  </div>
-
-                  <div className="form-group">
-
-                    <label>
-                      CVV
-                    </label>
-
-                    <input
-                      type="password"
-                      value={cvv}
-                      onChange={(event) =>
-                        setCvv(
+                  <input
+                    type="text"
+                    value={expiry}
+                    onChange={(event) =>
+                      setExpiry(
+                        formatExpiry(
                           event.target.value
-                            .replace(
-                              /\D/g,
-                              ""
-                            )
-                            .slice(
-                              0,
-                              4
-                            )
                         )
-                      }
-                      placeholder="CVV"
-                    />
-
-                  </div>
+                      )
+                    }
+                    placeholder="MM/YY"
+                  />
 
                 </div>
 
-                <div className="payment-warning">
+                <div className="payment-form-group">
 
-                  Card payments are not connected yet.
-                  Please use M-PESA or Cash.
+                  <label>
+                    CVV
+                  </label>
+
+                  <input
+                    type="password"
+                    value={cvv}
+                    onChange={(event) =>
+                      setCvv(
+                        event.target.value
+                          .replace(
+                            /\D/g,
+                            ""
+                          )
+                          .slice(
+                            0,
+                            4
+                          )
+                      )
+                    }
+                    placeholder="CVV"
+                  />
+
+                </div>
+
+                <div className="payment-error-message">
+
+                  Card payments are not connected
+                  yet. Please use M-PESA or Cash.
 
                 </div>
 
               </div>
-
             )}
 
-            {/* ==================================================
-                CASH PANEL
-            =================================================== */}
+            {/* =================================================
+                CASH
+            ================================================== */}
 
             {paymentMethod === "cash" && (
+              <div className="cash-payment-message">
 
-              <div className="cash-payment-panel">
-
-                <h3>
+                <strong>
                   Cash Payment
-                </h3>
+                </strong>
 
-                <p>
-                  Your booking will be created with
-                  payment status set to Pending.
-                  Payment can be made in cash as
-                  agreed with the service provider.
-                </p>
+                Your booking will be created with
+                payment status set to Pending.
+                Payment can be made in cash as
+                agreed with the service provider.
+
+                <button
+                  type="button"
+                  className="payment-submit-button"
+                  disabled={processing}
+                  onClick={
+                    handlePayment
+                  }
+                >
+
+                  {processing
+                    ? "Processing..."
+                    : "Confirm Cash Booking"}
+
+                </button>
 
               </div>
-
             )}
 
-          </div>
-
-          {/* ===================================================
-              ORDER SUMMARY
-          ==================================================== */}
-
-          <div className="payment-card payment-summary">
-
-            <h2>
-              Booking Summary
-            </h2>
-
-            <div className="summary-row">
-
-              <span>
-                Service
-              </span>
-
-              <strong>
-                {booking.serviceName ||
-                  booking.service?.title ||
-                  "Selected Service"}
-              </strong>
-
-            </div>
-
-            <div className="summary-row">
-
-              <span>
-                Category
-              </span>
-
-              <strong>
-                {booking.categoryName ||
-                  "Service"}
-              </strong>
-
-            </div>
-
-            <div className="summary-row">
-
-              <span>
-                Date
-              </span>
-
-              <strong>
-                {booking.date ||
-                  "Not selected"}
-              </strong>
-
-            </div>
-
-            <div className="summary-row">
-
-              <span>
-                Time
-              </span>
-
-              <strong>
-                {booking.time ||
-                  "Not selected"}
-              </strong>
-
-            </div>
-
-            <div className="summary-row">
-
-              <span>
-                Location
-              </span>
-
-              <strong>
-                {booking.address ||
-                  booking.estate ||
-                  "Not provided"}
-              </strong>
-
-            </div>
-
-            <div className="summary-divider" />
-
-            <div className="summary-total">
-
-              <span>
-                Total
-              </span>
-
-              <strong>
-                KSh{" "}
-                {total.toLocaleString(
-                  "en-KE"
-                )}
-              </strong>
-
-            </div>
+            {/* =================================================
+                BACK BUTTON
+            ================================================== */}
 
             <button
               type="button"
-              className="pay-button"
-              disabled={processing}
-              onClick={
-                handlePayment
-              }
-            >
-
-              {processing
-                ? "Processing..."
-                : paymentMethod === "mpesa"
-                ? "Submit M-PESA Payment"
-                : paymentMethod === "cash"
-                ? "Confirm Booking"
-                : "Continue"}
-
-            </button>
-
-            <button
-              type="button"
-              className="back-button"
+              className="payment-back-button"
               disabled={processing}
               onClick={() =>
                 navigate(-1)

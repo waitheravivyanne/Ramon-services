@@ -2361,12 +2361,23 @@ function Booking() {
 
         </section>
 
+            <div className="booking-actions">
+
+          <button
+            type="button"
+            className="checkout-button"
+            onClick={proceedToCheckout}
+          >
+            Proceed to Checkout →
+          </button>
+          </div>
+
        
 {/* =================================================
     FINAL BOOKING ACTION
 ================================================= */}
 
-<section className="booking-final-action">
+{/* <section className="booking-final-action">
 
   <div className="final-action-content">
 
@@ -2397,7 +2408,7 @@ function Booking() {
 
   </div>
 
-</section>
+</section> */}
 
       </div>
 

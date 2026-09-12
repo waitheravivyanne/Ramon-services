@@ -1,325 +1,69 @@
 /* =========================================================
-   BOOKING PAGE
+   RAMON'S SERVICE MARKETPLACE
+   PREMIUM BOOKING PAGE
 ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
 
 .booking-page {
   min-height: 100vh;
-  padding: 50px 20px 80px;
+  width: 100%;
+  padding: 55px 20px 90px;
+  overflow-x: hidden;
 
   background:
     radial-gradient(
-      circle at top left,
-      rgba(219, 234, 254, 0.9),
-      transparent 32%
+      circle at 5% 5%,
+      rgba(59, 130, 246, 0.14),
+      transparent 28%
     ),
     radial-gradient(
-      circle at bottom right,
-      rgba(224, 231, 255, 0.8),
-      transparent 35%
+      circle at 95% 85%,
+      rgba(99, 102, 241, 0.12),
+      transparent 30%
     ),
-    #f8fafc;
+    linear-gradient(
+      135deg,
+      #f8fbff 0%,
+      #f1f5f9 100%
+    );
 
   font-family:
     Arial,
     Helvetica,
     sans-serif;
 
+  color: #0f172a;
+
   animation: pageFadeIn 0.5s ease;
 }
 
 
 /* =========================================================
-   MAIN BOOKING CARD
+   MAIN CARD
 ========================================================= */
 
 .booking-card {
   width: 100%;
-  max-width: 1050px;
+  max-width: 1080px;
 
   margin: 0 auto;
 
-  background: rgba(255, 255, 255, 0.97);
+  background: rgba(255, 255, 255, 0.96);
 
-  border-radius: 28px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+
+  border-radius: 30px;
 
   overflow: hidden;
-/* =========================================================
-   EXTRA SMALL PHONE FIXES
-   ========================================================= */
 
-@media (max-width: 520px) {
-
-  .booking-page {
-    width: 100%;
-    max-width: 100%;
-    padding: 12px 8px 35px;
-    overflow-x: hidden;
-  }
-
-  .booking-card {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    border-radius: 16px;
-    overflow: hidden;
-  }
-
-  .booking-header {
-    width: 100%;
-    padding: 22px 16px;
-    gap: 14px;
-  }
-
-  .booking-header h1 {
-    font-size: 24px;
-    line-height: 1.25;
-    overflow-wrap: anywhere;
-  }
-
-  .booking-header p {
-    font-size: 13px;
-    line-height: 1.5;
-  }
-
-  .back-button {
-    max-width: 100%;
-    white-space: normal;
-  }
-
-  .booking-form {
-    width: 100%;
-    padding: 10px;
-  }
-
-  .booking-section {
-    width: 100%;
-    max-width: 100%;
-    margin-bottom: 18px;
-    padding: 15px;
-    border-radius: 14px;
-  }
-
-  /* Section headings */
-  .section-heading {
-    width: 100%;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 18px;
-  }
-
-  .section-heading > div {
-    min-width: 0;
-    flex: 1;
-  }
-
-  .section-heading h2 {
-    font-size: 17px;
-    line-height: 1.3;
-    overflow-wrap: anywhere;
-  }
-
-  .section-heading p {
-    font-size: 12px;
-    line-height: 1.45;
-    overflow-wrap: anywhere;
-  }
-
-  .section-number {
-    flex: 0 0 34px;
-  }
-
-  /* All form grids become single column */
-  .form-grid {
-    width: 100%;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 14px;
-  }
-
-  .form-group,
-  .form-group.full-width {
-    width: 100%;
-    min-width: 0;
-    grid-column: auto;
-  }
-
-  .form-group label {
-    display: block;
-    margin-bottom: 7px;
-    font-size: 13px;
-    line-height: 1.4;
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    font-size: 14px;
-    padding: 12px;
-    border-radius: 9px;
-  }
-
-  .form-group textarea {
-    min-height: 100px;
-    resize: vertical;
-  }
-
-  /* Prevent date/time controls from overflowing */
-  input[type="date"],
-  input[type="time"] {
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-  }
-
-  /* Option/card grids */
-  .house-size-grid,
-  .cleaning-type-grid,
-  .frequency-grid,
-  .time-slots,
-  .time-slot-grid {
-    width: 100%;
-    max-width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 9px;
-  }
-
-  .house-size-card,
-  .cleaning-type-card,
-  .frequency-card,
-  .time-slot,
-  .time-slot-card {
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  /* Make long option text wrap instead of pushing the page sideways */
-  .house-size-card *,
-  .cleaning-type-card *,
-  .frequency-card *,
-  .time-slot *,
-  .time-slot-card * {
-    max-width: 100%;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-  }
-
-  /* Extras */
-  .extras-grid {
-    width: 100%;
-    grid-template-columns: 1fr 1fr;
-    gap: 9px;
-  }
-
-  .extras-grid > * {
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  /* Price summary */
-  .price-summary {
-    width: 100%;
-    max-width: 100%;
-    padding: 16px;
-    box-sizing: border-box;
-    overflow: hidden;
-  }
-
-  .price-summary * {
-    max-width: 100%;
-    overflow-wrap: anywhere;
-  }
-
-  .price-total {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .price-total strong {
-    font-size: 22px;
-  }
-
-  /* Submit button */
-  .booking-submit {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    padding: 14px 16px;
-    font-size: 15px;
-  }
-}
-
-
-/* =========================================================
-   VERY SMALL PHONES
-   ========================================================= */
-
-@media (max-width: 380px) {
-
-  .booking-page {
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  .booking-form {
-    padding: 7px;
-  }
-
-  .booking-section {
-    padding: 12px;
-  }
-
-  .booking-header {
-    padding: 18px 13px;
-  }
-
-  .booking-header h1 {
-    font-size: 21px;
-  }
-
-  .section-heading h2 {
-    font-size: 16px;
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    font-size: 13px;
-    padding: 11px;
-  }
-
-  .house-size-grid,
-  .cleaning-type-grid,
-  .frequency-grid,
-  .time-slots,
-  .time-slot-grid,
-  .extras-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .price-total strong {
-    font-size: 20px;
-  }
-}
   box-shadow:
-    0 25px 70px rgba(15, 23, 42, 0.12);
+    0 30px 80px rgba(15, 23, 42, 0.12),
+    0 8px 25px rgba(37, 99, 235, 0.05);
 
-  border: 1px solid rgba(226, 232, 240, 0.8);
-
-  animation: bookingAppear 0.65s ease;
+  animation: bookingAppear 0.6s ease;
 }
 
 
@@ -333,18 +77,118 @@
   display: flex;
   align-items: center;
 
-  gap: 25px;
+  gap: 26px;
 
-  padding: 35px 40px;
+  padding: 38px 42px;
+
+  overflow: hidden;
 
   background:
     linear-gradient(
       135deg,
-      #2563eb,
-      #4f46e5
+      #1d4ed8 0%,
+      #2563eb 45%,
+      #4f46e5 100%
     );
 
   color: white;
+}
+
+/* Decorative circles */
+
+.booking-header::before {
+  content: "";
+
+  position: absolute;
+
+  width: 240px;
+  height: 240px;
+
+  right: -80px;
+  top: -100px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.booking-header::after {
+  content: "";
+
+  position: absolute;
+
+  width: 150px;
+  height: 150px;
+
+  right: 130px;
+  bottom: -90px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.06);
+}
+
+
+/* =========================================================
+   HEADER CONTENT
+========================================================= */
+
+.booking-header-content {
+  position: relative;
+  z-index: 2;
+
+  flex: 1;
+  min-width: 0;
+}
+
+.booking-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 13px;
+
+  padding: 7px 13px;
+
+  border-radius: 50px;
+
+  background: rgba(255, 255, 255, 0.14);
+
+  border: 1px solid rgba(255, 255, 255, 0.22);
+
+  backdrop-filter: blur(10px);
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.3px;
+}
+
+.booking-header h1 {
+  margin: 0 0 9px;
+
+  font-size: 35px;
+
+  line-height: 1.15;
+
+  letter-spacing: -0.8px;
+
+  overflow-wrap: anywhere;
+}
+
+.booking-header p {
+  max-width: 650px;
+
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.88);
+
+  font-size: 15px;
+
+  line-height: 1.6;
 }
 
 
@@ -353,17 +197,27 @@
 ========================================================= */
 
 .back-button {
+  position: relative;
+  z-index: 3;
+
   flex-shrink: 0;
 
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 11px 17px;
+
   border: 1px solid rgba(255, 255, 255, 0.25);
+
+  border-radius: 12px;
 
   background: rgba(255, 255, 255, 0.13);
 
   color: white;
-
-  padding: 11px 17px;
-
-  border-radius: 12px;
 
   font-size: 14px;
 
@@ -371,7 +225,7 @@
 
   cursor: pointer;
 
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
 
   transition:
     transform 0.25s ease,
@@ -388,85 +242,44 @@
     0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-.back-button:active {
-  transform: translateX(-1px);
-}
-
 
 /* =========================================================
-   BOOKING BADGE
-========================================================= */
-
-.booking-badge {
-  display: inline-flex;
-
-  align-items: center;
-
-  gap: 7px;
-
-  padding: 7px 13px;
-
-  margin-bottom: 12px;
-
-  border-radius: 50px;
-
-  background: rgba(255, 255, 255, 0.16);
-
-  border: 1px solid rgba(255, 255, 255, 0.2);
-
-  font-size: 13px;
-
-  font-weight: 700;
-
-  backdrop-filter: blur(8px);
-}
-
-
-.booking-header h1 {
-  margin: 0 0 8px;
-
-  font-size: 34px;
-
-  line-height: 1.2;
-
-  letter-spacing: -0.5px;
-}
-
-
-.booking-header p {
-  margin: 0;
-
-  color: rgba(255, 255, 255, 0.86);
-
-  font-size: 15px;
-
-  line-height: 1.6;
-}
-
-
-/* =========================================================
-   FORM
+   FORM AREA
 ========================================================= */
 
 .booking-form {
-  padding: 40px;
+  width: 100%;
+
+  padding: 38px;
 }
 
 
 /* =========================================================
-   SECTIONS
+   BOOKING SECTIONS
 ========================================================= */
 
 .booking-section {
-  margin-bottom: 32px;
+  position: relative;
+
+  width: 100%;
+
+  margin-bottom: 26px;
 
   padding: 28px;
 
-  background: #ffffff;
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #fbfdff 100%
+    );
 
   border: 1px solid #e2e8f0;
 
-  border-radius: 20px;
+  border-radius: 22px;
+
+  box-shadow:
+    0 5px 18px rgba(15, 23, 42, 0.035);
 
   transition:
     transform 0.25s ease,
@@ -474,13 +287,17 @@
     border-color 0.25s ease;
 }
 
+.booking-section:last-of-type {
+  margin-bottom: 0;
+}
+
 .booking-section:hover {
+  transform: translateY(-2px);
+
   border-color: #bfdbfe;
 
   box-shadow:
-    0 10px 30px rgba(37, 99, 235, 0.07);
-
-  transform: translateY(-2px);
+    0 14px 35px rgba(37, 99, 235, 0.07);
 }
 
 
@@ -493,24 +310,29 @@
 
   align-items: flex-start;
 
-  gap: 15px;
+  gap: 14px;
 
-  margin-bottom: 25px;
+  margin-bottom: 24px;
 }
 
+.section-heading > div {
+  flex: 1;
+
+  min-width: 0;
+}
 
 .section-number {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
 
-  flex-shrink: 0;
+  flex: 0 0 40px;
 
   display: flex;
 
   align-items: center;
   justify-content: center;
 
-  border-radius: 12px;
+  border-radius: 13px;
 
   background:
     linear-gradient(
@@ -521,21 +343,13 @@
 
   color: white;
 
-  font-size: 16px;
+  font-size: 15px;
 
-  font-weight: 800;
+  font-weight: 900;
 
   box-shadow:
-    0 7px 18px rgba(37, 99, 235, 0.22);
-
-  transition: transform 0.3s ease;
+    0 8px 18px rgba(37, 99, 235, 0.22);
 }
-
-
-.booking-section:hover .section-number {
-  transform: rotate(-5deg) scale(1.08);
-}
-
 
 .section-heading h2 {
   margin: 0 0 5px;
@@ -543,15 +357,16 @@
   color: #0f172a;
 
   font-size: 21px;
-}
 
+  line-height: 1.3;
+}
 
 .section-heading p {
   margin: 0;
 
   color: #64748b;
 
-  font-size: 14px;
+  font-size: 13px;
 
   line-height: 1.5;
 }
@@ -570,58 +385,55 @@
   gap: 20px;
 }
 
-
-/* =========================================================
-   FORM GROUP
-========================================================= */
-
 .form-group {
+  min-width: 0;
+
   display: flex;
 
   flex-direction: column;
 }
-
 
 .form-group.full-width {
   grid-column: 1 / -1;
 }
 
 
+/* =========================================================
+   LABELS
+========================================================= */
+
 .form-group label {
   margin-bottom: 8px;
 
   color: #334155;
 
-  font-size: 14px;
-
-  font-weight: 700;
-}
-
-
-.form-group label span,
-.required-note span {
-  color: #ef4444;
+  font-size: 13px;
 
   font-weight: 800;
+
+  line-height: 1.4;
+}
+
+.form-group label span {
+  color: #ef4444;
 }
 
 
 /* =========================================================
-   INPUTS / SELECTS / TEXTAREA
+   INPUTS
 ========================================================= */
 
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-
-  box-sizing: border-box;
+  min-width: 0;
 
   padding: 14px 15px;
 
   border: 1px solid #dbe3ef;
 
-  border-radius: 12px;
+  border-radius: 13px;
 
   outline: none;
 
@@ -634,44 +446,40 @@
   font-size: 15px;
 
   transition:
-    border-color 0.25s ease,
-    box-shadow 0.25s ease,
-    background 0.25s ease,
-    transform 0.25s ease;
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
-
 
 .form-group input:hover,
 .form-group select:hover,
 .form-group textarea:hover {
-  background: white;
+  background: #ffffff;
 
   border-color: #93c5fd;
 }
 
-
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-  background: white;
+  background: #ffffff;
 
   border-color: #2563eb;
 
   box-shadow:
-    0 0 0 4px rgba(37, 99, 235, 0.10);
+    0 0 0 4px rgba(37, 99, 235, 0.09);
 
   transform: translateY(-1px);
 }
 
-
 .form-group textarea {
-  resize: vertical;
+  min-height: 115px;
 
-  min-height: 120px;
+  resize: vertical;
 
   line-height: 1.6;
 }
-
 
 .form-group input::placeholder,
 .form-group textarea::placeholder {
@@ -680,11 +488,61 @@
 
 
 /* =========================================================
-   DATE INPUT
+   OPTION GRIDS
 ========================================================= */
 
-.form-group input[type="date"] {
+.house-size-grid,
+.cleaning-type-grid,
+.frequency-grid,
+.time-slots,
+.time-slot-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 13px;
+
+  width: 100%;
+}
+
+
+/* =========================================================
+   OPTION CARDS
+========================================================= */
+
+.house-size-card,
+.cleaning-type-card,
+.frequency-card,
+.time-slot,
+.time-slot-card {
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+
+  overflow: hidden;
+
+  border-radius: 15px;
+
   cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.house-size-card:hover,
+.cleaning-type-card:hover,
+.frequency-card:hover,
+.time-slot:hover,
+.time-slot-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 8px 22px rgba(37, 99, 235, 0.08);
 }
 
 
@@ -698,20 +556,20 @@
   grid-template-columns:
     repeat(2, minmax(0, 1fr));
 
-  gap: 14px;
+  gap: 13px;
 }
 
-
 .extra-option {
-  position: relative;
-
   display: flex;
 
   align-items: center;
 
-  gap: 13px;
+  gap: 12px;
 
-  padding: 16px;
+  width: 100%;
+  min-width: 0;
+
+  padding: 15px;
 
   border: 1px solid #e2e8f0;
 
@@ -722,24 +580,19 @@
   cursor: pointer;
 
   transition:
-    transform 0.25s ease,
-    border-color 0.25s ease,
-    background 0.25s ease,
-    box-shadow 0.25s ease;
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-
 .extra-option:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 
   border-color: #93c5fd;
 
   background: #eff6ff;
-
-  box-shadow:
-    0 8px 20px rgba(37, 99, 235, 0.08);
 }
-
 
 .extra-option.selected {
   border-color: #2563eb;
@@ -752,21 +605,17 @@
     );
 
   box-shadow:
-    0 8px 20px rgba(37, 99, 235, 0.10);
+    0 7px 20px rgba(37, 99, 235, 0.08);
 }
-
 
 .extra-option input {
   width: 19px;
   height: 19px;
 
-  flex-shrink: 0;
+  flex: 0 0 19px;
 
   accent-color: #2563eb;
-
-  cursor: pointer;
 }
-
 
 .extra-content {
   display: flex;
@@ -775,25 +624,31 @@
 
   justify-content: space-between;
 
-  gap: 15px;
+  gap: 10px;
 
   width: 100%;
-}
 
+  min-width: 0;
+}
 
 .extra-content strong {
+  min-width: 0;
+
   color: #334155;
-
-  font-size: 14px;
-}
-
-
-.extra-content span {
-  color: #2563eb;
 
   font-size: 13px;
 
-  font-weight: 800;
+  line-height: 1.35;
+}
+
+.extra-content span {
+  flex-shrink: 0;
+
+  color: #2563eb;
+
+  font-size: 12px;
+
+  font-weight: 900;
 
   white-space: nowrap;
 }
@@ -804,11 +659,17 @@
 ========================================================= */
 
 .price-summary {
+  position: relative;
+
+  width: 100%;
+
   margin-top: 10px;
 
   padding: 28px;
 
-  border-radius: 20px;
+  border: 1px solid #bfdbfe;
+
+  border-radius: 22px;
 
   background:
     linear-gradient(
@@ -817,96 +678,117 @@
       #eef2ff
     );
 
-  border: 1px solid #bfdbfe;
-
   box-shadow:
-    0 12px 30px rgba(37, 99, 235, 0.08);
+    0 15px 35px rgba(37, 99, 235, 0.09);
 
-  animation: priceAppear 0.4s ease;
+  overflow: hidden;
 }
 
+.price-summary::after {
+  content: "";
+
+  position: absolute;
+
+  width: 150px;
+  height: 150px;
+
+  right: -60px;
+  top: -60px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.45);
+}
 
 .price-summary-header {
+  position: relative;
+  z-index: 2;
+
   display: flex;
 
   align-items: center;
 
   justify-content: space-between;
 
-  margin-bottom: 22px;
-}
+  gap: 15px;
 
+  margin-bottom: 18px;
+}
 
 .price-summary-header h2 {
   margin: 0;
 
   color: #0f172a;
 
-  font-size: 21px;
+  font-size: 20px;
 }
-
 
 .price-summary-header span {
   width: 42px;
   height: 42px;
+
+  flex: 0 0 42px;
 
   display: flex;
 
   align-items: center;
   justify-content: center;
 
-  border-radius: 12px;
+  border-radius: 13px;
 
   background: white;
 
-  font-size: 22px;
+  font-size: 20px;
 
   box-shadow:
-    0 5px 15px rgba(15, 23, 42, 0.08);
+    0 6px 16px rgba(15, 23, 42, 0.08);
 }
 
-
-/* =========================================================
-   PRICE ROW
-========================================================= */
-
 .price-row {
-  display: flex;
+  position: relative;
+  z-index: 2;
 
-  justify-content: space-between;
+  display: flex;
 
   align-items: center;
 
+  justify-content: space-between;
+
   gap: 20px;
 
-  padding: 12px 0;
+  padding: 11px 0;
 
   color: #475569;
 
-  font-size: 15px;
+  font-size: 14px;
 }
 
+.price-row span {
+  min-width: 0;
+
+  overflow-wrap: anywhere;
+}
 
 .price-row strong {
-  color: #0f172a;
-}
+  flex-shrink: 0;
 
+  color: #0f172a;
+
+  white-space: nowrap;
+}
 
 .price-row.discount {
   color: #15803d;
 }
 
-
 .price-row.discount strong {
   color: #16a34a;
 }
 
-
-/* =========================================================
-   PRICE DIVIDER
-========================================================= */
-
 .price-divider {
+  position: relative;
+  z-index: 2;
+
   height: 1px;
 
   margin: 12px 0;
@@ -914,37 +796,37 @@
   background: #bfdbfe;
 }
 
-
-/* =========================================================
-   TOTAL
-========================================================= */
-
 .price-total {
-  display: flex;
+  position: relative;
+  z-index: 2;
 
-  justify-content: space-between;
+  display: flex;
 
   align-items: center;
 
-  padding-top: 5px;
-}
+  justify-content: space-between;
 
+  gap: 15px;
+
+  padding-top: 6px;
+}
 
 .price-total span {
   color: #0f172a;
 
   font-size: 18px;
 
-  font-weight: 800;
+  font-weight: 900;
 }
-
 
 .price-total strong {
   color: #2563eb;
 
-  font-size: 27px;
+  font-size: 28px;
 
   font-weight: 900;
+
+  white-space: nowrap;
 }
 
 
@@ -953,9 +835,11 @@
 ========================================================= */
 
 .booking-submit {
+  position: relative;
+
   width: 100%;
 
-  margin-top: 25px;
+  margin-top: 22px;
 
   padding: 17px 25px;
 
@@ -972,9 +856,11 @@
 
   color: white;
 
-  font-size: 17px;
+  font-size: 16px;
 
-  font-weight: 800;
+  font-weight: 900;
+
+  letter-spacing: 0.1px;
 
   cursor: pointer;
 
@@ -982,11 +868,10 @@
     0 12px 25px rgba(37, 99, 235, 0.25);
 
   transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    filter 0.25s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
 }
-
 
 .booking-submit:hover {
   transform: translateY(-3px);
@@ -994,15 +879,21 @@
   filter: brightness(1.05);
 
   box-shadow:
-    0 17px 35px rgba(37, 99, 235, 0.32);
+    0 17px 35px rgba(37, 99, 235, 0.30);
 }
-
 
 .booking-submit:active {
   transform: translateY(0);
+}
 
-  box-shadow:
-    0 8px 18px rgba(37, 99, 235, 0.22);
+.booking-submit:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  transform: none;
+
+  box-shadow: none;
 }
 
 
@@ -1011,21 +902,24 @@
 ========================================================= */
 
 .required-note {
-  margin: 14px 0 0;
+  margin: 13px 0 0;
 
   text-align: center;
 
   color: #94a3b8;
 
-  font-size: 13px;
+  font-size: 12px;
+
+  line-height: 1.5;
 }
 
 
 /* =========================================================
-   ERROR PAGE
+   ERROR
 ========================================================= */
 
 .booking-error {
+  width: 100%;
   max-width: 600px;
 
   margin: 100px auto;
@@ -1040,28 +934,21 @@
 
   box-shadow:
     0 20px 50px rgba(15, 23, 42, 0.10);
-
-  animation: bookingAppear 0.5s ease;
 }
 
-
 .booking-error h2 {
-  margin-bottom: 12px;
-
-  color: #0f172a;
+  margin: 0 0 12px;
 
   font-size: 27px;
 }
 
-
 .booking-error p {
-  margin-bottom: 25px;
+  margin: 0 0 25px;
 
   color: #64748b;
 
   line-height: 1.6;
 }
-
 
 .booking-error button {
   padding: 13px 22px;
@@ -1074,69 +961,9 @@
 
   color: white;
 
-  font-size: 15px;
-
   font-weight: 700;
 
   cursor: pointer;
-
-  transition: 0.25s ease;
-}
-
-
-.booking-error button:hover {
-  background: #1d4ed8;
-
-  transform: translateY(-2px);
-}
-
-
-/* =========================================================
-   ANIMATIONS
-========================================================= */
-
-@keyframes pageFadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-
-@keyframes bookingAppear {
-  from {
-    opacity: 0;
-
-    transform:
-      translateY(25px)
-      scale(0.98);
-  }
-
-  to {
-    opacity: 1;
-
-    transform:
-      translateY(0)
-      scale(1);
-  }
-}
-
-
-@keyframes priceAppear {
-  from {
-    opacity: 0;
-
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-
-    transform: translateY(0);
-  }
 }
 
 
@@ -1159,7 +986,7 @@
   }
 
   .booking-section {
-    padding: 22px;
+    padding: 23px;
   }
 
   .form-grid {
@@ -1171,9 +998,8 @@
   }
 
   .extras-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
-
 }
 
 
@@ -1184,11 +1010,11 @@
 @media (max-width: 520px) {
 
   .booking-page {
-    padding: 15px 10px 45px;
+    padding: 12px 8px 35px;
   }
 
   .booking-card {
-    border-radius: 20px;
+    border-radius: 18px;
   }
 
   .booking-header {
@@ -1196,50 +1022,60 @@
 
     align-items: flex-start;
 
-    padding: 25px 20px;
+    gap: 15px;
 
-    gap: 18px;
+    padding: 23px 17px;
   }
 
   .booking-header h1 {
-    font-size: 27px;
+    font-size: 25px;
+
+    letter-spacing: -0.4px;
   }
 
   .booking-header p {
-    font-size: 14px;
-  }
-
-  .back-button {
-    padding: 9px 14px;
+    font-size: 13px;
   }
 
   .booking-form {
-    padding: 15px;
+    padding: 10px;
   }
 
   .booking-section {
-    padding: 18px;
+    margin-bottom: 17px;
+
+    padding: 16px;
 
     border-radius: 16px;
   }
 
   .section-heading {
-    gap: 11px;
+    gap: 10px;
+
+    margin-bottom: 17px;
   }
 
   .section-number {
     width: 34px;
     height: 34px;
 
+    flex-basis: 34px;
+
     border-radius: 10px;
   }
 
   .section-heading h2 {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .section-heading p {
-    font-size: 13px;
+    font-size: 12px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+
+    gap: 13px;
   }
 
   .form-group input,
@@ -1247,11 +1083,69 @@
   .form-group textarea {
     padding: 13px;
 
-    font-size: 14px;
+    font-size: 16px;
+
+    border-radius: 11px;
+  }
+
+  .house-size-grid,
+  .cleaning-type-grid,
+  .frequency-grid,
+  .time-slots,
+  .time-slot-grid {
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+  }
+
+  .extras-grid {
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+  }
+
+  .extra-option {
+    padding: 11px;
+
+    gap: 8px;
+
+    align-items: flex-start;
+  }
+
+  .extra-content {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 3px;
+  }
+
+  .extra-content strong {
+    font-size: 12px;
+  }
+
+  .extra-content span {
+    font-size: 11px;
   }
 
   .price-summary {
-    padding: 20px;
+    padding: 17px;
+
+    border-radius: 17px;
+  }
+
+  .price-summary-header h2 {
+    font-size: 18px;
+  }
+
+  .price-row {
+    font-size: 13px;
+
+    gap: 10px;
+  }
+
+  .price-total span {
+    font-size: 16px;
   }
 
   .price-total strong {
@@ -1259,296 +1153,169 @@
   }
 
   .booking-submit {
-    font-size: 15px;
-
     padding: 15px;
-  }
 
+    font-size: 15px;
+  }
 }
 
+
 /* =========================================================
-   EXTRA SMALL PHONE RESPONSIVENESS
-   Supports phones around 320px - 390px wide
+   SMALL PHONES
 ========================================================= */
 
-@media (max-width: 390px) {
-
-  /* ---------- PAGE ---------- */
+@media (max-width: 380px) {
 
   .booking-page {
-    width: 100%;
-    min-width: 0;
-    padding: 16px 8px;
-    overflow-x: hidden;
+    padding: 7px 5px 30px;
   }
 
-  .booking-container {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    padding: 0;
+  .booking-card {
+    border-radius: 14px;
   }
 
-  /* ---------- HEADINGS ---------- */
-
-  .booking-page h1 {
-    font-size: 24px;
-    line-height: 1.2;
-    word-break: normal;
+  .booking-header {
+    padding: 19px 13px;
   }
 
-  .booking-page h2 {
-    font-size: 20px;
-    line-height: 1.25;
+  .booking-header h1 {
+    font-size: 22px;
   }
 
-  .booking-page h3 {
-    font-size: 17px;
-    line-height: 1.3;
+  .booking-header p {
+    font-size: 12px;
   }
 
-  .booking-page p {
-    font-size: 14px;
-    line-height: 1.5;
+  .booking-form {
+    padding: 7px;
   }
 
-  /* ---------- CARDS / SECTIONS ---------- */
+  .booking-section {
+    padding: 13px;
 
-  .booking-section,
-  .booking-card,
-  .form-section,
-  .service-details,
-  .price-summary,
-  .booking-summary {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    padding: 14px 12px;
-    margin-left: 0;
-    margin-right: 0;
+    border-radius: 13px;
   }
 
-  /* ---------- ALL GRIDS ---------- */
+  .section-number {
+    width: 31px;
+    height: 31px;
 
-  .booking-grid,
-  .form-grid,
-  .details-grid,
-  .options-grid,
-  .extras-grid,
-  .service-options,
-  .cleaning-options,
-  .room-options,
-  .size-options {
-    display: grid;
-    grid-template-columns: 1fr !important;
-    width: 100%;
-    gap: 10px;
-  }
+    flex-basis: 31px;
 
-  /* ---------- FLEX ROWS ---------- */
-
-  .booking-page .form-row,
-  .booking-page .booking-row,
-  .booking-page .summary-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-
-  /* ---------- LABELS ---------- */
-
-  .booking-page label {
-    display: block;
-    width: 100%;
-    max-width: 100%;
     font-size: 13px;
-    line-height: 1.4;
-    margin-bottom: 5px;
   }
 
-  /* ---------- INPUTS ---------- */
+  .section-heading h2 {
+    font-size: 16px;
+  }
 
-  .booking-page input,
-  .booking-page select,
-  .booking-page textarea {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
+  .section-heading p {
+    font-size: 11px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 11px;
 
     font-size: 16px;
-    padding: 11px 10px;
   }
 
-  .booking-page textarea {
-    min-height: 100px;
-    resize: vertical;
+  .house-size-grid,
+  .cleaning-type-grid,
+  .frequency-grid,
+  .time-slots,
+  .time-slot-grid {
+    grid-template-columns: 1fr;
   }
 
-  /* ---------- BUTTONS ---------- */
-
-  .booking-page button {
-    max-width: 100%;
-    box-sizing: border-box;
+  .extras-grid {
+    grid-template-columns: 1fr;
   }
 
-  .option-button,
-  .choice-button,
-  .service-option,
-  .booking-option {
-    width: 100%;
-    min-height: 46px;
-    padding: 10px;
-    font-size: 14px;
-    line-height: 1.3;
-    white-space: normal;
+  .extra-content {
+    flex-direction: row;
+
+    align-items: center;
+
+    justify-content: space-between;
   }
-
-  /* ---------- CHECKBOX / RADIO OPTIONS ---------- */
-
-  .booking-page .checkbox-row,
-  .booking-page .radio-row,
-  .booking-page .extra-option {
-    width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 10px;
-  }
-
-  .booking-page input[type="checkbox"],
-  .booking-page input[type="radio"] {
-    width: auto;
-    min-width: 18px;
-    margin-top: 3px;
-    flex-shrink: 0;
-  }
-
-  /* ---------- PRICE SUMMARY ---------- */
 
   .price-summary {
     padding: 14px 12px;
   }
 
-  .price-summary .summary-row,
-  .price-summary .price-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
+  .price-total strong {
+    font-size: 21px;
   }
-
-  .price-summary span {
-    min-width: 0;
-    overflow-wrap: anywhere;
-  }
-
-  .price-summary strong {
-    white-space: nowrap;
-    font-size: 16px;
-  }
-
-  /* ---------- FINAL ACTION ---------- */
-
-  .booking-final-action {
-    width: 100%;
-    box-sizing: border-box;
-    margin-top: 20px;
-    padding: 16px 12px;
-  }
-
-  .final-action-content {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    width: 100%;
-  }
-
-  .final-action-content > div {
-    width: 100%;
-  }
-
-  .final-total {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-    margin-top: 12px;
-  }
-
-  .final-total strong {
-    font-size: 22px;
-    line-height: 1.2;
-  }
-
-  .checkout-button {
-    width: 100%;
-    min-height: 50px;
-    padding: 12px 14px;
-    font-size: 15px;
-    white-space: normal;
-  }
-
-  /* ---------- PREVENT TEXT FROM BREAKING THE PAGE ---------- */
-
-  .booking-page * {
-    max-width: 100%;
-  }
-
-  .booking-page img {
-    max-width: 100%;
-    height: auto;
-  }
-
 }
 
 
 /* =========================================================
-   EXTREMELY SMALL PHONES
-   Around 320px wide
+   VERY SMALL PHONES
 ========================================================= */
 
 @media (max-width: 340px) {
 
   .booking-page {
-    padding: 12px 6px;
+    padding-left: 4px;
+    padding-right: 4px;
   }
 
-  .booking-section,
-  .booking-card,
-  .form-section,
-  .service-details,
-  .price-summary,
-  .booking-summary,
-  .booking-final-action {
-    padding: 12px 9px;
+  .booking-form {
+    padding: 5px;
   }
 
-  .booking-page h1 {
-    font-size: 21px;
+  .booking-section {
+    padding: 11px;
   }
 
-  .booking-page h2 {
-    font-size: 18px;
+  .booking-header {
+    padding: 17px 11px;
   }
 
-  .booking-page h3 {
-    font-size: 16px;
-  }
-
-  .booking-page input,
-  .booking-page select,
-  .booking-page textarea {
-    font-size: 16px;
-    padding: 10px 8px;
-  }
-
-  .checkout-button {
-    font-size: 14px;
-    min-height: 48px;
-  }
-
-  .final-total strong {
+  .booking-header h1 {
     font-size: 20px;
+  }
+
+  .booking-submit {
+    min-height: 48px;
+
+    padding: 12px;
+
+    font-size: 14px;
+  }
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bookingAppear {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(25px)
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
   }
 }

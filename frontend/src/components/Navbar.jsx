@@ -7,34 +7,24 @@ function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-
+  // Hide navbar on home, login and register pages
   if (
-  location.pathname === "/" ||
-  location.pathname === "/login" ||
-  location.pathname === "/register"
-) {
-  return null;
-}
-
-  const handleBack = () => {
-    // Don't go back if the user is already on the home page
-    if (location.pathname === "/") {
-      return;
-    }
-
-    navigate(-1);
-  };
+    location.pathname === "/" ||
+    location.pathname === "/login" ||
+    location.pathname === "/register"
+  ) {
+    return null;
+  }
 
   const handleLogout = () => {
     logout();
 
-    // Make sure the user is returned to the home page
+    // Return user to home page after logout
     navigate("/", { replace: true });
   };
 
   // Get the user's role safely
   const userRole = String(user?.role || "").toLowerCase();
-  
 
   return (
     <nav className="navbar">
@@ -52,12 +42,22 @@ function Navbar() {
       <div className="nav-links">
 
         {/* HOME */}
-        <Link to="/" className="nav-link">
+        <Link
+          to="/"
+          className={`nav-link ${
+            location.pathname === "/" ? "active" : ""
+          }`}
+        >
           🏠 Home
         </Link>
 
         {/* SERVICES */}
-        <Link to="/services" className="nav-link">
+        <Link
+          to="/services"
+          className={`nav-link ${
+            location.pathname.startsWith("/services") ? "active" : ""
+          }`}
+        >
           🛠️ Services
         </Link>
 
@@ -71,20 +71,12 @@ function Navbar() {
               Welcome, {user.name || "Client"}
             </span>
 
-            {/* BACK */}
-            <button
-              type="button"
-              className="back-button"
-              onClick={handleBack}
-              disabled={location.pathname === "/"}
-            >
-              ← Back
-            </button>
-
             {/* DASHBOARD */}
             <Link
               to="/dashboard"
-              className="nav-link"
+              className={`nav-link ${
+                location.pathname === "/dashboard" ? "active" : ""
+              }`}
             >
               📊 Dashboard
             </Link>
@@ -92,7 +84,9 @@ function Navbar() {
             {/* BOOKINGS */}
             <Link
               to="/bookings"
-              className="nav-link booking-link"
+              className={`nav-link booking-link ${
+                location.pathname === "/bookings" ? "active" : ""
+              }`}
             >
               📅 My Bookings
             </Link>
@@ -100,7 +94,9 @@ function Navbar() {
             {/* PROFILE */}
             <Link
               to="/profile"
-              className="nav-link profile-link"
+              className={`nav-link profile-link ${
+                location.pathname === "/profile" ? "active" : ""
+              }`}
             >
               👤 Profile
             </Link>
@@ -109,7 +105,9 @@ function Navbar() {
             {userRole === "admin" && (
               <Link
                 to="/admin"
-                className="nav-link admin-link"
+                className={`nav-link admin-link ${
+                  location.pathname === "/admin" ? "active" : ""
+                }`}
               >
                 ⚙️ Admin Dashboard
               </Link>
@@ -129,22 +127,15 @@ function Navbar() {
              USER NOT LOGGED IN
           ========================== */
           <>
-            <button
-              type="button"
-              className="back-button"
-              onClick={handleBack}
-              disabled={location.pathname === "/"}
-            >
-              ← Back
-            </button>
-
+            {/* LOGIN */}
             <Link
               to="/login"
-              className="nav-link"
+              className="nav-link login-link"
             >
               🔐 Login
             </Link>
 
+            {/* REGISTER */}
             <Link
               to="/register"
               className="nav-link register-link"
@@ -158,6 +149,5 @@ function Navbar() {
     </nav>
   );
 }
-
 
 export default Navbar;
