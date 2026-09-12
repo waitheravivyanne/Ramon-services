@@ -7,9 +7,14 @@ function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  if (location.pathname === "/") {
-    return null;
-  }
+
+  if (
+  location.pathname === "/" ||
+  location.pathname === "/login" ||
+  location.pathname === "/register"
+) {
+  return null;
+}
 
   const handleBack = () => {
     // Don't go back if the user is already on the home page
