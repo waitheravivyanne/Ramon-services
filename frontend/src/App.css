@@ -1,6 +1,6 @@
-
 /* =========================================================
-   GLOBAL RESET
+   RAMON'S SERVICE MARKETPLACE
+   GLOBAL RESPONSIVE FOUNDATION
 ========================================================= */
 
 *,
@@ -11,6 +11,7 @@
 
 html {
   width: 100%;
+  min-width: 0;
   min-height: 100%;
   margin: 0;
   padding: 0;
@@ -19,17 +20,22 @@ html {
 
 body {
   width: 100%;
+  min-width: 0;
   min-height: 100vh;
   margin: 0;
   padding: 0;
+
   font-family: Arial, sans-serif;
-  background: #F5F7FA;
+
+  background: #f5f7fa;
   color: #263238;
+
   overflow-x: hidden;
 }
 
 #root {
   width: 100%;
+  min-width: 0;
   min-height: 100vh;
   margin: 0;
   padding: 0;
@@ -37,12 +43,13 @@ body {
 }
 
 /* =========================================================
-   APP CONTAINER
+   GLOBAL APP CONTAINER
 ========================================================= */
 
 .app-container {
   width: 100%;
   max-width: 100%;
+  min-width: 0;
   min-height: 100vh;
   margin: 0;
   padding: 0;
@@ -50,7 +57,21 @@ body {
 }
 
 /* =========================================================
-   GENERAL ELEMENTS
+   IMPORTANT RESPONSIVE RULE
+========================================================= */
+
+main,
+header,
+footer,
+article,
+aside,
+nav,
+div {
+  min-width: 0;
+}
+
+/* =========================================================
+   TEXT
 ========================================================= */
 
 h1,
@@ -59,11 +80,19 @@ h3,
 h4,
 h5,
 h6,
-p {
+p,
+span,
+a,
+strong,
+small {
   max-width: 100%;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   word-wrap: break-word;
 }
+
+/* =========================================================
+   MEDIA
+========================================================= */
 
 img,
 video,
@@ -73,44 +102,16 @@ canvas {
   height: auto;
 }
 
-a {
-  max-width: 100%;
-  overflow-wrap: anywhere;
-}
+/* =========================================================
+   FORM ELEMENTS
+========================================================= */
 
 input,
 select,
 textarea {
-  width: 100%;
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
-}
-
-/* =========================================================
-   HEADINGS
-========================================================= */
-
-.app-title {
-  width: 100%;
-  max-width: 100%;
-  margin: 20px auto;
-  padding: 0 16px;
-  text-align: center;
-  color: #1565C0;
-  font-size: 40px;
-  line-height: 1.2;
-  overflow-wrap: anywhere;
-}
-
-.app-description {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto 20px;
-  padding: 0 16px;
-  text-align: center;
-  color: #546E7A;
-  line-height: 1.6;
 }
 
 /* =========================================================
@@ -119,59 +120,78 @@ textarea {
 
 button {
   max-width: 100%;
+  min-width: 0;
   min-height: 44px;
-  padding: 12px 25px;
-  border: none;
-  border-radius: 8px;
-  background: #2E7D32;
-  color: #FFFFFF;
-  cursor: pointer;
-  font-size: 16px;
-  box-sizing: border-box;
-}
 
-button:hover {
-  background: #1B5E20;
+  box-sizing: border-box;
+
+  font-family: inherit;
 }
 
 /* =========================================================
-   NAVIGATION
+   LINKS
 ========================================================= */
 
-nav {
-  width: 100%;
+a {
   max-width: 100%;
-  box-sizing: border-box;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  max-width: 100%;
-}
-
-.nav-links a,
-.nav-links button {
-  max-width: 100%;
-  overflow-wrap: anywhere;
 }
 
 /* =========================================================
-   HERO SECTION
+   DO NOT USE GLOBAL SECTION LAYOUTS
+   Page-specific sections should control their own padding.
+========================================================= */
+
+
+/* =========================================================
+   APP TITLE
+========================================================= */
+
+.app-title {
+  width: 100%;
+  max-width: 100%;
+
+  margin: 20px auto;
+  padding: 0 16px;
+
+  text-align: center;
+
+  color: #1565c0;
+
+  font-size: 40px;
+  line-height: 1.2;
+}
+
+.app-description {
+  width: 100%;
+  max-width: 800px;
+
+  margin: 0 auto 20px;
+  padding: 0 16px;
+
+  text-align: center;
+
+  color: #546e7a;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   HERO
 ========================================================= */
 
 .hero {
   width: 100%;
   max-width: 100%;
+  min-width: 0;
+
   box-sizing: border-box;
 }
 
 .hero h1,
 .hero p {
   max-width: 100%;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .hero h1 {
@@ -182,261 +202,106 @@ nav {
   margin: 0 auto 25px;
 }
 
-/* =========================================================
-   GENERAL SECTIONS
-========================================================= */
-
-section {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
 
 /* =========================================================
-   TABLETS
-   481px - 768px
+   TABLET
 ========================================================= */
 
 @media (max-width: 768px) {
 
   .app-title {
     font-size: 32px;
-    line-height: 1.2;
     margin: 16px auto;
-    padding: 0 20px;
+    padding: 0 16px;
   }
 
   .app-description {
     font-size: 15px;
-    padding: 0 20px;
+    padding: 0 16px;
   }
-
-  /* Navigation */
-
-  nav {
-    width: 100%;
-    padding: 10px 15px;
-  }
-
-  .nav-links {
-    width: 100%;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  .nav-links a,
-  .nav-links button {
-    width: auto;
-    max-width: 180px;
-    padding: 10px 18px;
-    font-size: 15px;
-  }
-
-  /* Hero */
 
   .hero {
-    min-height: 500px;
-    height: auto;
-    padding: 60px 20px;
+    min-height: auto;
   }
 
   .hero h1 {
-    width: 100%;
-    max-width: 100%;
-    font-size: clamp(36px, 10vw, 60px);
-    line-height: 1.05;
-    text-align: center;
+    font-size: clamp(30px, 8vw, 48px);
+    line-height: 1.1;
   }
 
   .hero p {
-    width: 100%;
-    max-width: 90%;
-    font-size: 16px;
-    line-height: 1.5;
-    text-align: center;
-  }
-
-  .hero button {
     max-width: 100%;
-    font-size: 16px;
-    padding: 12px 25px;
-  }
-
-  /* Sections */
-
-  section {
-    width: 100%;
-    padding: 40px 20px;
+    font-size: 15px;
+    line-height: 1.5;
   }
 }
 
+
 /* =========================================================
-   SMALL PHONES
-   361px - 480px
+   SMALL PHONE
 ========================================================= */
 
 @media (max-width: 480px) {
 
   .app-title {
     font-size: 27px;
-    line-height: 1.25;
-    margin: 15px auto;
+    line-height: 1.2;
+    margin: 14px auto;
     padding: 0 12px;
   }
 
   .app-description {
     font-size: 14px;
     line-height: 1.5;
-    padding: 0 15px;
+    padding: 0 12px;
   }
-
-  /* Navigation */
-
-  nav {
-    padding: 10px 12px;
-  }
-
-  .nav-links {
-    width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-
-  .nav-links a,
-  .nav-links button {
-    width: 100%;
-    max-width: 100%;
-    text-align: center;
-    padding: 10px 15px;
-    font-size: 15px;
-  }
-
-  /* Hero */
 
   .hero {
-    min-height: auto;
-    padding: 45px 15px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
   .hero h1 {
-    width: 100%;
-    font-size: clamp(30px, 10vw, 44px);
-    line-height: 1.1;
-    margin-bottom: 20px;
+    font-size: clamp(26px, 9vw, 40px);
   }
 
   .hero p {
-    width: 100%;
+    font-size: 14px;
+  }
+
+  button {
     max-width: 100%;
-    font-size: 15px;
-    line-height: 1.5;
-    margin-bottom: 20px;
-  }
-
-  .hero button {
-    width: 100%;
-    max-width: 320px;
-    display: block;
-    margin: 0 auto;
-    padding: 12px 16px;
-    font-size: 15px;
-  }
-
-  /* Sections */
-
-  section {
-    padding: 30px 15px;
-  }
-
-  /* Images */
-
-  img {
-    max-width: 100%;
-    height: auto;
-    display: block;
   }
 }
 
+
 /* =========================================================
-   VERY SMALL PHONES
-   360px AND BELOW
+   VERY SMALL PHONE
+   320px - 360px
 ========================================================= */
 
 @media (max-width: 360px) {
 
   .app-title {
-    font-size: 24px;
-    padding: 0 10px;
+    font-size: 23px;
+    padding: 0 8px;
   }
 
   .app-description {
     font-size: 13px;
-    padding: 0 12px;
-  }
-
-  nav {
-    padding: 8px 10px;
-  }
-
-  .nav-links a,
-  .nav-links button {
-    width: 100%;
-    max-width: 100%;
-    font-size: 14px;
-    padding: 9px 12px;
+    padding: 0 8px;
   }
 
   .hero {
-    padding: 35px 12px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 
   .hero h1 {
-    font-size: clamp(27px, 9vw, 36px);
+    font-size: 26px;
   }
 
   .hero p {
-    font-size: 14px;
-  }
-
-  .hero button {
-    width: 100%;
-    max-width: 100%;
-    font-size: 14px;
-  }
-
-  section {
-    padding: 25px 12px;
-  }
-}
-
-/* =========================================================
-   EXTRA PROTECTION AGAINST MOBILE OVERFLOW
-========================================================= */
-
-@media (max-width: 768px) {
-
-  .row,
-  .container,
-  .content,
-  .card,
-  .cards,
-  .grid,
-  .form,
-  .form-container {
-    max-width: 100%;
-  }
-
-  .row,
-  .cards,
-  .grid {
-    flex-wrap: wrap;
-  }
-
-  table {
-    width: 100%;
-    max-width: 100%;
-    display: block;
-    overflow-x: auto;
+    font-size: 13px;
   }
 }

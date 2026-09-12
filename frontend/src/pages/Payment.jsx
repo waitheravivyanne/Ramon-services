@@ -774,7 +774,7 @@ const Payment = () => {
 
             <button
               type="button"
-              className="back-button"
+              className="payment-back-button"
               onClick={() =>
                 navigate(-1)
               }
