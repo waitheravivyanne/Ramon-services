@@ -262,33 +262,35 @@ def get_current_user():
 
     identity = get_jwt_identity()
 
+    print("====================================")
+    print("JWT IDENTITY:", identity)
+    print("JWT IDENTITY TYPE:", type(identity))
+    print("====================================")
+
     if not identity:
         return None
 
     if isinstance(identity, dict):
-
         user_id = identity.get("id")
-
     else:
-
         user_id = identity
+
+    print("USER ID FROM JWT:", user_id)
 
     if not user_id:
         return None
 
     try:
-
         user_id = int(user_id)
-
     except (TypeError, ValueError):
-
         return None
 
-    return db.session.get(
-        User,
-        user_id
-    )
+    user = db.session.get(User, user_id)
 
+    print("USER FOUND:", user)
+    print("====================================")
+
+    return user
 
 # ============================================================
 # ADMIN CHECK
@@ -3144,43 +3146,133 @@ def create_booking():
             }), 400
 
         # ======================================================
-        # TOTAL
+        # CALCULATE BOOKING TOTAL
         # ======================================================
 
-        total = data.get(
-            "total"
+        house_size = str(
+            data.get("houseSize") or ""
+        ).strip()
+
+        frequency = str(
+            data.get("frequency") or "One-Time"
+        ).strip()
+
+        # Base cleaning prices
+        cleaning_prices = {
+            "Bedsitter": 1500,
+            "1 Bedroom": 2000,
+            "2 Bedroom": 3000,
+            "3 Bedroom": 4000,
+            "4 Bedroom": 5500,
+            "5+ Bedroom": 7000,
+        }
+
+        if house_size not in cleaning_prices:
+
+            return jsonify({
+                "message": "Invalid house size.",
+                "received": house_size,
+                "allowed": list(
+                    cleaning_prices.keys()
+                )
+            }), 400
+
+        # Start with house-size price
+        total = float(
+            cleaning_prices[house_size]
         )
 
-        if total is None:
+        # ======================================================
+        # EXTRAS
+        # ======================================================
+
+        extras = data.get(
+            "extras",
+            []
+        )
+
+        if not isinstance(
+            extras,
+            list
+        ):
+            extras = []
+
+        extra_prices = {
+            "Inside Fridge": 500,
+            "Oven": 400,
+            "Balcony": 300,
+            "Laundry": 700,
+            "Ironing": 500,
+            "Pest Control/Fumigation": 2500,
+        }
+
+        for extra in extras:
+
+            if isinstance(extra, dict):
+
+                extra_name = (
+                    extra.get("name")
+                    or extra.get("label")
+                    or extra.get("title")
+                    or ""
+                )
+
+            else:
+
+                extra_name = str(
+                    extra
+                )
+
+            extra_name = extra_name.strip()
+
+            if extra_name in extra_prices:
+
+                total += extra_prices[
+                    extra_name
+                ]
+
+        # ======================================================
+        # FREQUENCY DISCOUNTS
+        # ======================================================
+
+        frequency_discounts = {
+            "One-Time": 0,
+            "Weekly": 0.10,
+            "Bi-Weekly": 0.05,
+            "Monthly Subscription": 0.15,
+        }
+
+        if frequency not in frequency_discounts:
 
             return jsonify({
-                "message":
-                    "Booking total is required."
+                "message": "Invalid frequency.",
+                "received": frequency,
+                "allowed": list(
+                    frequency_discounts.keys()
+                )
             }), 400
 
-        try:
+        discount_rate = frequency_discounts[
+            frequency
+        ]
 
-            total = float(
-                total
+        if discount_rate > 0:
+
+            total = total * (
+                1 - discount_rate
             )
 
-        except (
-            TypeError,
-            ValueError
-        ):
-
-            return jsonify({
-                "message":
-                    "Invalid booking total.",
-                "received":
-                    total
-            }), 400
+        # Round to two decimal places
+        total = round(
+            total,
+            2
+        )
 
         if total <= 0:
 
             return jsonify({
                 "message":
-                    "Booking total must be greater than zero."
+                    "Calculated booking total must be greater than zero."
             }), 400
 
         # ======================================================
