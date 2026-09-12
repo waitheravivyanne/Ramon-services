@@ -1,4 +1,5 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
 import useAuth from "../hooks/useAuth";
 import "../styles/Navbar.css";
 
@@ -6,6 +7,8 @@ function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Hide navbar on home, login and register pages
   if (
@@ -16,32 +19,34 @@ function Navbar() {
     return null;
   }
 
-  const handleLogout = () => {
-    logout();
+  const userRole = String(user?.role || "").toLowerCase();
 
-    // Return user to home page after logout
-    navigate("/", { replace: true });
+  const closeMenu = () => {
+    setMenuOpen(false);
   };
 
-  // Get the user's role safely
-  const userRole = String(user?.role || "").toLowerCase();
+  const handleLogout = () => {
+    closeMenu();
+    logout();
+    navigate("/", { replace: true });
+  };
 
   return (
     <nav className="navbar">
 
-      {/* =========================
+      {/* =========================================
           LOGO
-      ========================== */}
-      <Link to="/" className="logo">
+      ========================================= */}
+      <Link to="/" className="logo" onClick={closeMenu}>
         Ramon's Marketplace
       </Link>
 
-      {/* =========================
-          NAVIGATION
-      ========================== */}
-      <div className="nav-links">
 
-        {/* HOME */}
+      {/* =========================================
+          DESKTOP NAVIGATION
+      ========================================= */}
+      <div className="nav-links desktop-nav">
+
         <Link
           to="/"
           className={`nav-link ${
@@ -51,7 +56,6 @@ function Navbar() {
           🏠 Home
         </Link>
 
-        {/* SERVICES */}
         <Link
           to="/services"
           className={`nav-link ${
@@ -61,17 +65,8 @@ function Navbar() {
           🛠️ Services
         </Link>
 
-        {/* =========================
-            USER IS LOGGED IN
-        ========================== */}
         {user ? (
           <>
-            {/* USER NAME */}
-            <span className="welcome-user">
-              Welcome, {user.name || "Client"}
-            </span>
-
-            {/* DASHBOARD */}
             <Link
               to="/dashboard"
               className={`nav-link ${
@@ -81,31 +76,28 @@ function Navbar() {
               📊 Dashboard
             </Link>
 
-            {/* BOOKINGS */}
             <Link
               to="/bookings"
-              className={`nav-link booking-link ${
+              className={`nav-link ${
                 location.pathname === "/bookings" ? "active" : ""
               }`}
             >
               📅 My Bookings
             </Link>
 
-            {/* PROFILE */}
             <Link
               to="/profile"
-              className={`nav-link profile-link ${
+              className={`nav-link ${
                 location.pathname === "/profile" ? "active" : ""
               }`}
             >
               👤 Profile
             </Link>
 
-            {/* ADMIN */}
             {userRole === "admin" && (
               <Link
                 to="/admin"
-                className={`nav-link admin-link ${
+                className={`nav-link ${
                   location.pathname === "/admin" ? "active" : ""
                 }`}
               >
@@ -113,7 +105,6 @@ function Navbar() {
               </Link>
             )}
 
-            {/* LOGOUT */}
             <button
               type="button"
               className="logout-button"
@@ -123,22 +114,153 @@ function Navbar() {
             </button>
           </>
         ) : (
-          /* =========================
-             USER NOT LOGGED IN
-          ========================== */
           <>
-            {/* LOGIN */}
+            <Link to="/login" className="nav-link">
+              🔐 Login
+            </Link>
+
+            <Link to="/register" className="nav-link">
+              📝 Register
+            </Link>
+          </>
+        )}
+      </div>
+
+
+      {/* =========================================
+          WELCOME + HAMBURGER AREA
+          WELCOME IS OUTSIDE THE DROPDOWN
+      ========================================= */}
+      <div className="navbar-user-area">
+
+        {user && (
+          <span className="welcome-user">
+            Welcome, {user.name || "Client"}
+          </span>
+        )}
+
+        <button
+          type="button"
+          className={`hamburger-button ${
+            menuOpen ? "open" : ""
+          }`}
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle navigation menu"
+          aria-expanded={menuOpen}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+      </div>
+
+
+      {/* =========================================
+          MOBILE DROPDOWN
+      ========================================= */}
+      <div
+        className={`mobile-menu ${
+          menuOpen ? "show" : ""
+        }`}
+      >
+
+        <Link
+          to="/"
+          className={`mobile-nav-link ${
+            location.pathname === "/" ? "active" : ""
+          }`}
+          onClick={closeMenu}
+        >
+          🏠 Home
+        </Link>
+
+        <Link
+          to="/services"
+          className={`mobile-nav-link ${
+            location.pathname.startsWith("/services")
+              ? "active"
+              : ""
+          }`}
+          onClick={closeMenu}
+        >
+          🛠️ Services
+        </Link>
+
+        {user ? (
+          <>
+            <Link
+              to="/dashboard"
+              className={`mobile-nav-link ${
+                location.pathname === "/dashboard"
+                  ? "active"
+                  : ""
+              }`}
+              onClick={closeMenu}
+            >
+              📊 Dashboard
+            </Link>
+
+            <Link
+              to="/bookings"
+              className={`mobile-nav-link ${
+                location.pathname === "/bookings"
+                  ? "active"
+                  : ""
+              }`}
+              onClick={closeMenu}
+            >
+              📅 My Bookings
+            </Link>
+
+            <Link
+              to="/profile"
+              className={`mobile-nav-link ${
+                location.pathname === "/profile"
+                  ? "active"
+                  : ""
+              }`}
+              onClick={closeMenu}
+            >
+              👤 Profile
+            </Link>
+
+            {userRole === "admin" && (
+              <Link
+                to="/admin"
+                className={`mobile-nav-link ${
+                  location.pathname === "/admin"
+                    ? "active"
+                    : ""
+                }`}
+                onClick={closeMenu}
+              >
+                ⚙️ Admin Dashboard
+              </Link>
+            )}
+
+            <button
+              type="button"
+              className="mobile-logout-button"
+              onClick={handleLogout}
+            >
+              🚪 Logout
+            </button>
+          </>
+        ) : (
+          <>
             <Link
               to="/login"
-              className="nav-link login-link"
+              className="mobile-nav-link"
+              onClick={closeMenu}
             >
               🔐 Login
             </Link>
 
-            {/* REGISTER */}
             <Link
               to="/register"
-              className="nav-link register-link"
+              className="mobile-nav-link"
+              onClick={closeMenu}
             >
               📝 Register
             </Link>
@@ -146,6 +268,7 @@ function Navbar() {
         )}
 
       </div>
+
     </nav>
   );
 }

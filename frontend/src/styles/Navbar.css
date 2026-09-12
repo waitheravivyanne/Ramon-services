@@ -608,3 +608,345 @@
     font-size: 12px;
   }
 }
+
+/* =========================================================
+   HAMBURGER MENU
+   ========================================================= */
+
+.hamburger-button {
+  display: none;
+
+  width: 46px;
+  height: 46px;
+
+  padding: 8px;
+
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.12);
+
+  cursor: pointer;
+
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  box-sizing: border-box;
+}
+
+.hamburger-button span {
+  display: block;
+
+  width: 25px;
+  height: 3px;
+
+  background: #ffffff;
+
+  border-radius: 3px;
+
+  transition: all 0.25s ease;
+}
+
+/* Hamburger becomes X when opened */
+
+.hamburger-button.open span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger-button.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-button.open span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+
+/* =========================================================
+   MOBILE DROPDOWN
+   ========================================================= */
+
+.mobile-menu {
+  display: none;
+
+  position: absolute;
+
+  top: 100%;
+  left: 0;
+  right: 0;
+
+  width: 100%;
+
+  padding: 12px;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+
+  box-sizing: border-box;
+
+  z-index: 2000;
+}
+
+.mobile-menu.show {
+  display: block;
+}
+
+.mobile-nav-link {
+  display: block;
+
+  width: 100%;
+
+  padding: 15px 16px;
+
+  margin-bottom: 5px;
+
+  border-radius: 10px;
+
+  color: #1f2937;
+
+  text-decoration: none;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  box-sizing: border-box;
+}
+
+.mobile-nav-link:hover {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.mobile-nav-link.active {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.mobile-welcome {
+  padding: 14px 16px;
+
+  margin-bottom: 6px;
+
+  color: #2563eb;
+
+  font-size: 14px;
+
+  font-weight: 800;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.mobile-logout-button {
+  width: 100%;
+
+  padding: 15px 16px;
+
+  margin-top: 6px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  background: #fee2e2;
+
+  color: #b91c1c;
+
+  font-size: 15px;
+
+  font-weight: 800;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.mobile-logout-button:hover {
+  background: #fecaca;
+}
+
+
+/* =========================================================
+   SHOW HAMBURGER
+   ========================================================= */
+
+/*
+   1050px gives the mobile/tablet menu more room.
+   This means the normal navbar is used above 1050px.
+*/
+
+@media (max-width: 1050px) {
+
+  .navbar {
+    display: grid;
+
+    grid-template-columns: 1fr auto;
+
+    min-height: 68px;
+
+    padding: 10px 18px;
+
+    position: sticky;
+  }
+
+  .logo {
+    width: auto;
+
+    min-width: 0;
+
+    max-width: none;
+
+    font-size: 1.15rem;
+  }
+
+  .desktop-nav {
+    display: none !important;
+  }
+
+  .hamburger-button {
+    display: flex !important;
+  }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 500px) {
+
+  .navbar {
+    min-height: 64px;
+
+    padding: 9px 14px;
+  }
+
+  .logo {
+    font-size: 1rem;
+  }
+
+  .hamburger-button {
+    width: 42px;
+
+    height: 42px;
+  }
+
+  .hamburger-button span {
+    width: 22px;
+  }
+
+  .mobile-menu {
+    padding: 10px;
+  }
+}
+/* =====================================
+   WELCOME + HAMBURGER AREA
+===================================== */
+
+.navbar-user-area {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  min-width: 0;
+}
+
+.navbar-user-area .welcome-user {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  color: #dbeafe;
+  font-size: 0.88rem;
+  font-weight: 700;
+  white-space: nowrap;
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  box-sizing: border-box;
+}
+
+
+/* =====================================
+   MOBILE/TABLET
+===================================== */
+
+@media (max-width: 1050px) {
+
+  .navbar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    min-height: 68px;
+    padding: 10px 18px;
+    position: sticky;
+  }
+
+  .logo {
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    font-size: 1.15rem;
+  }
+
+  .desktop-nav {
+    display: none !important;
+  }
+
+  .navbar-user-area {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .navbar-user-area .welcome-user {
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+
+  .hamburger-button {
+    display: flex !important;
+  }
+}
+
+
+/* =====================================
+   SMALL MOBILE
+===================================== */
+
+@media (max-width: 500px) {
+
+  .navbar {
+    min-height: 64px;
+    padding: 9px 14px;
+  }
+
+  .logo {
+    font-size: 1rem;
+  }
+
+  .navbar-user-area {
+    gap: 6px;
+  }
+
+  .navbar-user-area .welcome-user {
+    font-size: 0.72rem;
+    padding: 5px 6px;
+  }
+
+  .hamburger-button {
+    width: 42px;
+    height: 42px;
+  }
+
+  .hamburger-button span {
+    width: 22px;
+  }
+
+  .mobile-menu {
+    padding: 10px;
+  }
+}
