@@ -1118,51 +1118,161 @@
 }
 
 
-/* SMALL PHONES */
+/* =========================================================
+   SMALL PHONE NAVBAR FIX
+   ========================================================= */
+
 @media (max-width: 500px) {
   .navbar {
+    width: 100%;
     min-height: 64px;
 
-    padding: 9px 12px;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+
+    align-items: center;
+
+    padding: 8px 10px !important;
+    gap: 6px;
+
+    overflow: visible;
+    box-sizing: border-box;
   }
 
   .logo {
-    font-size: 1rem;
+    min-width: 0 !important;
+    width: 100% !important;
+
+    font-size: 1rem !important;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .navbar-user-area {
-    gap: 5px;
+    min-width: auto !important;
+
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 6px;
   }
 
-  .navbar-user-area .welcome-user {
-    font-size: 0.7rem;
-    padding: 5px 6px !important;
+  .welcome-user {
+    max-width: 105px !important;
+
+    padding: 4px 5px !important;
+
+    font-size: 0.68rem !important;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    border-left: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-top: none !important;
   }
 
   .hamburger-button {
-    width: 42px;
-    height: 42px;
+    display: flex !important;
+
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
+
+    padding: 7px !important;
+
+    flex-shrink: 0;
+
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    gap: 5px;
+
+    box-sizing: border-box;
+
+    position: relative;
+    z-index: 3000;
   }
 
   .hamburger-button span {
-    width: 22px;
-    height: 3px;
+    display: block !important;
+
+    width: 22px !important;
+    height: 3px !important;
+
+    flex-shrink: 0;
+
+    background: #ffffff !important;
+
+    border-radius: 3px;
+  }
+
+  .mobile-menu {
+    position: absolute !important;
+
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+
+    width: 100% !important;
+
+    box-sizing: border-box;
+
+    z-index: 2500;
   }
 }
 
 
-/* VERY SMALL PHONES */
+/* =========================================================
+   VERY SMALL PHONES — 360px AND BELOW
+   ========================================================= */
+
 @media (max-width: 360px) {
-  .logo {
-    font-size: 0.9rem;
+
+  .navbar {
+    min-height: 60px;
+
+    padding: 7px 8px !important;
+
+    grid-template-columns: minmax(0, 1fr) auto !important;
+
+    gap: 5px;
   }
 
-  .navbar-user-area .welcome-user {
-    font-size: 0.65rem;
+  .logo {
+    font-size: 0.88rem !important;
+  }
+
+  /*
+     On very narrow screens the welcome message is removed
+     so the hamburger always has enough room.
+  */
+  .welcome-user {
+    display: none !important;
+  }
+
+  .navbar-user-area {
+    gap: 0 !important;
   }
 
   .hamburger-button {
-    width: 40px;
-    height: 40px;
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+
+    padding: 6px !important;
+  }
+
+  .hamburger-button span {
+    width: 21px !important;
+    height: 3px !important;
+  }
+
+  .mobile-menu {
+    width: 100% !important;
   }
 }
