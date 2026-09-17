@@ -1,0 +1,174 @@
+/* =========================
+   FEEDBACK PAGE
+========================= */
+
+.feedback-page {
+  min-height: 70vh;
+  background: #f5f7fb;
+  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.feedback-container {
+  width: 100%;
+  max-width: 700px;
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.1);
+}
+
+.feedback-container h1 {
+  margin: 0 0 12px;
+  text-align: center;
+  color: #0f172a;
+  font-size: 32px;
+}
+
+.feedback-intro {
+  text-align: center;
+  color: #64748b;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feedback-form label {
+  font-weight: 600;
+  color: #334155;
+  margin-top: 8px;
+}
+
+.feedback-form input,
+.feedback-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feedback-form input:focus,
+.feedback-form textarea:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+.feedback-form textarea {
+  resize: vertical;
+  min-height: 140px;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.feedback-form button {
+  margin-top: 15px;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #0f172a;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.feedback-form button:hover {
+  background: #1e293b;
+  transform: translateY(-1px);
+}
+
+.feedback-form button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =========================
+   STATUS MESSAGE
+========================= */
+
+.feedback-status {
+  margin-top: 20px;
+  padding: 14px;
+  border-radius: 8px;
+  background: #e0f2fe;
+  color: #075985;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .feedback-page {
+    padding: 35px 15px;
+  }
+
+  .feedback-container {
+    padding: 25px 20px;
+    border-radius: 12px;
+  }
+
+  .feedback-container h1 {
+    font-size: 27px;
+  }
+
+  .feedback-intro {
+    font-size: 15px;
+  }
+
+  .feedback-form input,
+  .feedback-form textarea {
+    font-size: 16px;
+    padding: 13px;
+  }
+
+  .feedback-form button {
+    width: 100%;
+  }
+}
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+@media (max-width: 380px) {
+
+  .feedback-page {
+    padding: 25px 10px;
+  }
+
+  .feedback-container {
+    padding: 22px 15px;
+  }
+
+  .feedback-container h1 {
+    font-size: 24px;
+  }
+
+  .feedback-intro {
+    font-size: 14px;
+  }
+}

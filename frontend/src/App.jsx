@@ -18,7 +18,7 @@ import Bookings from "./pages/Bookings";
 import Profile from "./pages/Profile";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-
+import Feedback from "./components/Feedback"
 function App() {
   return (
     <>
@@ -55,6 +55,10 @@ function App() {
             path="/register"
             element={<Register />}
           />
+<Route
+  path="/feedback"
+  element={<Feedback />}
+/>
           <Route
   path="/forgot-password"
   element={<ForgotPassword />}

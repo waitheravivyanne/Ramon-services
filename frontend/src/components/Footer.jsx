@@ -69,6 +69,11 @@ function Footer() {
                 Login
               </Link>
             </li>
+            <li>
+  <Link to="/feedback">
+    Give Feedback
+  </Link>
+</li>
 
           </ul>
 

@@ -9,7 +9,7 @@ from flask_jwt_extended import (
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from database import db
-from models import User, Service, Booking
+from models import User, Service, Booking, Feedback
 
 import json
 import os
@@ -7193,6 +7193,160 @@ def admin_dashboard():
             "error":
                 str(e),
 
+        }), 500
+
+
+        # ============================================================
+# SUBMIT FEEDBACK
+# ============================================================
+
+@app.route("/feedback", methods=["POST"])
+def submit_feedback():
+
+    try:
+
+        data = request.get_json(
+            silent=True
+        ) or {}
+
+        name = str(
+            data.get("name", "")
+        ).strip()
+
+        email = str(
+            data.get("email", "")
+        ).strip()
+
+        message = str(
+            data.get("message", "")
+        ).strip()
+
+        # ----------------------------------------------------
+        # VALIDATION
+        # ----------------------------------------------------
+
+        if not name:
+            return jsonify({
+                "message": "Name is required."
+            }), 400
+
+        if not email:
+            return jsonify({
+                "message": "Email is required."
+            }), 400
+
+        if not message:
+            return jsonify({
+                "message": "Feedback message is required."
+            }), 400
+
+        if len(name) > 100:
+            return jsonify({
+                "message": "Name is too long."
+            }), 400
+
+        if len(email) > 120:
+            return jsonify({
+                "message": "Email is too long."
+            }), 400
+
+        if len(message) > 5000:
+            return jsonify({
+                "message": "Feedback message is too long."
+            }), 400
+
+        # ----------------------------------------------------
+        # SAVE FEEDBACK
+        # ----------------------------------------------------
+
+        feedback = Feedback(
+            name=name,
+            email=email,
+            message=message
+        )
+
+        db.session.add(feedback)
+        db.session.commit()
+
+        print(
+            "NEW FEEDBACK RECEIVED:",
+            feedback.id,
+            feedback.name,
+            feedback.email
+        )
+
+        return jsonify({
+            "message":
+                "Thank you! Your feedback has been sent to our admin.",
+            "feedback_id":
+                feedback.id
+        }), 201
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        print(
+            "FEEDBACK SUBMISSION ERROR:",
+            e
+        )
+
+        return jsonify({
+            "message":
+                "Failed to submit feedback.",
+            "error":
+                str(e)
+        }), 500
+
+
+# ============================================================
+# ADMIN FEEDBACK
+# ============================================================
+
+@app.route("/admin/feedback", methods=["GET"])
+@jwt_required()
+def get_admin_feedback():
+
+    try:
+
+        admin, error = admin_required()
+
+        if error:
+            return error
+
+        feedback_list = Feedback.query.order_by(
+            Feedback.id.desc()
+        ).all()
+
+        return jsonify({
+            "feedback": [
+                {
+                    "id": feedback.id,
+                    "name": feedback.name,
+                    "email": feedback.email,
+                    "message": feedback.message,
+                    "created_at": (
+                        feedback.created_at.isoformat()
+                        if feedback.created_at
+                        else None
+                    )
+                }
+                for feedback in feedback_list
+            ]
+        }), 200
+
+    except Exception as e:
+
+        print(
+            "ADMIN FEEDBACK ERROR:",
+            e
+        )
+
+        return jsonify({
+            "message":
+                "Failed to load feedback.",
+            "error":
+                str(e)
         }), 500
 
 

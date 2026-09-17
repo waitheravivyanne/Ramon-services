@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import "../styles/AdminDashboard.css";
@@ -8,7 +12,15 @@ function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
-  const [processingPayment, setProcessingPayment] = useState(null);
+
+  const [processingPayment, setProcessingPayment] =
+    useState(null);
+
+  const [feedback, setFeedback] = useState([]);
+  const [feedbackLoading, setFeedbackLoading] =
+    useState(true);
+  const [feedbackError, setFeedbackError] =
+    useState("");
 
   const navigate = useNavigate();
 
@@ -109,6 +121,7 @@ function AdminDashboard() {
       booking.serviceName ||
       booking.service_name ||
       booking.service?.name ||
+      booking.service?.title ||
       "Service"
     );
   };
@@ -150,125 +163,223 @@ function AdminDashboard() {
   // LOAD BOOKINGS
   // ============================================================
 
-  const loadBookings = async (showFullLoader = true) => {
-    try {
-      if (showFullLoader) {
-        setLoading(true);
-      } else {
-        setRefreshing(true);
-      }
+  const loadBookings = useCallback(
+    async (showFullLoader = true) => {
+      try {
+        if (showFullLoader) {
+          setLoading(true);
+        } else {
+          setRefreshing(true);
+        }
 
-      setError("");
+        setError("");
 
-      const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
 
-      if (!token) {
-        setError(
-          "You are not logged in. Please log in as an administrator."
+        if (!token) {
+          setError(
+            "You are not logged in. Please log in as an administrator."
+          );
+          return;
+        }
+
+        const role = localStorage.getItem("role");
+
+        console.log(
+          "================================="
         );
-        return;
-      }
-
-      const role = localStorage.getItem("role");
-
-      console.log("=================================");
-      console.log("ADMIN DASHBOARD");
-      console.log("Token exists:", !!token);
-      console.log("Stored role:", role);
-      console.log("Loading admin bookings...");
-      console.log("=================================");
-
-      if (role && role.toLowerCase() !== "admin") {
-        setError(
-          "Access denied. You must be logged in as an administrator."
+        console.log("ADMIN DASHBOARD");
+        console.log("Token exists:", !!token);
+        console.log("Stored role:", role);
+        console.log("Loading admin bookings...");
+        console.log(
+          "================================="
         );
-        return;
-      }
 
-      const response = await api.get("/admin/bookings");
+        if (
+          role &&
+          role.toLowerCase() !== "admin"
+        ) {
+          setError(
+            "Access denied. You must be logged in as an administrator."
+          );
+          return;
+        }
 
-      console.log(
-        "ADMIN BOOKINGS RESPONSE:",
-        response.data
-      );
+        const response = await api.get(
+          "/admin/bookings"
+        );
 
-      const data = response.data;
+        console.log(
+          "ADMIN BOOKINGS RESPONSE:",
+          response.data
+        );
 
-      let bookingList = [];
+        const data = response.data;
 
-      if (Array.isArray(data)) {
-        bookingList = data;
-      } else if (Array.isArray(data?.bookings)) {
-        bookingList = data.bookings;
-      } else if (Array.isArray(data?.data)) {
-        bookingList = data.data;
-      }
+        let bookingList = [];
 
-      console.log(
-        "Number of bookings received:",
-        bookingList.length
-      );
+        if (Array.isArray(data)) {
+          bookingList = data;
+        } else if (
+          Array.isArray(data?.bookings)
+        ) {
+          bookingList = data.bookings;
+        } else if (
+          Array.isArray(data?.data)
+        ) {
+          bookingList = data.data;
+        }
 
-      // Debug useful payment/customer information
-      bookingList.forEach((booking) => {
-        console.log("BOOKING:", {
-          id: booking.id,
-          customer: getCustomerName(booking),
-          phone: getCustomerPhone(booking),
-          transactionCode: getTransactionCode(booking),
-          paymentMethod: getPaymentMethod(booking),
-          paymentStatus: getPaymentStatus(booking),
+        console.log(
+          "Number of bookings received:",
+          bookingList.length
+        );
+
+        bookingList.forEach((booking) => {
+          console.log("BOOKING:", {
+            id: booking.id,
+            customer:
+              getCustomerName(booking),
+            phone:
+              getCustomerPhone(booking),
+            transactionCode:
+              getTransactionCode(booking),
+            paymentMethod:
+              getPaymentMethod(booking),
+            paymentStatus:
+              getPaymentStatus(booking),
+          });
         });
-      });
 
-      setBookings(bookingList);
-    } catch (err) {
-      console.error(
-        "Failed to load bookings:",
-        err
-      );
-
-      if (err.response?.status === 401) {
-        setError(
-          err.response?.data?.message ||
-            "Your administrator session is invalid or has expired. Please log in again."
+        setBookings(bookingList);
+      } catch (err) {
+        console.error(
+          "Failed to load bookings:",
+          err
         );
 
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        localStorage.removeItem("role");
-      } else if (err.response?.status === 403) {
-        setError(
-          err.response?.data?.message ||
-            "Access denied. Administrator privileges are required."
-        );
-      } else if (err.response?.status === 500) {
-        setError(
-          err.response?.data?.message ||
-            "The server encountered an error while loading the orders. Please check your Flask backend."
-        );
-      } else if (err.request && !err.response) {
-        setError(
-          "Unable to connect to the server. Please make sure your Flask backend is running."
-        );
-      } else {
-        setError(
-          err.response?.data?.message ||
-            "Failed to load bookings. Please try again."
-        );
+        if (err.response?.status === 401) {
+          setError(
+            err.response?.data?.message ||
+              "Your administrator session is invalid or has expired. Please log in again."
+          );
+
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("role");
+        } else if (
+          err.response?.status === 403
+        ) {
+          setError(
+            err.response?.data?.message ||
+              "Access denied. Administrator privileges are required."
+          );
+        } else if (
+          err.response?.status === 500
+        ) {
+          setError(
+            err.response?.data?.message ||
+              "The server encountered an error while loading the orders. Please check your Flask backend."
+          );
+        } else if (
+          err.request &&
+          !err.response
+        ) {
+          setError(
+            "Unable to connect to the server. Please make sure your Flask backend is running."
+          );
+        } else {
+          setError(
+            err.response?.data?.message ||
+              "Failed to load bookings. Please try again."
+          );
+        }
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
       }
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
+    },
+    []
+  );
+
+  // ============================================================
+  // LOAD CUSTOMER FEEDBACK
+  // ============================================================
+
+  const loadFeedback = useCallback(
+    async () => {
+      try {
+        setFeedbackLoading(true);
+        setFeedbackError("");
+
+        const response = await api.get(
+          "/admin/feedback"
+        );
+
+        console.log(
+          "ADMIN FEEDBACK RESPONSE:",
+          response.data
+        );
+
+        const data = response.data;
+
+        if (
+          Array.isArray(data?.feedback)
+        ) {
+          setFeedback(data.feedback);
+        } else if (Array.isArray(data)) {
+          setFeedback(data);
+        } else {
+          setFeedback([]);
+        }
+      } catch (err) {
+        console.error(
+          "Failed to load feedback:",
+          err
+        );
+
+        if (
+          err.response?.status === 401
+        ) {
+          setFeedbackError(
+            "Your administrator session has expired. Please log in again."
+          );
+        } else if (
+          err.response?.status === 403
+        ) {
+          setFeedbackError(
+            "Administrator privileges are required to view feedback."
+          );
+        } else {
+          setFeedbackError(
+            err.response?.data?.message ||
+              "Failed to load customer feedback."
+          );
+        }
+      } finally {
+        setFeedbackLoading(false);
+      }
+    },
+    []
+  );
+
+  // ============================================================
+  // INITIAL LOAD
+  // ============================================================
 
   useEffect(() => {
     let cancelled = false;
 
     const initialLoad = async () => {
-      if (cancelled) return;
-      await loadBookings(true);
+      if (cancelled) {
+        return;
+      }
+
+      await Promise.all([
+        loadBookings(true),
+        loadFeedback(),
+      ]);
     };
 
     initialLoad();
@@ -276,23 +387,30 @@ function AdminDashboard() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [loadBookings, loadFeedback]);
 
   // ============================================================
   // REFRESH
   // ============================================================
 
   const handleRefresh = async () => {
-    await loadBookings(false);
+    await Promise.all([
+      loadBookings(false),
+      loadFeedback(),
+    ]);
   };
 
   // ============================================================
   // UPDATE BOOKING STATUS
   // ============================================================
 
-  const updateStatus = async (bookingId, status) => {
+  const updateStatus = async (
+    bookingId,
+    status
+  ) => {
     try {
-      const token = localStorage.getItem("token");
+      const token =
+        localStorage.getItem("token");
 
       if (!token) {
         alert(
@@ -314,15 +432,17 @@ function AdminDashboard() {
         }
       );
 
-      setBookings((currentBookings) =>
-        currentBookings.map((booking) =>
-          booking.id === bookingId
-            ? {
-                ...booking,
-                status,
-              }
-            : booking
-        )
+      setBookings(
+        (currentBookings) =>
+          currentBookings.map(
+            (booking) =>
+              booking.id === bookingId
+                ? {
+                    ...booking,
+                    status,
+                  }
+                : booking
+          )
       );
 
       console.log(
@@ -334,10 +454,18 @@ function AdminDashboard() {
         err
       );
 
-      if (err.response?.status === 401) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        localStorage.removeItem("role");
+      if (
+        err.response?.status === 401
+      ) {
+        localStorage.removeItem(
+          "token"
+        );
+        localStorage.removeItem(
+          "user"
+        );
+        localStorage.removeItem(
+          "role"
+        );
 
         alert(
           "Your administrator session has expired. Please log in again."
@@ -347,7 +475,9 @@ function AdminDashboard() {
         return;
       }
 
-      if (err.response?.status === 403) {
+      if (
+        err.response?.status === 403
+      ) {
         alert(
           err.response?.data?.message ||
             "You do not have permission to update this booking."
@@ -367,13 +497,18 @@ function AdminDashboard() {
   // VERIFY / REJECT M-PESA PAYMENT
   // ============================================================
 
-  const verifyPayment = async (bookingId, action) => {
+  const verifyPayment = async (
+    bookingId,
+    action
+  ) => {
     const booking = bookings.find(
       (item) => item.id === bookingId
     );
 
     if (!booking) {
-      alert("Booking could not be found.");
+      alert(
+        "Booking could not be found."
+      );
       return;
     }
 
@@ -391,9 +526,12 @@ function AdminDashboard() {
       getPaymentStatus(booking);
 
     if (
-      paymentStatus.toLowerCase() === "paid"
+      paymentStatus.toLowerCase() ===
+      "paid"
     ) {
-      alert("This payment has already been verified.");
+      alert(
+        "This payment has already been verified."
+      );
       return;
     }
 
@@ -402,21 +540,24 @@ function AdminDashboard() {
         ? "verify this M-PESA payment"
         : "reject this M-PESA payment";
 
-    const confirmed = window.confirm(
-      `Are you sure you want to ${actionText}?\n\n` +
-        `Order: #${bookingId}\n` +
-        `Transaction Code: ${transactionCode}\n` +
-        `Amount: Ksh ${Number(
-          booking.total || 0
-        ).toLocaleString()}`
-    );
+    const confirmed =
+      window.confirm(
+        `Are you sure you want to ${actionText}?\n\n` +
+          `Order: #${bookingId}\n` +
+          `Transaction Code: ${transactionCode}\n` +
+          `Amount: Ksh ${Number(
+            booking.total || 0
+          ).toLocaleString()}`
+      );
 
     if (!confirmed) {
       return;
     }
 
     try {
-      setProcessingPayment(bookingId);
+      setProcessingPayment(
+        bookingId
+      );
 
       console.log(
         `Payment action: ${action} for booking #${bookingId}`
@@ -438,27 +579,32 @@ function AdminDashboard() {
         response.data?.booking ||
         response.data;
 
-      setBookings((currentBookings) =>
-        currentBookings.map((item) =>
-          item.id === bookingId
-            ? {
-                ...item,
-                ...updatedBooking,
-                paymentStatus:
-                  updatedBooking?.paymentStatus ||
-                  updatedBooking?.payment_status ||
-                  action === "verify"
-                    ? "Paid"
-                    : "Failed",
-                payment_status:
-                  updatedBooking?.payment_status ||
-                  updatedBooking?.paymentStatus ||
-                  action === "verify"
-                    ? "Paid"
-                    : "Failed",
-              }
-            : item
-        )
+      const newPaymentStatus =
+        action === "verify"
+          ? "Paid"
+          : "Failed";
+
+      setBookings(
+        (currentBookings) =>
+          currentBookings.map(
+            (item) =>
+              item.id === bookingId
+                ? {
+                    ...item,
+                    ...updatedBooking,
+
+                    paymentStatus:
+                      updatedBooking?.paymentStatus ||
+                      updatedBooking?.payment_status ||
+                      newPaymentStatus,
+
+                    payment_status:
+                      updatedBooking?.payment_status ||
+                      updatedBooking?.paymentStatus ||
+                      newPaymentStatus,
+                  }
+                : item
+          )
       );
 
       alert(
@@ -467,7 +613,6 @@ function AdminDashboard() {
           : "M-PESA payment rejected."
       );
 
-      // Reload from server to make sure UI is synchronized
       await loadBookings(false);
     } catch (err) {
       console.error(
@@ -475,10 +620,18 @@ function AdminDashboard() {
         err
       );
 
-      if (err.response?.status === 401) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        localStorage.removeItem("role");
+      if (
+        err.response?.status === 401
+      ) {
+        localStorage.removeItem(
+          "token"
+        );
+        localStorage.removeItem(
+          "user"
+        );
+        localStorage.removeItem(
+          "role"
+        );
 
         alert(
           "Your administrator session has expired. Please log in again."
@@ -488,7 +641,9 @@ function AdminDashboard() {
         return;
       }
 
-      if (err.response?.status === 403) {
+      if (
+        err.response?.status === 403
+      ) {
         alert(
           err.response?.data?.message ||
             "Only administrators can verify payments."
@@ -521,8 +676,8 @@ function AdminDashboard() {
           </h2>
 
           <p>
-            Please wait while we load customer
-            bookings.
+            Please wait while we load
+            customer bookings.
           </p>
         </div>
       </div>
@@ -545,9 +700,7 @@ function AdminDashboard() {
             Unable to Load Orders
           </h2>
 
-          <p>
-            {error}
-          </p>
+          <p>{error}</p>
 
           <div className="error-actions">
             <button
@@ -576,40 +729,46 @@ function AdminDashboard() {
   // STATISTICS
   // ============================================================
 
-  const pendingCount = bookings.filter(
-    (booking) =>
-      String(
-        booking.status || "Pending"
-      ).toLowerCase() === "pending"
-  ).length;
+  const pendingCount =
+    bookings.filter(
+      (booking) =>
+        String(
+          booking.status || "Pending"
+        ).toLowerCase() === "pending"
+    ).length;
 
-  const confirmedCount = bookings.filter(
-    (booking) =>
-      String(
-        booking.status || ""
-      ).toLowerCase() === "confirmed"
-  ).length;
+  const confirmedCount =
+    bookings.filter(
+      (booking) =>
+        String(
+          booking.status || ""
+        ).toLowerCase() === "confirmed"
+    ).length;
 
-  const inProgressCount = bookings.filter(
-    (booking) =>
-      String(
-        booking.status || ""
-      ).toLowerCase() === "in progress"
-  ).length;
+  const inProgressCount =
+    bookings.filter(
+      (booking) =>
+        String(
+          booking.status || ""
+        ).toLowerCase() ===
+        "in progress"
+    ).length;
 
-  const completedCount = bookings.filter(
-    (booking) =>
-      String(
-        booking.status || ""
-      ).toLowerCase() === "completed"
-  ).length;
+  const completedCount =
+    bookings.filter(
+      (booking) =>
+        String(
+          booking.status || ""
+        ).toLowerCase() === "completed"
+    ).length;
 
-  const paidCount = bookings.filter(
-    (booking) =>
-      String(
-        getPaymentStatus(booking)
-      ).toLowerCase() === "paid"
-  ).length;
+  const paidCount =
+    bookings.filter(
+      (booking) =>
+        String(
+          getPaymentStatus(booking)
+        ).toLowerCase() === "paid"
+    ).length;
 
   const awaitingPaymentCount =
     bookings.filter(
@@ -620,23 +779,29 @@ function AdminDashboard() {
         "awaiting verification"
     ).length;
 
-  const totalRevenue = bookings.reduce(
-    (total, booking) =>
-      total +
-      Number(booking.total || 0),
-    0
-  );
+  const totalRevenue =
+    bookings.reduce(
+      (total, booking) =>
+        total +
+        Number(
+          booking.total || 0
+        ),
+      0
+    );
 
   // ============================================================
-  // MEMOIZED COUNTS
+  // PAYMENT VERIFICATION COUNT
   // ============================================================
 
-  const paymentVerificationCount = bookings.filter(
-  (booking) =>
-    String(getPaymentStatus(booking)).toLowerCase() ===
-      "awaiting verification" &&
-    !!getTransactionCode(booking)
-).length;
+  const paymentVerificationCount =
+    bookings.filter(
+      (booking) =>
+        String(
+          getPaymentStatus(booking)
+        ).toLowerCase() ===
+          "awaiting verification" &&
+        !!getTransactionCode(booking)
+    ).length;
 
   // ============================================================
   // DASHBOARD
@@ -699,15 +864,11 @@ function AdminDashboard() {
 
       <div className="admin-stats">
 
-        {/* TOTAL ORDERS */}
-
         <div className="stat-card">
           <span>📦</span>
 
           <div>
-            <p>
-              Total Orders
-            </p>
+            <p>Total Orders</p>
 
             <h2>
               {bookings.length}
@@ -715,15 +876,11 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* PENDING */}
-
         <div className="stat-card">
           <span>⏳</span>
 
           <div>
-            <p>
-              Pending
-            </p>
+            <p>Pending</p>
 
             <h2>
               {pendingCount}
@@ -731,15 +888,11 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* CONFIRMED */}
-
         <div className="stat-card">
           <span>✅</span>
 
           <div>
-            <p>
-              Confirmed
-            </p>
+            <p>Confirmed</p>
 
             <h2>
               {confirmedCount}
@@ -747,15 +900,11 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* IN PROGRESS */}
-
         <div className="stat-card">
           <span>🔧</span>
 
           <div>
-            <p>
-              In Progress
-            </p>
+            <p>In Progress</p>
 
             <h2>
               {inProgressCount}
@@ -763,15 +912,11 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* COMPLETED */}
-
         <div className="stat-card">
           <span>🎉</span>
 
           <div>
-            <p>
-              Completed
-            </p>
+            <p>Completed</p>
 
             <h2>
               {completedCount}
@@ -779,23 +924,17 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* PAID */}
-
         <div className="stat-card">
           <span>💳</span>
 
           <div>
-            <p>
-              Paid
-            </p>
+            <p>Paid</p>
 
             <h2>
               {paidCount}
             </h2>
           </div>
         </div>
-
-        {/* AWAITING VERIFICATION */}
 
         <div className="stat-card">
           <span>🧾</span>
@@ -811,15 +950,11 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* REVENUE */}
-
         <div className="stat-card">
           <span>💰</span>
 
           <div>
-            <p>
-              Total Revenue
-            </p>
+            <p>Total Revenue</p>
 
             <h2>
               Ksh{" "}
@@ -834,27 +969,33 @@ function AdminDashboard() {
           PAYMENT ALERT
           ====================================================== */}
 
-      {paymentVerificationCount > 0 && (
+      {paymentVerificationCount >
+        0 && (
         <div className="payment-alert">
+
           <div className="payment-alert-icon">
             🧾
           </div>
 
           <div>
             <strong>
-              {paymentVerificationCount} M-PESA
-              payment
-              {paymentVerificationCount === 1
+              {paymentVerificationCount}{" "}
+              M-PESA payment
+              {paymentVerificationCount ===
+              1
                 ? ""
-                : "s"} awaiting verification
+                : "s"} awaiting
+              verification
             </strong>
 
             <p>
-              Check the transaction codes below
-              against your M-PESA Till statement
+              Check the transaction
+              codes below against your
+              M-PESA Till statement
               before approving payments.
             </p>
           </div>
+
         </div>
       )}
 
@@ -904,8 +1045,8 @@ function AdminDashboard() {
             </h3>
 
             <p>
-              Customer bookings will appear
-              here.
+              Customer bookings will
+              appear here.
             </p>
 
           </div>
@@ -921,44 +1062,25 @@ function AdminDashboard() {
             <table className="orders-table">
 
               <thead>
-
                 <tr>
 
-                  <th>
-                    Order
-                  </th>
+                  <th>Order</th>
 
-                  <th>
-                    Customer
-                  </th>
+                  <th>Customer</th>
 
-                  <th>
-                    Phone
-                  </th>
+                  <th>Phone</th>
 
-                  <th>
-                    Service
-                  </th>
+                  <th>Service</th>
 
-                  <th>
-                    Date
-                  </th>
+                  <th>Date</th>
 
-                  <th>
-                    Time
-                  </th>
+                  <th>Time</th>
 
-                  <th>
-                    Location
-                  </th>
+                  <th>Location</th>
 
-                  <th>
-                    Amount
-                  </th>
+                  <th>Amount</th>
 
-                  <th>
-                    Payment
-                  </th>
+                  <th>Payment</th>
 
                   <th>
                     Transaction Code
@@ -973,7 +1095,6 @@ function AdminDashboard() {
                   </th>
 
                 </tr>
-
               </thead>
 
               <tbody>
@@ -1030,25 +1151,28 @@ function AdminDashboard() {
 
                     return (
                       <tr
-                        key={
-                          booking.id
-                        }
+                        key={booking.id}
                       >
 
                         {/* ORDER */}
 
                         <td>
                           <strong>
-                            #
-                            {
-                              booking.id
-                            }
+                            #{booking.id}
                           </strong>
 
                           {booking.createdAt && (
                             <small>
                               {
                                 booking.createdAt
+                              }
+                            </small>
+                          )}
+
+                          {booking.created_at && (
+                            <small>
+                              {
+                                booking.created_at
                               }
                             </small>
                           )}
@@ -1128,25 +1252,30 @@ function AdminDashboard() {
                               </small>
                             )}
 
+                            {booking.cleaning_type && (
+                              <small>
+                                Cleaning:{" "}
+                                {
+                                  booking.cleaning_type
+                                }
+                              </small>
+                            )}
+
                           </div>
                         </td>
 
                         {/* DATE */}
 
                         <td>
-                          {
-                            booking.date ||
-                            "-"
-                          }
+                          {booking.date ||
+                            "-" }
                         </td>
 
                         {/* TIME */}
 
                         <td>
-                          {
-                            booking.time ||
-                            "-"
-                          }
+                          {booking.time ||
+                            "-" }
                         </td>
 
                         {/* LOCATION */}
@@ -1166,6 +1295,15 @@ function AdminDashboard() {
                                 House:{" "}
                                 {
                                   booking.houseNumber
+                                }
+                              </small>
+                            )}
+
+                            {booking.house_number && (
+                              <small>
+                                House:{" "}
+                                {
+                                  booking.house_number
                                 }
                               </small>
                             )}
@@ -1363,6 +1501,143 @@ function AdminDashboard() {
               </tbody>
 
             </table>
+
+          </div>
+
+        )}
+
+      </div>
+
+      {/* ======================================================
+          CUSTOMER FEEDBACK
+          ====================================================== */}
+
+      <div className="feedback-admin-section">
+
+        <div className="feedback-admin-header">
+
+          <div>
+            <h2>
+              Customer Feedback
+            </h2>
+
+            <p>
+              Read feedback and
+              suggestions from your
+              customers.
+            </p>
+          </div>
+
+          <span className="feedback-count">
+            {feedback.length}{" "}
+            {feedback.length === 1
+              ? "Message"
+              : "Messages"}
+          </span>
+
+        </div>
+
+        {/* FEEDBACK LOADING */}
+
+        {feedbackLoading ? (
+
+          <div className="feedback-admin-message">
+
+            <div className="loading-spinner"></div>
+
+            <p>
+              Loading customer feedback...
+            </p>
+
+          </div>
+
+        ) : feedbackError ? (
+
+          /* FEEDBACK ERROR */
+
+          <div className="feedback-admin-error">
+
+            <p>
+              {feedbackError}
+            </p>
+
+          </div>
+
+        ) : feedback.length === 0 ? (
+
+          /* NO FEEDBACK */
+
+          <div className="feedback-admin-empty">
+
+            <div className="feedback-empty-icon">
+              💬
+            </div>
+
+            <h3>
+              No Feedback Yet
+            </h3>
+
+            <p>
+              Customer feedback will
+              appear here when someone
+              submits the feedback form.
+            </p>
+
+          </div>
+
+        ) : (
+
+          /* FEEDBACK LIST */
+
+          <div className="feedback-list">
+
+            {feedback.map((item) => (
+
+              <div
+                className="feedback-card"
+                key={item.id}
+              >
+
+                <div className="feedback-card-header">
+
+                  <div>
+                    <h3>
+                      {item.name ||
+                        "Customer"}
+                    </h3>
+
+                    {item.email && (
+                      <a
+                        href={`mailto:${item.email}`}
+                        className="feedback-email"
+                      >
+                        {item.email}
+                      </a>
+                    )}
+                  </div>
+
+                  <span className="feedback-date">
+                    {item.created_at
+                      ? new Date(
+                          item.created_at
+                        ).toLocaleString()
+                      : item.createdAt
+                      ? new Date(
+                          item.createdAt
+                        ).toLocaleString()
+                      : "Date unavailable"}
+                  </span>
+
+                </div>
+
+                <div className="feedback-message">
+                  {item.message ||
+                    "No message provided."}
+                </div>
+
+              </div>
+
+            ))}
 
           </div>
 
