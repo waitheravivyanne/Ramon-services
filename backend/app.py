@@ -5983,6 +5983,77 @@ def mpesa_stkpush():
 
         }), 500
 
+# =====================================================
+# ADMIN - DELETE COMPLETED BOOKING
+# =====================================================
+
+@app.route(
+    "/admin/bookings/<int:booking_id>",
+    methods=["DELETE"]
+)
+@jwt_required()
+def delete_booking(booking_id):
+
+    try:
+
+        admin, error = admin_required()
+
+        if error:
+            return error
+
+        booking = db.session.get(
+            Booking,
+            booking_id
+        )
+
+        if not booking:
+            return jsonify({
+                "message":
+                    "Booking not found."
+            }), 404
+
+        # ONLY COMPLETED BOOKINGS CAN BE DELETED
+        if str(
+            booking.status or ""
+        ).strip().lower() != "completed":
+
+            return jsonify({
+                "message":
+                    "Only completed bookings can be deleted."
+            }), 400
+
+        deleted_id = booking.id
+
+        db.session.delete(booking)
+        db.session.commit()
+
+        print(
+            f"COMPLETED BOOKING DELETED: "
+            f"{deleted_id} by {admin.email}"
+        )
+
+        return jsonify({
+            "message":
+                "Completed booking deleted successfully.",
+            "bookingId":
+                deleted_id
+        }), 200
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        print(
+            "DELETE BOOKING ERROR:",
+            str(e)
+        )
+
+        return jsonify({
+            "message":
+                "Failed to delete booking.",
+            "error":
+                str(e)
+        }), 500
 
 # ============================================================
 # M-PESA CALLBACK
@@ -6611,96 +6682,6 @@ def update_booking_status(
 
             "message":
                 "Failed to update booking status.",
-
-            "error":
-                str(e),
-
-        }), 500
-
-
-# ============================================================
-# ADMIN - DELETE BOOKING
-# ============================================================
-
-@app.route(
-    "/admin/bookings/<int:booking_id>",
-    methods=["DELETE"]
-)
-@jwt_required()
-def delete_booking(
-    booking_id
-):
-
-    try:
-
-        admin, error = admin_required()
-
-
-        if error:
-
-            return error
-
-
-        booking = db.session.get(
-            Booking,
-            booking_id
-        )
-
-
-        if not booking:
-
-            return jsonify({
-
-                "message":
-                    "Booking not found.",
-
-            }), 404
-
-
-        booking_id_deleted = booking.id
-
-
-        db.session.delete(
-            booking
-        )
-
-
-        db.session.commit()
-
-
-        print(
-            f"BOOKING DELETED: "
-            f"{booking_id_deleted} "
-            f"by {admin.email}"
-        )
-
-
-        return jsonify({
-
-            "message":
-                "Booking deleted successfully.",
-
-            "bookingId":
-                booking_id_deleted,
-
-        }), 200
-
-
-    except Exception as e:
-
-        db.session.rollback()
-
-
-        print(
-            "DELETE BOOKING ERROR:",
-            e
-        )
-
-
-        return jsonify({
-
-            "message":
-                "Failed to delete booking.",
 
             "error":
                 str(e),

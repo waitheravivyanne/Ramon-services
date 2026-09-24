@@ -494,6 +494,90 @@ function AdminDashboard() {
   };
 
   // ============================================================
+// DELETE COMPLETED BOOKING
+// ============================================================
+
+const deleteCompletedBooking = async (bookingId) => {
+  const booking = bookings.find(
+    (item) => item.id === bookingId
+  );
+
+  if (!booking) {
+    alert("Booking could not be found.");
+    return;
+  }
+
+  const status = String(
+    booking.status || ""
+  ).toLowerCase();
+
+  if (status !== "completed") {
+    alert(
+      "Only completed bookings can be deleted."
+    );
+    return;
+  }
+
+  const confirmed = window.confirm(
+    `Are you sure you want to permanently delete booking #${bookingId}?\n\n` +
+    "This action cannot be undone."
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    await api.delete(
+      `/admin/bookings/${bookingId}`
+    );
+
+    setBookings(
+      (currentBookings) =>
+        currentBookings.filter(
+          (item) => item.id !== bookingId
+        )
+    );
+
+    alert(
+      `Booking #${bookingId} was deleted successfully.`
+    );
+
+  } catch (err) {
+    console.error(
+      "DELETE BOOKING ERROR:",
+      err
+    );
+
+    if (err.response?.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("role");
+
+      alert(
+        "Your administrator session has expired. Please log in again."
+      );
+
+      navigate("/login");
+      return;
+    }
+
+    if (err.response?.status === 403) {
+      alert(
+        err.response?.data?.message ||
+        "Only administrators can delete bookings."
+      );
+      return;
+    }
+
+    alert(
+      err.response?.data?.message ||
+      "Failed to delete the completed booking."
+    );
+  }
+};
+
+  // ============================================================
   // VERIFY / REJECT M-PESA PAYMENT
   // ============================================================
 
@@ -1449,49 +1533,61 @@ function AdminDashboard() {
 
                         {/* ORDER STATUS */}
 
-                        <td>
+<td>
 
-                          <select
-                            className={`booking-status-select ${getBookingStatusClass(
-                              bookingStatus
-                            )}`}
-                            value={
-                              bookingStatus
-                            }
-                            onChange={(
-                              event
-                            ) =>
-                              updateStatus(
-                                booking.id,
-                                event.target
-                                  .value
-                              )
-                            }
-                          >
+  <select
+    className={`booking-status-select ${getBookingStatusClass(
+      bookingStatus
+    )}`}
+    value={bookingStatus}
+    onChange={(event) =>
+      updateStatus(
+        booking.id,
+        event.target.value
+      )
+    }
+  >
 
-                            <option value="Pending">
-                              Pending
-                            </option>
+    <option value="Pending">
+      Pending
+    </option>
 
-                            <option value="Confirmed">
-                              Confirmed
-                            </option>
+    <option value="Confirmed">
+      Confirmed
+    </option>
 
-                            <option value="In Progress">
-                              In Progress
-                            </option>
+    <option value="In Progress">
+      In Progress
+    </option>
 
-                            <option value="Completed">
-                              Completed
-                            </option>
+    <option value="Completed">
+      Completed
+    </option>
 
-                            <option value="Cancelled">
-                              Cancelled
-                            </option>
+    <option value="Cancelled">
+      Cancelled
+    </option>
 
-                          </select>
+  </select>
 
-                        </td>
+  {String(bookingStatus).toLowerCase() ===
+    "completed" && (
+
+    <button
+      type="button"
+      className="delete-booking-btn"
+      onClick={() =>
+        deleteCompletedBooking(
+          booking.id
+        )
+      }
+    >
+      🗑 Delete
+    </button>
+
+  )}
+
+</td>
 
                       </tr>
                     );

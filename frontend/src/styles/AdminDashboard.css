@@ -813,3 +813,37 @@
     font-size: 14px;
   }
 }
+
+/* =========================================================
+   DELETE COMPLETED BOOKING
+========================================================= */
+
+.delete-booking-btn {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 7px;
+  background: #c62828;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.delete-booking-btn:hover {
+  background: #a91f1f;
+}
+
+.delete-booking-btn:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 700px) {
+  .delete-booking-btn {
+    padding: 9px 10px;
+    font-size: 12px;
+  }
+}
