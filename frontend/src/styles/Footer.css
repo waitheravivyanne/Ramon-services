@@ -1,90 +1,86 @@
-.footer{
+/* =====================================================
+   FOOTER - ORANGE / WHITE / BLACK THEME
+===================================================== */
 
-    background:#0f172a;
-
-    color:white;
-
-    padding-top:60px;
-
-    margin-top:80px;
-
+.footer {
+    background: #000000;
+    color: #ffffff;
+    padding-top: 60px;
+    margin-top: 80px;
+    border-top: 4px solid #f97316;
 }
 
-.footer-container{
+.footer-container {
+    width: 90%;
+    max-width: 1300px;
+    margin: auto;
 
-    width:90%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 
-    max-width:1300px;
-
-    margin:auto;
-
-    display:grid;
-
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-
-    gap:40px;
-
-    padding-bottom:50px;
-
+    gap: 40px;
+    padding-bottom: 50px;
 }
 
-.footer-section h2{
+/* =====================================================
+   FOOTER HEADINGS
+===================================================== */
 
-    margin-bottom:20px;
-
-    color:#38bdf8;
-
+.footer-section h2 {
+    margin-bottom: 20px;
+    color: #f97316;
+    font-size: 1.6rem;
 }
 
-.footer-section h3{
-
-    margin-bottom:20px;
-
-    color:#38bdf8;
-
+.footer-section h3 {
+    margin-bottom: 20px;
+    color: #f97316;
+    font-size: 1.15rem;
 }
 
-.footer-section p{
+/* =====================================================
+   FOOTER TEXT
+===================================================== */
 
-    line-height:1.8;
-
-    color:#cbd5e1;
-
+.footer-section p {
+    line-height: 1.8;
+    color: #e5e5e5;
+    max-width: 420px;
 }
 
-.footer-section ul{
+/* =====================================================
+   FOOTER LINKS
+===================================================== */
 
-    list-style:none;
-
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-.footer-section ul li{
-
-    margin-bottom:14px;
-
+.footer-section ul li {
+    margin-bottom: 14px;
 }
 
-.footer-section ul li a{
+.footer-section ul li a {
+    text-decoration: none;
+    color: #ffffff;
 
-    text-decoration:none;
+    transition:
+        color 0.3s ease,
+        transform 0.3s ease;
 
-    color:#cbd5e1;
-
-    transition:.3s;
-
+    display: inline-block;
 }
 
-.footer-section ul li a:hover{
-
-    color:#38bdf8;
-
-    padding-left:8px;
-
+.footer-section ul li a:hover {
+    color: #f97316;
+    transform: translateX(8px);
 }
 
-/* ===========================
+/* =====================================================
    SOCIAL ICONS
-=========================== */
+===================================================== */
 
 .social-icons {
     display: flex;
@@ -100,60 +96,165 @@
     width: fit-content;
 
     text-decoration: none;
-    color: #cbd5e1;
+    color: #ffffff;
 
-    transition: all 0.3s ease;
+    transition:
+        color 0.3s ease,
+        transform 0.3s ease;
 }
 
-/* ===========================
-   ORIGINAL BRAND COLORS
-=========================== */
-
-.social-icons a.facebook:hover {
-    color: #1877F2;
-}
-
-.social-icons a.instagram:hover {
-    color: #E4405F;
-}
-
-.social-icons a.twitter:hover {
-    color: #282f34;
-}
-
-.social-icons a.whatsapp:hover {
-    color: #25D366;
-}
-
-.social-icons a.youtube:hover {
-    color: #FF0000;
-}
-
-.social-icons a.linkedin:hover {
-    color: #0A66C2;
-}
-
-.social-icons a.tiktok:hover {
-    color: #000000;
-}
-
-/* ===========================
-   ICON HOVER EFFECT
-=========================== */
+/* =====================================================
+   SOCIAL ICON HOVER
+   All icons use the same orange theme
+===================================================== */
 
 .social-icons a:hover {
+    color: #f97316;
     transform: translateX(8px) scale(1.03);
 }
 
-/* ===========================
+/* =====================================================
    ICON SIZE
-=========================== */
+===================================================== */
 
 .social-icons svg {
     font-size: 22px;
-    transition: transform 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        color 0.3s ease;
 }
 
 .social-icons a:hover svg {
+    color: #f97316;
     transform: scale(1.15);
+}
+
+/* =====================================================
+   FOOTER BOTTOM
+===================================================== */
+
+.footer-bottom {
+    border-top: 1px solid #333333;
+
+    padding: 22px 20px;
+
+    text-align: center;
+
+    color: #bdbdbd;
+
+    font-size: 0.9rem;
+}
+
+.footer-bottom span {
+    color: #f97316;
+}
+
+/* =====================================================
+   FOOTER BUTTONS
+   If feedback/contact buttons exist
+===================================================== */
+
+.footer button {
+    background: #f97316;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 8px;
+
+    padding: 11px 20px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.3s ease,
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.footer button:hover {
+    background: #ea580c;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 20px rgba(249, 115, 22, 0.25);
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 768px) {
+
+    .footer {
+        padding-top: 45px;
+        margin-top: 60px;
+    }
+
+    .footer-container {
+        width: 92%;
+
+        grid-template-columns: 1fr;
+
+        gap: 30px;
+
+        padding-bottom: 35px;
+    }
+
+    .footer-section {
+        text-align: center;
+    }
+
+    .footer-section p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .social-icons {
+        align-items: center;
+    }
+
+    .social-icons a {
+        justify-content: center;
+    }
+}
+
+/* =====================================================
+   SMALL PHONES
+===================================================== */
+
+@media (max-width: 480px) {
+
+    .footer {
+        padding-top: 40px;
+        margin-top: 50px;
+    }
+
+    .footer-container {
+        width: 94%;
+        gap: 25px;
+    }
+
+    .footer-section h2 {
+        font-size: 1.4rem;
+    }
+
+    .footer-section h3 {
+        font-size: 1.05rem;
+    }
+
+    .footer-section p {
+        font-size: 0.92rem;
+        line-height: 1.7;
+    }
+
+    .footer-section ul li {
+        margin-bottom: 11px;
+    }
+
+    .footer-bottom {
+        padding: 18px 15px;
+        font-size: 0.82rem;
+    }
 }

@@ -13,27 +13,27 @@ body{
 
 /* Hero Section */
 
-.home{
+.home {
+    min-height: 100vh;
 
-    min-height:100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    text-align: center;
 
-    text-align:center;
-
-    padding:40px;
+    padding: 40px;
 
     background:
-    linear-gradient(rgba(15,23,42,.75),
-    rgba(15,23,42,.75)),
-    url("https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1500&q=80");
+        linear-gradient(
+            rgba(15, 23, 42, 0.75),
+            rgba(15, 23, 42, 0.75)
+        ),
+        url("/images/ramons-people-and-brand.png");
 
-    background-size:cover;
-    background-position:center;
-    background-attachment:fixed;
-
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 .hero{
@@ -88,7 +88,7 @@ body{
 
     border:none;
 
-    padding:16px 35px;
+    padding:32px 35px;
 
     border-radius:50px;
 
@@ -104,15 +104,15 @@ body{
 
 .primary-btn{
 
-    background:#2563eb;
+    background:#d05c0f;
 
-    color:white;
+    color:rgb(12, 8, 8);
 
 }
 
 .primary-btn:hover{
 
-    background:#1d4ed8;
+    background:#f6835d;
 
     transform:translateY(-5px);
 
@@ -124,7 +124,7 @@ body{
 
 .secondary-btn{
 
-    background:white;
+    background:#d05c0f;
 
     color:#0f172a;
 
@@ -132,7 +132,7 @@ body{
 
 .secondary-btn:hover{
 
-    background:#38bdf8;
+    background:#f6835d;
 
     color:white;
 

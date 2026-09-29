@@ -6,7 +6,7 @@
     margin: 40px auto;
     padding: 35px;
 
-    background: white;
+    background: rgb(247, 226, 204);
 
     border-radius: 20px;
 
@@ -26,7 +26,7 @@
 
     text-align: center;
 
-    color: #16a34a;
+    color: #1a1e1c;
 
     margin-bottom: 25px;
 
@@ -142,8 +142,8 @@
     background:
     linear-gradient(
         135deg,
-        #2563eb,
-        #1d4ed8
+        #f38b04,
+        #081436
     );
 
 

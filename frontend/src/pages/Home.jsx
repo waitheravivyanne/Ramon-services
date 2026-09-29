@@ -7,7 +7,7 @@ function Home() {
 
       <div className="hero">
 
-        <h1>
+        {/* <h1>
           Find Trusted Service Providers Near You
         </h1>
 
@@ -15,7 +15,7 @@ function Home() {
           Connect with verified professionals for cleaning, plumbing,
           electrical work, painting, gardening, repairs, moving services,
           and much more—all in one place.
-        </p>
+        </p> */}
 
         <div className="hero-buttons">
 

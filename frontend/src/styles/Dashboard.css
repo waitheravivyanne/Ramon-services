@@ -1,419 +1,1365 @@
-/* =========================================================
-   RAMON'S MARKETPLACE - CUSTOMER DASHBOARD
-   ========================================================= */
+/* =========================================
+   DASHBOARD
+========================================= */
 
 .dashboard {
-  min-height: calc(100vh - 80px);
-  padding: 50px 25px 80px;
+  min-height: 100vh;
+
+  padding: 35px 30px 60px;
+
   background:
-    radial-gradient(circle at top right, rgba(99, 102, 241, 0.10), transparent 35%),
-    radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.08), transparent 35%),
-    #f6f8fc;
-  color: #172033;
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f8f8f8 50%,
+      #f3f3f3 100%
+    );
 }
 
-/* =========================================================
-   DASHBOARD HEADER
-   ========================================================= */
 
-.dashboard-header {
-  max-width: 1150px;
-  margin: 0 auto 45px;
-  text-align: center;
-}
+/* =========================================
+   HERO
+========================================= */
 
-.dashboard-header h1 {
-  margin: 0 0 12px;
-  font-size: clamp(30px, 5vw, 46px);
-  font-weight: 800;
-  letter-spacing: -1px;
-  color: #111827;
-}
+.dashboard-hero {
+  max-width: 1450px;
+  min-height: 410px;
 
-.dashboard-header p {
-  max-width: 650px;
-  margin: 0 auto;
-  color: #667085;
-  font-size: 16px;
-  line-height: 1.7;
-}
+  margin: 0 auto 35px;
 
-/* =========================================================
-   DASHBOARD CARDS CONTAINER
-   ========================================================= */
-
-.dashboard-cards {
-  max-width: 1150px;
-  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
 
-/* =========================================================
-   DASHBOARD CARD
-   ========================================================= */
+  grid-template-columns: 1.1fr 0.9fr;
 
-.dashboard-card {
-  position: relative;
-  min-height: 285px;
-  display: flex;
-  flex-direction: column;
-  padding: 32px;
-  box-sizing: border-box;
+  background: #ffffff;
 
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid #e6eaf0;
   border-radius: 22px;
-
-  text-decoration: none;
-  color: inherit;
 
   overflow: hidden;
 
   box-shadow:
-    0 10px 30px rgba(15, 23, 42, 0.06);
+    0 12px 35px rgba(0, 0, 0, 0.10);
 
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    border-color 0.25s ease;
-}
-
-/* Decorative background shape */
-
-.dashboard-card::before {
-  content: "";
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  right: -65px;
-  top: -65px;
-
-  border-radius: 50%;
-  background: #eef2ff;
-
-  transition: transform 0.3s ease;
-}
-
-.dashboard-card::after {
-  content: "";
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  left: -40px;
-  bottom: -40px;
-
-  border-radius: 50%;
-  background: #f0fdf4;
-
-  transition: transform 0.3s ease;
-}
-
-/* =========================================================
-   CARD HOVER
-   ========================================================= */
-
-.dashboard-card:hover {
-  transform: translateY(-8px);
-
-  border-color: #c7d2fe;
-
-  box-shadow:
-    0 18px 40px rgba(15, 23, 42, 0.12);
-}
-
-.dashboard-card:hover::before {
-  transform: scale(1.25);
-}
-
-.dashboard-card:hover::after {
-  transform: scale(1.3);
-}
-
-/* =========================================================
-   CARD ICON
-   ========================================================= */
-
-.dashboard-card h2 {
   position: relative;
-  z-index: 1;
+}
 
-  width: 68px;
-  height: 68px;
+
+/* =========================================
+   HERO CONTENT
+========================================= */
+
+.dashboard-hero-content {
+  padding: 55px;
 
   display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  position: relative;
+
+  z-index: 5;
+}
+
+
+/* =========================================
+   BRAND
+========================================= */
+
+.dashboard-brand {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 50px;
+}
+
+
+.brand-icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+
   align-items: center;
   justify-content: center;
 
-  margin: 0 0 25px;
+  background: #f97316;
 
-  border-radius: 18px;
+  color: #ffffff;
 
-  background: #eef2ff;
+  border-radius: 12px;
 
-  font-size: 32px;
+  font-size: 28px;
 
-  box-shadow:
-    0 8px 18px rgba(79, 70, 229, 0.10);
-
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
-}
-
-.dashboard-card:hover h2 {
-  transform: scale(1.08) rotate(-3deg);
+  font-weight: 800;
 
   box-shadow:
-    0 12px 25px rgba(79, 70, 229, 0.16);
+    0 8px 18px rgba(249, 115, 22, 0.25);
 }
 
-/* =========================================================
-   CARD TITLE
-   ========================================================= */
 
-.dashboard-card h3 {
-  position: relative;
-  z-index: 1;
+.dashboard-brand div {
+  display: flex;
 
-  margin: 0 0 10px;
+  flex-direction: column;
 
-  color: #111827;
-
-  font-size: 21px;
-  font-weight: 750;
-
-  letter-spacing: -0.3px;
+  line-height: 1.05;
 }
 
-/* =========================================================
-   CARD DESCRIPTION
-   ========================================================= */
 
-.dashboard-card p {
-  position: relative;
-  z-index: 1;
+.dashboard-brand strong {
+  font-size: 24px;
 
+  color: #111111;
+
+  font-weight: 800;
+}
+
+
+.dashboard-brand span {
+  font-size: 24px;
+
+  color: #f97316;
+
+  font-weight: 800;
+}
+
+
+/* =========================================
+   HERO TITLE
+========================================= */
+
+.dashboard-hero h1 {
+  margin: 0 0 18px;
+
+  color: #111111;
+
+  font-size: 48px;
+
+  line-height: 1.1;
+
+  font-weight: 800;
+
+  letter-spacing: -1px;
+}
+
+
+.dashboard-hero h1 span {
+  color: #f97316;
+}
+
+
+.dashboard-hero p {
   margin: 0;
 
-  max-width: 290px;
+  max-width: 600px;
 
-  color: #667085;
+  color: #555555;
 
-  font-size: 14px;
-  line-height: 1.65;
+  font-size: 20px;
+
+  line-height: 1.6;
 }
 
-/* =========================================================
-   CARD ACTION
-   ========================================================= */
 
-.dashboard-card-action {
+/* =========================================
+   CODE-GENERATED HERO VISUAL
+========================================= */
+
+.dashboard-hero-image {
   position: relative;
-  z-index: 1;
 
-  display: inline-flex;
+  min-height: 410px;
+
+  overflow: hidden;
+
+  display: flex;
+
   align-items: center;
 
-  margin-top: auto;
-  padding-top: 25px;
+  justify-content: center;
 
-  color: #4f46e5;
+  background:
+    linear-gradient(
+      135deg,
+      #fff4eb 0%,
+      #ffd9bd 45%,
+      #f97316 100%
+    );
+}
 
-  font-size: 14px;
-  font-weight: 750;
+
+/* =========================================
+   ORANGE HERO BACKGROUND
+========================================= */
+
+.hero-orange-bg {
+  position: absolute;
+
+  inset: 0;
+
+  overflow: hidden;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+/* =========================================
+   LARGE DECORATIVE CIRCLES
+========================================= */
+
+.hero-circle {
+  position: absolute;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+
+.circle-one {
+  width: 310px;
+  height: 310px;
+
+  right: -100px;
+  top: -100px;
+
+  background:
+    rgba(255, 255, 255, 0.20);
+}
+
+
+.circle-two {
+  width: 230px;
+  height: 230px;
+
+  left: -80px;
+  bottom: -100px;
+
+  background:
+    rgba(255, 255, 255, 0.16);
+}
+
+
+.circle-three {
+  width: 120px;
+  height: 120px;
+
+  right: 30px;
+  bottom: 25px;
+
+  border: 2px solid rgba(255, 255, 255, 0.35);
+
+  background: transparent;
+}
+
+
+/* =========================================
+   HOUSE
+========================================= */
+
+.hero-house {
+  position: absolute;
+
+  left: 50%;
+
+  top: 50%;
+
+  transform:
+    translate(-50%, -60%);
+
+  width: 180px;
+
+  height: 145px;
+
+  background: #ffffff;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 18px 35px rgba(0, 0, 0, 0.16);
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: center;
+
+  padding-bottom: 20px;
+
+  font-size: 85px;
+
+  z-index: 3;
+}
+
+
+/* =========================================
+   HOUSE ROOF EFFECT
+========================================= */
+
+.hero-house::before {
+  content: "";
+
+  position: absolute;
+
+  top: -55px;
+
+  left: 10px;
+
+  width: 0;
+
+  height: 0;
+
+  border-left: 80px solid transparent;
+
+  border-right: 80px solid transparent;
+
+  border-bottom: 65px solid #111111;
+}
+
+
+/* =========================================
+   HOUSE WINDOW
+========================================= */
+
+.hero-house::after {
+  content: "";
+
+  position: absolute;
+
+  width: 45px;
+
+  height: 45px;
+
+  top: 38px;
+
+  left: 25px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 46%,
+      #ffffff 46%,
+      #ffffff 54%,
+      transparent 54%
+    ),
+    linear-gradient(
+      0deg,
+      transparent 46%,
+      #ffffff 46%,
+      #ffffff 54%,
+      transparent 54%
+    );
+
+  background-color: #f97316;
+
+  border-radius: 6px;
+
+  box-shadow:
+    75px 0 0 -1px #f97316;
+}
+
+
+/* =========================================
+   WORKER
+========================================= */
+
+.hero-worker {
+  position: absolute;
+
+  right: 12%;
+
+  bottom: 35px;
+
+  z-index: 5;
+
+  width: 90px;
+
+  height: 90px;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 58px;
+
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.18);
+
+  animation:
+    heroFloat 4s ease-in-out infinite;
+}
+
+
+/* =========================================
+   SERVICE TOOLS
+========================================= */
+
+.hero-tools {
+  position: absolute;
+
+  left: 9%;
+
+  bottom: 40px;
+
+  z-index: 6;
+
+  display: flex;
+
+  gap: 10px;
+}
+
+
+.hero-tools span {
+  width: 48px;
+
+  height: 48px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: #ffffff;
+
+  border-radius: 14px;
+
+  font-size: 25px;
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.14);
+
+  animation:
+    toolFloat 3s ease-in-out infinite;
+}
+
+
+.hero-tools span:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+
+.hero-tools span:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+
+.hero-tools span:nth-child(4) {
+  animation-delay: 0.9s;
+}
+
+
+/* =========================================
+   SERVICE LABEL
+========================================= */
+
+.hero-service-label {
+  position: absolute;
+
+  right: 8%;
+
+  top: 35px;
+
+  z-index: 8;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+
+  padding: 13px 18px;
+
+  background: #111111;
+
+  color: #ffffff;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.18);
+}
+
+
+.hero-service-label strong {
+  font-size: 15px;
+
+  color: #ffffff;
+}
+
+
+.hero-service-label span {
+  font-size: 12px;
+
+  color: #ffb17a;
+}
+
+
+/* =========================================
+   HERO VISUAL ANIMATION
+========================================= */
+
+@keyframes heroFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+
+@keyframes toolFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+
+/* =========================================
+   ORANGE HERO DECORATION
+========================================= */
+
+.dashboard-hero::after {
+  content: "";
+
+  position: absolute;
+
+  width: 180px;
+
+  height: 90px;
+
+  left: -45px;
+
+  bottom: -45px;
+
+  background: #f97316;
+
+  border-radius: 50%;
+
+  z-index: 10;
+}
+
+
+/* =========================================
+   DASHBOARD CARDS
+========================================= */
+
+.dashboard-cards {
+  max-width: 1450px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 30px;
+}
+
+
+/* =========================================
+   CARD
+========================================= */
+
+.dashboard-card {
+  position: relative;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  background: #ffffff;
+
+  padding: 32px 30px 30px;
+
+  min-height: 390px;
+
+  border-radius: 20px;
+
+  border: 1px solid #e5e5e5;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.08);
+
+  overflow: hidden;
 
   transition:
-    color 0.2s ease,
-    transform 0.2s ease;
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
+
+
+/* =========================================
+   ORANGE CARD BOTTOM
+========================================= */
+
+.dashboard-card::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+
+  bottom: 0;
+
+  width: 100%;
+
+  height: 6px;
+
+  background: #f97316;
+}
+
+
+/* =========================================
+   CARD HOVER
+========================================= */
+
+.dashboard-card:hover {
+  transform:
+    translateY(-8px);
+
+  border-color: #f97316;
+
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.14);
+}
+
+
+/* =========================================
+   CARD ICON
+========================================= */
+
+.dashboard-card-icon {
+  width: 100px;
+
+  height: 100px;
+
+  margin-bottom: 25px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: #fff0e5;
+
+  font-size: 48px;
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
+}
+
+
+.dashboard-card:hover .dashboard-card-icon {
+  transform:
+    scale(1.08);
+
+  background: #ffe0cc;
+}
+
+
+/* =========================================
+   CARD TITLE
+========================================= */
+
+.dashboard-card h2 {
+  margin: 0 0 15px;
+
+  color: #111111;
+
+  font-size: 28px;
+
+  font-weight: 800;
+}
+
+
+/* =========================================
+   CARD DESCRIPTION
+========================================= */
+
+.dashboard-card p {
+  max-width: 310px;
+
+  margin: 0 auto 25px;
+
+  color: #555555;
+
+  font-size: 17px;
+
+  line-height: 1.6;
+}
+
+
+/* =========================================
+   CARD ACTION
+========================================= */
+
+.dashboard-card-action {
+  width: 100%;
+
+  max-width: 330px;
+
+  margin-top: auto;
+
+  padding: 15px 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  border-radius: 12px;
+
+  background: #111111;
+
+  color: #ffffff;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  transition:
+    background 0.3s ease,
+    transform 0.3s ease;
+}
+
+
+.dashboard-card-action span {
+  color: #f97316;
+
+  font-size: 25px;
+
+  line-height: 1;
+}
+
 
 .dashboard-card:hover .dashboard-card-action {
-  color: #3730a3;
-  transform: translateX(5px);
+  background: #f97316;
 }
 
-/* =========================================================
-   INDIVIDUAL CARD STYLES
-   ========================================================= */
 
-/* Book a Service */
-
-.dashboard-card:nth-child(1) h2 {
-  background: #ecfdf3;
+.dashboard-card:hover .dashboard-card-action span {
+  color: #ffffff;
 }
 
-.dashboard-card:nth-child(1)::before {
-  background: #ecfdf3;
+
+/* =========================================
+   MIDDLE ORANGE BUTTON
+========================================= */
+
+.orange-action {
+  background: #f97316;
 }
 
-.dashboard-card:nth-child(1) .dashboard-card-action {
-  color: #059669;
+
+.orange-action span {
+  color: #ffffff;
 }
 
-.dashboard-card:nth-child(1):hover {
-  border-color: #a7f3d0;
-}
 
-/* My Bookings */
-
-.dashboard-card:nth-child(2) h2 {
-  background: #eff6ff;
-}
-
-.dashboard-card:nth-child(2)::before {
-  background: #eff6ff;
-}
-
-.dashboard-card:nth-child(2) .dashboard-card-action {
-  color: #2563eb;
-}
-
-.dashboard-card:nth-child(2):hover {
-  border-color: #bfdbfe;
-}
-
-/* My Profile */
-
-.dashboard-card:nth-child(3) h2 {
-  background: #f5f3ff;
-}
-
-.dashboard-card:nth-child(3)::before {
-  background: #f5f3ff;
-}
-
-.dashboard-card:nth-child(3) .dashboard-card-action {
-  color: #7c3aed;
-}
-
-.dashboard-card:nth-child(3):hover {
-  border-color: #ddd6fe;
-}
-
-/* =========================================================
-   CARD FOCUS ACCESSIBILITY
-   ========================================================= */
-
-.dashboard-card:focus-visible {
-  outline: 3px solid rgba(79, 70, 229, 0.35);
-  outline-offset: 4px;
-}
-
-/* =========================================================
+/* =========================================
    TABLET
-   ========================================================= */
+========================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
+
   .dashboard {
-    padding: 40px 20px 60px;
+    padding-left: 22px;
+    padding-right: 22px;
   }
+
+
+  .dashboard-hero {
+    grid-template-columns: 1fr;
+
+    min-height: auto;
+  }
+
+
+  .dashboard-hero-content {
+    min-height: 330px;
+
+    padding: 45px;
+  }
+
+
+  .dashboard-hero-image {
+    min-height: 330px;
+
+    height: 330px;
+  }
+
 
   .dashboard-cards {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns:
+      repeat(2, 1fr);
+
+    gap: 24px;
   }
 
-  .dashboard-card:last-child {
-    grid-column: 1 / -1;
-    max-width: 50%;
-    width: 100%;
-    margin: 0 auto;
+
+  .dashboard-card {
+    min-height: 370px;
+  }
+
+
+  .hero-house {
+    width: 160px;
+
+    height: 130px;
+
+    font-size: 72px;
+  }
+
+
+  .hero-worker {
+    right: 14%;
+
+    width: 80px;
+    height: 80px;
+
+    font-size: 50px;
   }
 }
 
-/* =========================================================
+
+/* =========================================
    MOBILE
-   ========================================================= */
+========================================= */
 
 @media (max-width: 650px) {
+
   .dashboard {
-    padding: 30px 15px 50px;
+    padding: 25px 16px 45px;
   }
 
-  .dashboard-header {
-    margin-bottom: 30px;
+
+  .dashboard-hero {
+    border-radius: 18px;
+
+    margin-bottom: 25px;
   }
 
-  .dashboard-header h1 {
-    font-size: 30px;
-    line-height: 1.2;
+
+  .dashboard-hero-content {
+    padding: 35px 25px;
+
+    min-height: 300px;
   }
 
-  .dashboard-header p {
-    font-size: 14px;
-    line-height: 1.6;
+
+  .dashboard-brand {
+    margin-bottom: 35px;
   }
+
+
+  .dashboard-brand strong,
+  .dashboard-brand span {
+    font-size: 20px;
+  }
+
+
+  .brand-icon {
+    width: 42px;
+    height: 42px;
+
+    font-size: 24px;
+
+    border-radius: 10px;
+  }
+
+
+  .dashboard-hero h1 {
+    font-size: 36px;
+
+    letter-spacing: -0.5px;
+  }
+
+
+  .dashboard-hero p {
+    font-size: 17px;
+  }
+
+
+  /* Hero visual */
+
+  .dashboard-hero-image {
+    height: 260px;
+
+    min-height: 260px;
+  }
+
+
+  .hero-house {
+    width: 130px;
+
+    height: 105px;
+
+    font-size: 58px;
+
+    padding-bottom: 12px;
+  }
+
+
+  .hero-house::before {
+    top: -45px;
+
+    left: 5px;
+
+    border-left-width: 60px;
+
+    border-right-width: 60px;
+
+    border-bottom-width: 50px;
+  }
+
+
+  .hero-house::after {
+    width: 34px;
+    height: 34px;
+
+    top: 28px;
+    left: 18px;
+
+    box-shadow:
+      55px 0 0 -1px #f97316;
+  }
+
+
+  .hero-worker {
+    right: 8%;
+
+    bottom: 25px;
+
+    width: 65px;
+    height: 65px;
+
+    font-size: 42px;
+  }
+
+
+  .hero-tools {
+    left: 6%;
+
+    bottom: 25px;
+
+    gap: 6px;
+  }
+
+
+  .hero-tools span {
+    width: 38px;
+    height: 38px;
+
+    font-size: 20px;
+
+    border-radius: 10px;
+  }
+
+
+  .hero-service-label {
+    right: 6%;
+
+    top: 20px;
+
+    padding: 10px 13px;
+
+    border-radius: 10px;
+  }
+
+
+  .hero-service-label strong {
+    font-size: 12px;
+  }
+
+
+  .hero-service-label span {
+    font-size: 10px;
+  }
+
+
+  .circle-one {
+    width: 210px;
+    height: 210px;
+
+    right: -80px;
+    top: -80px;
+  }
+
+
+  .circle-two {
+    width: 170px;
+    height: 170px;
+
+    left: -70px;
+    bottom: -90px;
+  }
+
+
+  .circle-three {
+    display: none;
+  }
+
+
+  /* Cards */
 
   .dashboard-cards {
     grid-template-columns: 1fr;
-    gap: 17px;
+
+    gap: 20px;
   }
 
+
   .dashboard-card {
-    min-height: 245px;
-    padding: 25px;
+    min-height: 350px;
+
+    padding: 30px 22px 25px;
+
     border-radius: 18px;
   }
 
-  .dashboard-card:last-child {
-    grid-column: auto;
-    max-width: none;
-  }
 
   .dashboard-card h2 {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 20px;
-    border-radius: 15px;
-    font-size: 28px;
+    font-size: 25px;
   }
 
-  .dashboard-card h3 {
-    font-size: 19px;
-  }
 
   .dashboard-card p {
-    font-size: 13px;
-  }
-
-  .dashboard-card-action {
-    padding-top: 20px;
+    font-size: 16px;
   }
 }
 
-/* =========================================================
+
+/* =========================================
    SMALL PHONES
-   ========================================================= */
+========================================= */
 
-@media (max-width: 400px) {
+@media (max-width: 380px) {
+
   .dashboard {
-    padding: 25px 12px 40px;
+    padding: 20px 12px 40px;
   }
 
-  .dashboard-header h1 {
-    font-size: 26px;
+
+  .dashboard-hero {
+    border-radius: 16px;
   }
+
+
+  .dashboard-hero-content {
+    padding: 30px 20px;
+
+    min-height: 285px;
+  }
+
+
+  .dashboard-brand {
+    gap: 9px;
+
+    margin-bottom: 30px;
+  }
+
+
+  .dashboard-brand strong,
+  .dashboard-brand span {
+    font-size: 18px;
+  }
+
+
+  .brand-icon {
+    width: 38px;
+    height: 38px;
+
+    font-size: 21px;
+
+    border-radius: 9px;
+  }
+
+
+  .dashboard-hero h1 {
+    font-size: 30px;
+
+    line-height: 1.15;
+  }
+
+
+  .dashboard-hero p {
+    font-size: 15px;
+
+    line-height: 1.5;
+  }
+
+
+  /* Small hero */
+
+  .dashboard-hero-image {
+    height: 220px;
+
+    min-height: 220px;
+  }
+
+
+  .hero-house {
+    width: 105px;
+
+    height: 85px;
+
+    font-size: 47px;
+
+    padding-bottom: 8px;
+  }
+
+
+  .hero-house::before {
+    top: -36px;
+
+    left: 4px;
+
+    border-left-width: 49px;
+
+    border-right-width: 49px;
+
+    border-bottom-width: 42px;
+  }
+
+
+  .hero-house::after {
+    width: 28px;
+    height: 28px;
+
+    top: 23px;
+    left: 14px;
+
+    box-shadow:
+      45px 0 0 -1px #f97316;
+  }
+
+
+  .hero-worker {
+    right: 6%;
+
+    bottom: 18px;
+
+    width: 53px;
+    height: 53px;
+
+    font-size: 34px;
+  }
+
+
+  .hero-tools {
+    left: 5%;
+
+    bottom: 18px;
+
+    gap: 4px;
+  }
+
+
+  .hero-tools span {
+    width: 32px;
+    height: 32px;
+
+    font-size: 17px;
+
+    border-radius: 8px;
+  }
+
+
+  .hero-service-label {
+    right: 5%;
+
+    top: 15px;
+
+    padding: 8px 10px;
+  }
+
+
+  .hero-service-label strong {
+    font-size: 10px;
+  }
+
+
+  .hero-service-label span {
+    font-size: 8px;
+  }
+
+
+  /* Cards */
 
   .dashboard-card {
-    padding: 22px;
+    min-height: 330px;
+
+    padding: 27px 18px 23px;
+
+    border-radius: 16px;
+  }
+
+
+  .dashboard-card-icon {
+    width: 80px;
+
+    height: 80px;
+
+    margin-bottom: 20px;
+
+    font-size: 40px;
+  }
+
+
+  .dashboard-card h2 {
+    font-size: 22px;
+
+    margin-bottom: 12px;
+  }
+
+
+  .dashboard-card p {
+    font-size: 15px;
+
+    line-height: 1.5;
+
+    margin-bottom: 20px;
+  }
+
+
+  .dashboard-card-action {
+    padding: 13px 16px;
+
+    font-size: 14px;
+
+    border-radius: 10px;
+  }
+
+
+  .dashboard-card-action span {
+    font-size: 22px;
+  }
+
+
+  .dashboard-hero::after {
+    width: 130px;
+
+    height: 65px;
+
+    left: -35px;
+
+    bottom: -35px;
   }
 }
 
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
 
-@media (prefers-reduced-motion: reduce) {
-  .dashboard-card,
-  .dashboard-card::before,
-  .dashboard-card::after,
-  .dashboard-card h2,
-  .dashboard-card-action {
-    transition: none;
+/* =========================================
+   VERY SMALL DEVICES
+========================================= */
+
+@media (max-width: 320px) {
+
+  .dashboard {
+    padding-left: 9px;
+    padding-right: 9px;
   }
 
-  .dashboard-card:hover {
-    transform: none;
+
+  .dashboard-hero-content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+
+  .dashboard-hero h1 {
+    font-size: 27px;
+  }
+
+
+  .dashboard-hero-image {
+    height: 200px;
+
+    min-height: 200px;
+  }
+
+
+  .hero-house {
+    transform:
+      translate(-50%, -55%)
+      scale(0.85);
+  }
+
+
+  .hero-worker {
+    transform:
+      scale(0.85);
+  }
+
+
+  .hero-tools {
+    transform:
+      scale(0.85);
+
+    transform-origin: bottom left;
+  }
+
+
+  .hero-service-label {
+    transform:
+      scale(0.85);
+
+    transform-origin: top right;
+  }
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .hero-worker,
+  .hero-tools span,
+  .dashboard-card,
+  .dashboard-card-icon,
+  .dashboard-card-action {
+    animation: none;
+
+    transition: none;
   }
 }

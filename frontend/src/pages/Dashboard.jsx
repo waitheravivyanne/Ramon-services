@@ -5,108 +5,276 @@ import "../styles/Dashboard.css";
 function Dashboard() {
   const { user } = useAuth();
 
+  /* =========================================
+     PROTECT DASHBOARD
+  ========================================= */
+
   if (!user) {
     return null;
   }
 
+
+  /* =========================================
+     DISPLAY USER NAME
+  ========================================= */
+
+  const displayName =
+    user.name ||
+    user.username ||
+    user.email?.split("@")[0] ||
+    "Customer";
+
+
   return (
     <div className="dashboard">
+    
 
-      {/* Dashboard Header */}
-      <div className="dashboard-header">
+      {/* =========================================
+          HERO SECTION
+      ========================================= */}
 
-        <h1>
-          Welcome, {user.name}! 👋
-        </h1>
+      <section className="dashboard-hero">
 
-        <p>
-          Welcome to your Ramon's Marketplace dashboard.
-        </p>
+        {/* =========================================
+            HERO CONTENT
+        ========================================= */}
 
-      </div>
+        <div className="dashboard-hero-content">
+
+          {/* BRAND */}
+
+          <div className="dashboard-brand">
+
+            <span className="brand-icon">
+              ⌂
+            </span>
+
+            <div className="brand-text">
+
+              <strong>
+                Ramon's
+              </strong>
+
+              <span>
+                Marketplace
+              </span>
+
+            </div>
+
+          </div>
 
 
-      {/* Dashboard Cards */}
-      <div className="dashboard-cards">
+          {/* WELCOME MESSAGE */}
 
-        {/* ============================= */}
-        {/* BOOK A SERVICE */}
-        {/* ============================= */}
+          <h1>
+            Welcome, <span>{displayName}!</span> 👋
+          </h1>
+
+
+          <p>
+            Welcome to your Ramon's Marketplace dashboard.
+          </p>
+
+        </div>
+
+
+        {/* =========================================
+            HERO VISUAL
+            CSS GENERATED — NO IMAGE REQUIRED
+        ========================================= */}
+
+        <div className="dashboard-hero-image">
+
+          <div className="hero-orange-bg">
+
+            {/* DECORATIVE CIRCLES */}
+
+            <div className="hero-circle circle-one"></div>
+
+            <div className="hero-circle circle-two"></div>
+
+            <div className="hero-circle circle-three"></div>
+
+
+            {/* HOUSE */}
+
+            <div className="hero-house">
+              🏠
+            </div>
+
+
+            {/* SERVICE WORKER */}
+
+            <div className="hero-worker">
+              🧑🏾‍🔧
+            </div>
+
+
+            {/* SERVICE TOOLS */}
+
+            <div className="hero-tools">
+
+              <span>
+                🧹
+              </span>
+
+              <span>
+                🔧
+              </span>
+
+              <span>
+                ⚡
+              </span>
+
+              <span>
+                🌱
+              </span>
+
+            </div>
+
+
+            {/* SERVICE LABEL */}
+
+            <div className="hero-service-label">
+
+              <strong>
+                Trusted Services
+              </strong>
+
+              <span>
+                At your doorstep
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* =========================================
+          DASHBOARD CARDS
+      ========================================= */}
+
+      <section className="dashboard-cards">
+
+
+        {/* =========================================
+            BOOK A SERVICE
+        ========================================= */}
 
         <Link
           to="/services"
           className="dashboard-card"
         >
 
-          <h2>🧹</h2>
+          <div className="dashboard-card-icon">
+            🧹
+          </div>
 
-          <h3>
+
+          <h2>
             Book a Service
-          </h3>
+          </h2>
+
 
           <p>
-            Find and book a professional service.
+            Find and book a professional service
+            for your home or business.
           </p>
 
+
           <span className="dashboard-card-action">
-            Browse Services →
+
+            Browse Services
+
+            <span>
+              →
+            </span>
+
           </span>
 
         </Link>
 
 
-        {/* ============================= */}
-        {/* MY BOOKINGS */}
-        {/* ============================= */}
+        {/* =========================================
+            MY BOOKINGS
+        ========================================= */}
 
         <Link
           to="/bookings"
           className="dashboard-card"
         >
 
-          <h2>📋</h2>
+          <div className="dashboard-card-icon">
+            📋
+          </div>
 
-          <h3>
+
+          <h2>
             My Bookings
-          </h3>
+          </h2>
+
 
           <p>
-            View your current and previous bookings.
+            View your current and previous
+            service bookings.
           </p>
 
-          <span className="dashboard-card-action">
-            View Bookings →
+
+          <span className="dashboard-card-action orange-action">
+
+            View Bookings
+
+            <span>
+              →
+            </span>
+
           </span>
 
         </Link>
 
 
-        {/* ============================= */}
-        {/* MY PROFILE */}
-        {/* ============================= */}
+        {/* =========================================
+            MY PROFILE
+        ========================================= */}
 
         <Link
           to="/profile"
           className="dashboard-card"
         >
 
-          <h2>👤</h2>
+          <div className="dashboard-card-icon">
+            👤
+          </div>
 
-          <h3>
+
+          <h2>
             My Profile
-          </h3>
+          </h2>
+
 
           <p>
-            Manage your account information.
+            Manage your account information
+            and personal details.
           </p>
 
+
           <span className="dashboard-card-action">
-            View Profile →
+
+            View Profile
+
+            <span>
+              →
+            </span>
+
           </span>
 
         </Link>
 
-      </div>
+      </section>
 
     </div>
   );
