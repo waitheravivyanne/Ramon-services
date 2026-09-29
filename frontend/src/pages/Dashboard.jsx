@@ -72,7 +72,7 @@ function Dashboard() {
 
 
           <p>
-            Welcome to your Ramon's Marketplace dashboard.
+            Welcome to your Ramon's Marketplace!
           </p>
 
         </div>
